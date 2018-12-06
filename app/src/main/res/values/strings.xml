@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Dead man\'s switch</string>
+    <string name="fab_run_switch">run switch</string>
 </resources>
