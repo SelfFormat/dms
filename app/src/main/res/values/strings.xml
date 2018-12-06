@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Dead man\'s switch</string>
-    <string name="fab_run_switch">run switch</string>
+    <string name="fab_run_switch">\trun switch</string>
+    <string name="buy_premium">buy premium</string>
 </resources>
