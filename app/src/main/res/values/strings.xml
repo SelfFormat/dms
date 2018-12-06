@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Dead man\'s switch</string>
     <string name="fab_run_switch">\trun switch</string>
-    <string name="buy_premium">buy premium</string>
+    <string name="buy_premium">get premium</string>
+    <string name="buy_premium_description">dark mode, sounds, emergency alert</string>
 </resources>
