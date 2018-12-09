@@ -18,6 +18,4 @@ class BuyPremiumFragment : Fragment() {
         val binding = DataBindingUtil.inflate<FragmentBuyPremiumBinding>(inflater, R.layout.fragment_buy_premium, container, false)
         return binding.root
     }
-
-
 }
