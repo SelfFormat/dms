@@ -5,6 +5,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.transaction
 
 class MainActivity : AppCompatActivity() {
 
@@ -12,6 +13,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setUpStatusBarAppearance()
+        supportFragmentManager.transaction(allowStateLoss = true) {
+            add(R.id.mainFragment, MainFragment.newInstance(), "MAIN_FRAGMENT")
+        }
     }
 
     private fun setUpStatusBarAppearance() {

@@ -10,12 +10,16 @@ import com.example.deadmanswitch.databinding.FragmentBuyPremiumBinding
 
 class BuyPremiumFragment : Fragment() {
 
+    companion object {
+        fun newInstance(): BuyPremiumFragment {
+            return BuyPremiumFragment()
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        val binding = DataBindingUtil.inflate<FragmentBuyPremiumBinding>(inflater, R.layout.fragment_buy_premium, container, false)
-        return binding.root
+        return inflater.inflate(R.layout.fragment_buy_premium, container, false)
     }
 }
