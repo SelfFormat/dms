@@ -3,4 +3,5 @@
     <string name="fab_run_switch">\trun switch</string>
     <string name="buy_premium">get premium</string>
     <string name="buy_premium_description">dark mode, sounds, emergency alert</string>
+    <string name="premium">Premium</string>
 </resources>

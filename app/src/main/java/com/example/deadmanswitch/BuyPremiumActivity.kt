@@ -6,15 +6,21 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.transaction
+import kotlinx.android.synthetic.main.activity_buy_premium.*
 
-class MainActivity : AppCompatActivity() {
+
+class BuyPremiumActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_buy_premium)
         setUpStatusBarAppearance()
+        toolbarPremium.setNavigationOnClickListener {
+            onBackPressed()
+        }
+
         supportFragmentManager.transaction(allowStateLoss = true) {
-            replace(R.id.frame, MainFragment.newInstance(), "MAIN")
+            add(R.id.premiumFrame, BuyPremiumFragment.newInstance())
         }
     }
 

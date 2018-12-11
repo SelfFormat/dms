@@ -5,8 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
-import com.example.deadmanswitch.databinding.FragmentBuyPremiumBinding
 
 class BuyPremiumFragment : Fragment() {
 
@@ -21,5 +19,9 @@ class BuyPremiumFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_buy_premium, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
     }
 }
