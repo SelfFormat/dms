@@ -20,4 +20,10 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
+    <style name="Toolbar.Title.Center" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+
 </resources>
