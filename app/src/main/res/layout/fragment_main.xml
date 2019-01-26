@@ -8,85 +8,128 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/fab"
-        style="@style/FabLightTextOnDarkBackground"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center"
-        android:layout_margin="16dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:paddingStart="24dp"
-        android:paddingEnd="24dp"
-        android:text="@string/fab_run_switch"
-        android:textSize="18sp"
-        app:cornerRadius="56dp"
-        app:icon="@drawable/ic_alarm_on_white_24dp"
-        app:iconTint="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/premiumBar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/premiumBar"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom"
-        android:background="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/premiumBarMain"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/imageView"
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/materialCardView4"
+                    style="@style/Widget.MaterialComponents.CardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="4dp">
+                    <include layout="@layout/card_darkmode" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/materialCardView"
+                    style="@style/Widget.MaterialComponents.CardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"                    app:cardCornerRadius="16dp"
+                    app:cardElevation="4dp">
+                    <include layout="@layout/card_time_picker" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/materialCardView2"
+                    style="@style/Widget.MaterialComponents.CardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="4dp">
+                    <include layout="@layout/card_calibration" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/materialCardView3"
+                    style="@style/Widget.MaterialComponents.CardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="4dp">
+                    <include layout="@layout/card_loudness" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/materialCardView5"
+                    style="@style/Widget.MaterialComponents.CardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="4dp">
+                    <include layout="@layout/card_tone_picker" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/materialCardView6"
+                    style="@style/Widget.MaterialComponents.CardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="4dp">
+                    <include layout="@layout/card_emergency" />
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/fab"
+            style="@style/FabLightTextOnDarkBackground"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:layout_margin="16dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:src="@drawable/ic_stars_white_48dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/buyPremiumTitle"
-            style="@style/TextAppearance.AppCompat.Title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/buy_premium"
-            android:textAllCaps="true"
-            android:textColor="@color/white"
-            app:layout_constraintStart_toEndOf="@+id/imageView"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/buyPremiumDescription"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginBottom="8dp"
-            android:text="@string/buy_premium_description"
-            android:textAllCaps="true"
-            android:textColor="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageView"
-            app:layout_constraintTop_toBottomOf="@+id/buyPremiumTitle" />
-
-        <ImageView
-            android:id="@+id/goToPremiumArrow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_keyboard_arrow_right_black_24dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:text="@string/fab_run_switch"
+            android:textSize="18sp"
+            app:cornerRadius="56dp"
+            app:icon="@drawable/ic_alarm_on_white_24dp"
+            app:iconTint="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/premiumBarMain"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <include
+        android:id="@+id/premiumBarMain"
+        layout="@layout/premium_bar"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
