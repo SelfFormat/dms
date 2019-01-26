@@ -6,8 +6,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AlertDialog
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.transaction
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.card_tone_picker.*
 import kotlinx.android.synthetic.main.fragment_main.*
 import org.jetbrains.anko.startActivity
@@ -35,6 +38,19 @@ class MainFragment : Fragment() {
         chooseToneButton.setOnClickListener {
             openSoundPicker(view)
         }
+
+        val scaleDown = AnimationUtils.loadAnimation(view.context, R.anim.scale_down)
+        val scaleUp = AnimationUtils.loadAnimation(view.context, R.anim.scale_up)
+
+        scrollableMainLayout.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
+            if (scrollY > oldScrollY) {
+                fab.startAnimation(scaleDown)
+                fab.visibility = View.GONE
+            } else {
+                fab.startAnimation(scaleUp)
+                fab.visibility = View.VISIBLE
+            }
+        })
     }
 
     private fun openSoundPicker(view: View) {
