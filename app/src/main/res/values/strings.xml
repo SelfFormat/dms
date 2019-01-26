@@ -36,4 +36,7 @@
     <string name="example_full_contact">Anna (+48 111222333)</string>
     <string name="message_label">Message:</string>
     <string name="edit">edit</string>
+    <string name="buy_premium_and_get_awesome_features">Buy Premium and get awesome features!</string>
+    <string name="start_free_7_day_trial">Start free 7-day trial</string>
+    <string name="no_thanks">no thanks</string>
 </resources>

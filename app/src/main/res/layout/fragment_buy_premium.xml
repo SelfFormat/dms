@@ -2,58 +2,81 @@
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/premiumSlogan"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginRight="48dp"
+        android:layout_marginLeft="48dp"
         android:fontFamily="@font/raleway_bold"
-        android:text="@string/default_emergency_message"
+        android:text="@string/buy_premium_and_get_awesome_features"
         android:textColor="@color/black"
-        android:textSize="19dp"
+        android:textSize="22dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.card.MaterialCardView
-        style="@style/Widget.MaterialComponents.CardView"
+    <ListView
+        android:id="@+id/listOfFeatures"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="32dp"
-        android:minHeight="200dp"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/materialButton5"
+        android:layout_marginLeft="48dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="48dp"
+        android:divider="@null"
+        android:dividerHeight="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
+        app:layout_constraintTop_toBottomOf="@+id/premiumSlogan"
+        tools:listitem="@layout/single_row_feature" />
 
-        <ListView xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/listOfFeatures"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="16dp"
-            android:divider="@null"
-            android:dividerHeight="0dp"
-            tools:listitem="@layout/single_row_feature" />
-
-    </com.google.android.material.card.MaterialCardView>
+    <ImageView
+        android:id="@+id/carImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="8dp"
+        android:adjustViewBounds="true"
+        android:minHeight="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/buyPremiumButton"
+        app:layout_constraintEnd_toEndOf="@+id/buyPremiumButton"
+        app:layout_constraintStart_toStartOf="@+id/buyPremiumButton"
+        app:layout_constraintTop_toBottomOf="@+id/listOfFeatures"
+        app:srcCompat="@drawable/car" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/materialButton5"
-        android:layout_height="80dp"
-        android:layout_width="match_parent"
+        android:id="@+id/buyPremiumButton"
+        android:layout_width="@+id/carImage"
+        android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:layout_marginBottom="32dp"
-        android:textSize="20dp"
-        android:text="purchase"
+        android:layout_marginBottom="8dp"
+        android:fontFamily="@font/raleway_medium"
+        android:text="@string/buy_premium"
+        app:cornerRadius="40dp"
+        app:layout_constraintBottom_toTopOf="@+id/trialButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/trialButton"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="@+id/carImage"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="8dp"
+        android:fontFamily="@font/raleway_medium"
+        android:text="@string/start_free_7_day_trial"
+        app:cornerRadius="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emergencyCardLabel" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
