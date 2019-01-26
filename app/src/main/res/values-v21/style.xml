@@ -3,6 +3,6 @@
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@color/grayTitle</item>
+        <item name="android:statusBarColor">@color/grayButton</item>
     </style>
 </resources>
