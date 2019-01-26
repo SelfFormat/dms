@@ -5,6 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:fontFamily="@font/raleway_bold"
+        android:text="@string/default_emergency_message"
+        android:textColor="@color/black"
+        android:textSize="19dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.card.MaterialCardView
         style="@style/Widget.MaterialComponents.CardView"
         android:layout_width="0dp"
@@ -16,7 +29,7 @@
         app:layout_constraintBottom_toTopOf="@+id/materialButton5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/textView">
 
         <ListView xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/listOfFeatures"
@@ -25,7 +38,7 @@
             android:layout_margin="16dp"
             android:divider="@null"
             android:dividerHeight="0dp"
-            tools:listitem="@layout/single_row_feature"/>
+            tools:listitem="@layout/single_row_feature" />
 
     </com.google.android.material.card.MaterialCardView>
 
