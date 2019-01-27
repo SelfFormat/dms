@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.card_tone_picker.*
 import kotlinx.android.synthetic.main.fragment_main.*
 import org.jetbrains.anko.startActivity
 import android.animation.ObjectAnimator
+import kotlinx.android.synthetic.main.card_emergency.*
 
 class MainFragment : Fragment() {
 
@@ -30,12 +31,10 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        premiumBarMain.setOnClickListener {
-            activity!!.startActivity<BuyPremiumActivity>()
-        }
-        chooseToneButton.setOnClickListener {
-            openSoundPicker(view)
-        }
+        premiumBarMain.setOnClickListener { activity?.startActivity<BuyPremiumActivity>() }
+        editEmergency.setOnClickListener { activity?.startActivity<EmergencySmsActivity>() }
+        chooseToneButton.setOnClickListener { openSoundPicker(view) }
+        currentAlarmName.setOnClickListener { openSoundPicker(view) }
 
         scrollableMainLayout.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
             if (scrollY > oldScrollY) {
@@ -66,9 +65,9 @@ class MainFragment : Fragment() {
             .show()
     }
 
-    fun newFrag() {
+    fun newFrag(fragment: Fragment) {
         activity!!.supportFragmentManager.transaction(allowStateLoss = true) {
-            replace(R.id.frame, BuyPremiumFragment.newInstance()).addToBackStack("BUY_PREMIUM")
+            replace(R.id.mainFrame, fragment).addToBackStack("BUY_PREMIUM")
         }
     }
 }

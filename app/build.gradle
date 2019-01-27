@@ -33,7 +33,6 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
     implementation "com.google.android.material:material:$materialVersion"
     implementation "androidx.legacy:legacy-support-v4:$legacySupportV4Version"
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0-beta01'
     testImplementation "junit:junit:$jUnitVersion"
     androidTestImplementation "androidx.test:runner:$testRunnerVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"

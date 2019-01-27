@@ -1,58 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/emergencyCardLabel"
         style="@style/widgetTitle"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
         android:text="@string/alarm_sounds"
+        app:layout_constraintBottom_toTopOf="@+id/imageView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/currentAlarmName"
+        style="@style/widgetTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="16dp"
         android:text="@string/current_alarm"
-        app:layout_constraintBottom_toBottomOf="@+id/materialButton3"
-        app:layout_constraintEnd_toStartOf="@+id/materialButton3"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/materialButton3" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/materialButton3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="@string/bell"
-        android:textAllCaps="true"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textColor="@color/lightGray"
+        app:layout_constraintBottom_toBottomOf="@+id/emergencyCardLabel"
         app:layout_constraintEnd_toStartOf="@+id/chooseToneButton"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/textView2"
-        app:layout_constraintTop_toBottomOf="@+id/emergencyCardLabel"
-        style="@style/grayButton"/>
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/emergencyCardLabel"
+        app:layout_constraintTop_toTopOf="@+id/emergencyCardLabel" />
 
-    <com.google.android.material.button.MaterialButton
+    <ImageView
         android:id="@+id/chooseToneButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/choose"
-        android:textAllCaps="true"
-        app:layout_constraintBottom_toBottomOf="@+id/materialButton3"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/currentAlarmName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/materialButton3"
-        app:layout_constraintTop_toTopOf="@+id/materialButton3"
-        style="@style/grayButton"/>
+        app:layout_constraintTop_toTopOf="@+id/currentAlarmName"
+        app:srcCompat="@drawable/ic_keyboard_arrow_right_black_24dp" />
+
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/random_ringtone"
+        android:textColor="@color/grayButton"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <SeekBar
+        android:id="@+id/seekBar"
+        style="@style/Widget.AppCompat.SeekBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:max="10"
+        android:progress="3"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/imageView2"
+        app:layout_constraintTop_toTopOf="@+id/imageView2" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/checkBox"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/ic_volume_up_black_24dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

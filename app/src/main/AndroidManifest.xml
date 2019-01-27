@@ -3,6 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.deadmanswitch">
 
+    <uses-feature
+        android:name="android.hardware.sensor.proximity"
+        android:required="true" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,9 +15,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".CustomStatusBarActivity"/>
+        <activity android:name=".EmergencySmsActivity" />
         <activity
             android:name=".BuyPremiumActivity"
-            android:parentActivityName="com.example.deadmanswitch.MainActivity">
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.deadmanswitch.MainActivity" />

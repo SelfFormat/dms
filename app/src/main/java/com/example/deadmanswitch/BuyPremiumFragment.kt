@@ -15,7 +15,7 @@ class BuyPremiumFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_buy_premium, container,
+        return inflater.inflate(R.layout.fragment_buy_premium, container,
             false)
     }
 
