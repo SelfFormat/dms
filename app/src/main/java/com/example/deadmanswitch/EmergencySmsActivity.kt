@@ -1,10 +1,15 @@
 package com.example.deadmanswitch
 
+import android.content.Context
 import android.os.Bundle
+import androidx.core.content.edit
 import androidx.fragment.app.transaction
 import kotlinx.android.synthetic.main.activity_emergency_sms.*
+import kotlinx.android.synthetic.main.fragment_emergency_sms.*
 
 class EmergencySmsActivity : CustomStatusBarActivity() {
+
+private val sharedPref = this.getPreferences(Context.MODE_PRIVATE)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -15,5 +20,19 @@ class EmergencySmsActivity : CustomStatusBarActivity() {
         supportFragmentManager.transaction(allowStateLoss = true) {
             replace(R.id.emergencyFrame, EmergencySmsFragment.newInstance(), "MAIN")
         }
+        saveContactButton.setOnClickListener {
+            saveContact()
+        }
     }
+
+    //TODO: edittext fields validation
+
+    private fun saveContact() {
+        sharedPref.edit {
+            putString("contactName", contactName.editText?.text.toString())
+            putString("contactNumber", contactNumber.editText?.text.toString())
+            putString("emergencyMessage", emergencyMessage.editText?.text.toString())
+        }
+    }
+
 }

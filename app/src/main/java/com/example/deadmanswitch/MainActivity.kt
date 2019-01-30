@@ -16,12 +16,14 @@ import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.transaction
 import kotlinx.android.synthetic.main.activity_main.*
+import android.telephony.SmsManager
+import android.view.View
 
 class MainActivity : CustomStatusBarActivity(), SensorEventListener {
     private lateinit var mSensorManager: SensorManager
     private var notificationManager: NotificationManager? = null
     private var mProximity: Sensor? = null
-
+    private val sharedPref = this.getPreferences(Context.MODE_PRIVATE)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +40,29 @@ class MainActivity : CustomStatusBarActivity(), SensorEventListener {
         notification("Title", "description")
     }
 
+    //region sending emergency sms
+
+    fun getEmergencyContact(): EmergencyContact {
+        return EmergencyContact(
+            sharedPref.getString("contactNumber", null),
+            sharedPref.getString("emergencyMessage", null),
+            sharedPref.getString("contactName", null)
+        )
+    }
+
+    fun smsSendMessage(view: View, contact: EmergencyContact) {
+        val serviceCenterAddress: String? = null
+        val smsManager = SmsManager.getDefault()
+        smsManager.sendTextMessage(
+            contact.message, serviceCenterAddress, null,
+            null, null
+        )
+    }
+
+    //endregion
+
+    //region lifecycle methods
+
     override fun onResume() {
         super.onResume()
         mSensorManager.registerListener(this, mProximity, SensorManager.SENSOR_DELAY_NORMAL)
@@ -47,6 +72,10 @@ class MainActivity : CustomStatusBarActivity(), SensorEventListener {
         super.onPause()
         mSensorManager.unregisterListener(this, mProximity)
     }
+
+    //endregion
+
+    //region proximity sensor
 
     override fun onSensorChanged(event: SensorEvent?) {
         val distance = event?.values?.get(0)?.toInt()
@@ -58,6 +87,10 @@ class MainActivity : CustomStatusBarActivity(), SensorEventListener {
         }
 
     override fun onAccuracyChanged(event: Sensor?,value: Int) {}
+
+    //endregion
+
+    //region notification
 
     private fun notification(title: String, body: String) {
 
@@ -123,4 +156,6 @@ class MainActivity : CustomStatusBarActivity(), SensorEventListener {
             notificationManager?.createNotificationChannel(channel)
         }
     }
+
+    //endregion
 }

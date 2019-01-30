@@ -41,4 +41,8 @@
     <string name="no_thanks">no thanks</string>
     <string name="random_ringtone">random ringtone</string>
     <string name="premium_features_list_button">Premium features list button</string>
+    <string name="turn_off">Turn off</string>
+    <string name="repeat">Repeat</string>
+    <string name="contact_name">CONTACT NAME</string>
+    <string name="sample_contact_name">John Smith</string>
 </resources>
