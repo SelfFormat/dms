@@ -16,6 +16,7 @@ import android.animation.ObjectAnimator
 import kotlinx.android.synthetic.main.card_emergency.*
 import android.util.Log
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
 class MainFragment : Fragment() {
@@ -40,7 +41,7 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         premiumBarMain.setOnClickListener { activity?.startActivity<BuyPremiumActivity>() }
-        editEmergency.setOnClickListener { activity?.startActivity<EmergencySmsActivity>() }
+        editEmergency.setOnClickListener { newFrag(EmergencySmsFragment.newInstance()) }
         chooseToneButton.setOnClickListener { openSoundPicker(view) }
         currentAlarmName.setOnClickListener { openSoundPicker(view) }
 
@@ -75,7 +76,7 @@ class MainFragment : Fragment() {
 
         builder.setTitle("Credits")
             .setMessage("Pick favorite")
-            .setPositiveButton(android.R.string.yes) { _, _ -> }
+            .setPositiveButton(android.R.string.yes) { _, _ -> (activity as MainActivity).smsSendMessage() }
             .setNegativeButton(android.R.string.no) { _, _ -> }
             .setIcon(R.drawable.ic_check_green_24dp)
             .setView(R.layout.single_row_feature) // you could specify your inner layout
@@ -96,7 +97,15 @@ class MainFragment : Fragment() {
     }
 
     private fun showSnackBar(text: String) {
-        val mySnackbar = Snackbar.make(view!!.findViewById(com.example.deadmanswitch.R.id.scrollableMainLayout), text, Snackbar.LENGTH_LONG)
-        mySnackbar.show()
+        Snackbar.make(view!!.findViewById(com.example.deadmanswitch.R.id.scrollableMainLayout), text, Snackbar.LENGTH_LONG).show()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val summary = "${(activity as MainActivity).getEmergencyContact().name ?: getString(R.string.sample_contact_name)} (${(activity as MainActivity).getEmergencyContact().number ?: getString(R.string.sample_contact_name)})"
+        val textSummary = (activity as MainActivity).getEmergencyContact().message ?: getString(R.string.message)
+        contactSummary.text = summary
+        messageSummary.text = textSummary
+        activity?.toolbarTitle?.text = resources.getString(R.string.app_name)
     }
 }

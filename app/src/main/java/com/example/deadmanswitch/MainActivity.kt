@@ -13,7 +13,7 @@ import android.os.Bundle
 import androidx.fragment.app.transaction
 import kotlinx.android.synthetic.main.activity_main.*
 import android.telephony.SmsManager
-import android.view.View
+import android.widget.Toast
 
 class MainActivity : CustomStatusBarActivity() {
     private var notificationManager: NotificationManager? = null
@@ -42,11 +42,13 @@ class MainActivity : CustomStatusBarActivity() {
         )
     }
 
-    fun smsSendMessage(view: View, contact: EmergencyContact) {
+    fun smsSendMessage() {
+        val contact = getEmergencyContact()
+        Toast.makeText(this, "Sending emergency sms to: ${contact.number}", Toast.LENGTH_SHORT).show()
         val serviceCenterAddress: String? = null
         val smsManager = SmsManager.getDefault()
         smsManager.sendTextMessage(
-            contact.message, serviceCenterAddress, null,
+            contact.number, serviceCenterAddress, contact.message,
             null, null
         )
     }

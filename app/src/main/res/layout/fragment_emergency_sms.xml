@@ -44,7 +44,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/contactName"
+        android:id="@+id/contactNameLabel"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -58,17 +58,17 @@
         app:layout_constraintTop_toBottomOf="@+id/emergencyPeriod">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/contactName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
-            android:text="@string/sample_contact_name"
-            app:counterMaxLength="3" />
+            android:text="@string/sample_contact_name" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/contactNumber"
+        android:id="@+id/contactNumberLabel"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -78,9 +78,10 @@
         android:hint="@string/contact_number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/contactName">
+        app:layout_constraintTop_toBottomOf="@+id/contactNameLabel">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/contactNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="phone"
@@ -89,7 +90,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-    android:id="@+id/emergencyMessage"
+    android:id="@+id/emergencyMessageLabel"
     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
     android:layout_width="match_parent"
     android:layout_height="0dp"
@@ -101,9 +102,10 @@
     app:layout_constraintBottom_toTopOf="@+id/saveContactButton"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/contactNumber">
+    app:layout_constraintTop_toBottomOf="@+id/contactNumberLabel">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/emergencyMessage"
             android:gravity="top"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

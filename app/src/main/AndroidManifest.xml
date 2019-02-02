@@ -21,7 +21,6 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".CustomStatusBarActivity"/>
-        <activity android:name=".EmergencySmsActivity" />
         <activity
             android:name=".BuyPremiumActivity"
             android:parentActivityName=".MainActivity">

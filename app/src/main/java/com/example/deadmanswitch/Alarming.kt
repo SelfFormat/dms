@@ -11,6 +11,7 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.SystemClock
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
@@ -28,6 +29,8 @@ class Alarming : AppCompatActivity(), SensorEventListener {
     private var mProximity: Sensor? = null
     private var valueMin = 20
     private var valueMax = 21
+    private var inactivity = 0L
+    private var inactivityTresholdInMilliseconds = 30000L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,6 +64,8 @@ class Alarming : AppCompatActivity(), SensorEventListener {
             prepare()
             start()
         }
+
+        inactivity = SystemClock.elapsedRealtime()
 
         val off = findViewById<View>(R.id.clickableLayOff)
         off.setOnClickListener {
