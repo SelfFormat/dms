@@ -6,36 +6,28 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
-import android.hardware.Sensor
-import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
-import android.hardware.SensorManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.transaction
 import kotlinx.android.synthetic.main.activity_main.*
 import android.telephony.SmsManager
 import android.view.View
 
-class MainActivity : CustomStatusBarActivity(), SensorEventListener {
-    private lateinit var mSensorManager: SensorManager
+class MainActivity : CustomStatusBarActivity() {
     private var notificationManager: NotificationManager? = null
-    private var mProximity: Sensor? = null
-    private val sharedPref = this.getPreferences(Context.MODE_PRIVATE)
+    private lateinit var sharedPref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setUpStatusBarAppearance()
         toolbarTitle.text = resources.getString(R.string.app_name)
+        sharedPref = getPreferences(Context.MODE_PRIVATE)
         supportFragmentManager.transaction(allowStateLoss = true) {
             replace(R.id.mainFrame, MainFragment.newInstance(), "MAIN")
         }
-        mSensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY)
-
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notification("Title", "description")
     }
@@ -58,35 +50,6 @@ class MainActivity : CustomStatusBarActivity(), SensorEventListener {
             null, null
         )
     }
-
-    //endregion
-
-    //region lifecycle methods
-
-    override fun onResume() {
-        super.onResume()
-        mSensorManager.registerListener(this, mProximity, SensorManager.SENSOR_DELAY_NORMAL)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        mSensorManager.unregisterListener(this, mProximity)
-    }
-
-    //endregion
-
-    //region proximity sensor
-
-    override fun onSensorChanged(event: SensorEvent?) {
-        val distance = event?.values?.get(0)?.toInt()
-        if (distance == 0) {
-            Log.i("Distance: ", "near")
-        } else {
-            Log.i("Distance: ", "far")
-        }
-        }
-
-    override fun onAccuracyChanged(event: Sensor?,value: Int) {}
 
     //endregion
 

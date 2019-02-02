@@ -14,8 +14,16 @@ import kotlinx.android.synthetic.main.fragment_main.*
 import org.jetbrains.anko.startActivity
 import android.animation.ObjectAnimator
 import kotlinx.android.synthetic.main.card_emergency.*
+import android.util.Log
+import com.google.android.material.snackbar.Snackbar
+import java.util.*
 
 class MainFragment : Fragment() {
+
+    private val valueMin = 5
+    private val valueMax = 10
+    private var alarm = Alarm()
+    private val randomTime = Random()
 
     companion object {
         fun newInstance(): MainFragment {
@@ -47,6 +55,15 @@ class MainFragment : Fragment() {
                 animation.start()
             }
         })
+
+        fab.setOnClickListener {
+            val random = randomTime()
+            val time = System.currentTimeMillis() + random
+            val sum = "Alarm" + random / 1000 + " seconds"
+            showSnackBar(sum)
+            alarm.startAlarm(activity!!.applicationContext, time, Alarm.State.ON)
+            fab.setText(R.string.turn_off)
+        }
     }
 
     private fun openSoundPicker(view: View) {
@@ -69,5 +86,17 @@ class MainFragment : Fragment() {
         activity!!.supportFragmentManager.transaction(allowStateLoss = true) {
             replace(R.id.mainFrame, fragment).addToBackStack("BUY_PREMIUM")
         }
+    }
+
+    private fun randomTime(): Int {
+        val initialTime = valueMin * 1000
+        val generated = randomTime.nextInt(valueMax + 1 - valueMin) * 1000
+        Log.i("init: $initialTime", ", gen: $generated")
+        return generated + initialTime
+    }
+
+    private fun showSnackBar(text: String) {
+        val mySnackbar = Snackbar.make(view!!.findViewById(com.example.deadmanswitch.R.id.scrollableMainLayout), text, Snackbar.LENGTH_LONG)
+        mySnackbar.show()
     }
 }

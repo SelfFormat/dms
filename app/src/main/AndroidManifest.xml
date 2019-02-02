@@ -38,7 +38,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Alarming" />
+        <activity
+            android:name=".Alarming"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
+            tools:targetApi="o_mr1" />
 
         <meta-data
             android:name="preloaded_fonts"
