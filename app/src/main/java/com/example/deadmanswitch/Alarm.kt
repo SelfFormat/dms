@@ -26,4 +26,19 @@ internal class Alarm {
             }
         }
     }
+
+    fun prepareForSms(context: Context, time: Long?, state: Alarm.State) {
+        val alarmIntent = Intent(context, EmergencySmsReceiver::class.java)
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+        Log.i("Emergency sms manager:", state.name)
+        when (state) {
+            State.ON -> {
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, time!!, pendingIntent)
+            }
+            State.OFF -> {
+                alarmManager.cancel(pendingIntent)
+            }
+        }
+    }
 }

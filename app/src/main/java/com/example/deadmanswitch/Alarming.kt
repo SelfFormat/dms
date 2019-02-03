@@ -11,7 +11,6 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.SystemClock
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
@@ -27,10 +26,9 @@ class Alarming : AppCompatActivity(), SensorEventListener {
     private var alarm = Alarm()
     private var mSensorManager: SensorManager? = null
     private var mProximity: Sensor? = null
-    private var valueMin = 20
-    private var valueMax = 21
-    private var inactivity = 0L
-    private var inactivityTresholdInMilliseconds = 30000L
+    private var valueMin = 5
+    private var valueMax = 10
+//    private var inactivityTresholdInMilliseconds = 10000L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,26 +63,31 @@ class Alarming : AppCompatActivity(), SensorEventListener {
             start()
         }
 
-        inactivity = SystemClock.elapsedRealtime()
+        val time = System.currentTimeMillis() + randomTime()
+
+        alarm.prepareForSms(this, time, Alarm.State.ON)
+
 
         val off = findViewById<View>(R.id.clickableLayOff)
         off.setOnClickListener {
             textOff.text = "jakisstring"
-            stopCurrentAlarmAndSetUpNew()
+            releaseMediaPlayer()
+            alarm.prepareForSms(this, null, Alarm.State.OFF)
             onBackPressed()
         }
 
         val mute = findViewById<View>(R.id.clickableLayRepeat)
         mute.setOnClickListener {
             textRepeat.text = "jakisstring"
-            stopCurrentAlarmAndSetUpNew()
+            releaseMediaPlayer()
+            mp = MediaPlayer.create(this, R.raw.old)
             runAlarmAgain()
         }
     }
 
      override fun onResume() {
          super.onResume()
-        mSensorManager!!.registerListener(this, mProximity, SensorManager.SENSOR_DELAY_NORMAL)
+         mSensorManager!!.registerListener(this, mProximity, SensorManager.SENSOR_DELAY_NORMAL)
     }
 
     override fun onPause() {
@@ -100,18 +103,19 @@ class Alarming : AppCompatActivity(), SensorEventListener {
     }
 
     private fun runAlarmAgain() {
-        stopCurrentAlarmAndSetUpNew()
+        alarm.prepareForSms(this, null, Alarm.State.OFF)
+        releaseMediaPlayer()
         val time = System.currentTimeMillis() + randomTime()
+        alarm.prepareForSms(this, null, Alarm.State.OFF)
         alarm.startAlarm(this, time, Alarm.State.ON)
         onBackPressed()
     }
 
-    private fun stopCurrentAlarmAndSetUpNew() {
+    private fun releaseMediaPlayer() {
         mp.run {
             stop()
             release()
         }
-        mp = MediaPlayer.create(this, R.raw.old)
     }
 
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}

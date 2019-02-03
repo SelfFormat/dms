@@ -13,18 +13,37 @@ import android.os.Bundle
 import androidx.fragment.app.transaction
 import kotlinx.android.synthetic.main.activity_main.*
 import android.telephony.SmsManager
+import android.util.Log
 import android.widget.Toast
+import androidx.core.content.edit
 
 class MainActivity : CustomStatusBarActivity() {
     private var notificationManager: NotificationManager? = null
     private lateinit var sharedPref: SharedPreferences
 
+    override fun onResume() {
+        super.onResume()
+        val emergencySMS = sharedPref.getBoolean(EMERGENCY_SMS, false)
+        if (emergencySMS) {
+            Log.i("SENDING", "SMS")
+            smsSendMessage()
+            sharedPref.edit {
+                putBoolean(EMERGENCY_SMS, false)
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
         setUpStatusBarAppearance()
         toolbarTitle.text = resources.getString(R.string.app_name)
-        sharedPref = getPreferences(Context.MODE_PRIVATE)
+        sharedPref = getSharedPreferences(
+            "myPrefs",
+            Context.MODE_PRIVATE
+        )
+
         supportFragmentManager.transaction(allowStateLoss = true) {
             replace(R.id.mainFrame, MainFragment.newInstance(), "MAIN")
         }
@@ -123,4 +142,8 @@ class MainActivity : CustomStatusBarActivity() {
     }
 
     //endregion
+
+    companion object {
+        public const val EMERGENCY_SMS = "EMERGENCY_SMS"
+    }
 }

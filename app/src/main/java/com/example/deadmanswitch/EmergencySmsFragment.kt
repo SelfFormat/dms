@@ -37,7 +37,10 @@ class EmergencySmsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
+        sharedPref = view.context.getSharedPreferences(
+            "myPrefs",
+            Context.MODE_PRIVATE
+        )
         activity?.toolbarTitle?.text = resources.getString(R.string.set_emergency_contact)
         setEmergencyContatct()
         saveContactButton.setOnClickListener {

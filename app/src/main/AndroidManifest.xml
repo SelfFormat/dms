@@ -47,6 +47,7 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
         <receiver android:name=".AlarmReceiver" />
+        <receiver android:name=".EmergencySmsReceiver" />
     </application>
 
 </manifest>
