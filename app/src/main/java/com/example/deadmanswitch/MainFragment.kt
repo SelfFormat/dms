@@ -64,6 +64,7 @@ class MainFragment : Fragment() {
             showSnackBar(sum)
             alarm.startAlarm(activity!!.applicationContext, time, Alarm.State.ON)
             fab.setText(R.string.turn_off)
+            (activity as MainActivity).notification("Alarm is set", "no body")
         }
     }
 

@@ -22,10 +22,10 @@ class BuyPremiumFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val arrayOfFeatures = ArrayList<SingleFeature>()
-        arrayOfFeatures.add(0, SingleFeature("No ads"))
-        arrayOfFeatures.add(0, SingleFeature("More alarm sounds"))
-        arrayOfFeatures.add(0, SingleFeature("Emergency sms"))
-        arrayOfFeatures.add(0, SingleFeature("Dark mode"))
+        arrayOfFeatures.add(SingleFeature("No ads"))
+        arrayOfFeatures.add(SingleFeature("More alarm sounds"))
+        arrayOfFeatures.add(SingleFeature("Emergency sms"))
+        arrayOfFeatures.add(SingleFeature("Dark mode"))
         val listView = view.findViewById<ListView>(R.id.listOfFeatures)
         listView.adapter = FeatureAdapter(view.context, arrayOfFeatures)
     }

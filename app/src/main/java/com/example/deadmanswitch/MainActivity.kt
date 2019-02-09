@@ -48,7 +48,6 @@ class MainActivity : CustomStatusBarActivity() {
             replace(R.id.mainFrame, MainFragment.newInstance(), "MAIN")
         }
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notification("Title", "description")
     }
 
     //region sending emergency sms
@@ -76,7 +75,7 @@ class MainActivity : CustomStatusBarActivity() {
 
     //region notification
 
-    private fun notification(title: String, body: String) {
+    fun notification(title: String, body: String) {
 
         val resultIntent = Intent(this, MainActivity::class.java)
 
