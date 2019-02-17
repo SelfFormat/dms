@@ -76,7 +76,7 @@ class Alarming : AppCompatActivity(), SensorEventListener {
             onBackPressed()
         }
 
-        val mute = findViewById<View>(R.id.clickableLayRepeat)
+        val mute = findViewById<View>(R.id.circle_repeat)
         mute.setOnClickListener {
             textRepeat.text = "jakisstring"
             releaseMediaPlayer()
