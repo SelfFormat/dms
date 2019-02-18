@@ -23,14 +23,16 @@
         <activity android:name=".CustomStatusBarActivity"/>
         <activity
             android:name=".BuyPremiumActivity"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.deadmanswitch.MainActivity" />
         </activity>
         <activity
             android:name=".MainActivity"
-            android:windowSoftInputMode="stateHidden">
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -41,6 +43,7 @@
             android:name=".Alarming"
             android:showWhenLocked="true"
             android:turnScreenOn="true"
+            android:screenOrientation="portrait"
             tools:targetApi="o_mr1" />
 
         <meta-data
