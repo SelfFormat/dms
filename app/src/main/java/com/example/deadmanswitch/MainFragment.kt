@@ -13,6 +13,8 @@ import kotlinx.android.synthetic.main.card_tone_picker.*
 import kotlinx.android.synthetic.main.fragment_main.*
 import org.jetbrains.anko.startActivity
 import android.animation.ObjectAnimator
+import android.content.Context
+import android.media.AudioManager
 import kotlinx.android.synthetic.main.card_emergency.*
 import android.util.Log
 import com.google.android.material.snackbar.Snackbar
@@ -25,6 +27,7 @@ class MainFragment : Fragment() {
     private val valueMax = 10
     private var alarm = Alarm()
     private val randomTime = Random()
+    private lateinit var audioManager: AudioManager
 
     companion object {
         fun newInstance(): MainFragment {
@@ -44,6 +47,8 @@ class MainFragment : Fragment() {
         editEmergency.setOnClickListener { newFrag(EmergencySmsFragment.newInstance()) }
         chooseToneButton.setOnClickListener { openSoundPicker(view) }
         currentAlarmName.setOnClickListener { openSoundPicker(view) }
+        alarmVolumeSeekBar.max = getAlarmMaxVolume()
+        alarmVolumeSeekBar.progress = getCurrentAlarmVolume()
 
         scrollableMainLayout.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
             if (scrollY > oldScrollY) {
@@ -101,8 +106,20 @@ class MainFragment : Fragment() {
         Snackbar.make(view!!.findViewById(com.example.deadmanswitch.R.id.scrollableMainLayout), text, Snackbar.LENGTH_LONG).show()
     }
 
+    private fun getCurrentAlarmVolume() : Int {
+        audioManager = context?.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        return  audioManager.getStreamVolume(AudioManager.STREAM_ALARM) - 1 // -1 because of return shift value
+    }
+
+    private fun getAlarmMaxVolume() : Int {
+        audioManager = context?.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        return audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM) - 1 // -1 because of return shift value
+    }
+
     override fun onResume() {
         super.onResume()
+        getCurrentAlarmVolume()
+        alarmVolumeSeekBar.progress = getCurrentAlarmVolume()
         val summary = "${(activity as MainActivity).getEmergencyContact().name ?: getString(R.string.sample_contact_name)} (${(activity as MainActivity).getEmergencyContact().number ?: getString(R.string.sample_contact_name)})"
         val textSummary = (activity as MainActivity).getEmergencyContact().message ?: getString(R.string.message)
         contactSummary.text = summary

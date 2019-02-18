@@ -7,16 +7,17 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.media.AudioAttributes
+import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_alarming.*
-
 import java.util.Random
 
 class Alarming : AppCompatActivity(), SensorEventListener {
@@ -28,7 +29,9 @@ class Alarming : AppCompatActivity(), SensorEventListener {
     private var mProximity: Sensor? = null
     private var valueMin = 5
     private var valueMax = 10
-//    private var inactivityTresholdInMilliseconds = 10000L
+    private lateinit var audioManager: AudioManager
+    private val USER_AUDIO_VOLUME: Int = 5
+    private val EMERGENCY_TIME = 300000
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +52,9 @@ class Alarming : AppCompatActivity(), SensorEventListener {
         mSensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         mProximity = mSensorManager!!.getDefaultSensor(Sensor.TYPE_PROXIMITY)
 
+        audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        audioManager.setStreamVolume(AudioManager.STREAM_ALARM, USER_AUDIO_VOLUME, 0)
+
         mp = MediaPlayer()
         mp.run {
             isLooping = true
@@ -63,7 +69,7 @@ class Alarming : AppCompatActivity(), SensorEventListener {
             start()
         }
 
-        val time = System.currentTimeMillis() + randomTime()
+        val time = System.currentTimeMillis() + EMERGENCY_TIME //change it to time from preferences
 
         alarm.prepareForSms(this, time, Alarm.State.ON)
 
@@ -99,6 +105,26 @@ class Alarming : AppCompatActivity(), SensorEventListener {
         val distance = event?.values?.get(0)?.toInt()
         if (distance == 0) {
             runAlarmAgain()
+        }
+    }
+
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        val action = event.action
+        val keyCode = event.keyCode
+        return when (keyCode) {
+            KeyEvent.KEYCODE_VOLUME_UP -> {
+                if (action == KeyEvent.ACTION_DOWN) {
+                    audioManager.adjustStreamVolume(AudioManager.STREAM_ALARM, AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI)
+                }
+                true
+            }
+            KeyEvent.KEYCODE_VOLUME_DOWN -> {
+                if (action == KeyEvent.ACTION_DOWN) {
+                    audioManager.adjustStreamVolume(AudioManager.STREAM_ALARM, AudioManager.ADJUST_LOWER, AudioManager.FLAG_SHOW_UI)
+                }
+                true
+            }
+            else -> super.dispatchKeyEvent(event)
         }
     }
 
