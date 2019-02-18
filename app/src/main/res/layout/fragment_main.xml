@@ -76,6 +76,8 @@
                     app:cardElevation="3dp">
                     <include layout="@layout/card_emergency" />
                 </com.google.android.material.card.MaterialCardView>
+                
+                <View android:layout_width="match_parent" android:layout_height="@dimen/fab_button_height"/>
 
             </LinearLayout>
 
@@ -85,7 +87,7 @@
             android:id="@+id/fab"
             style="@style/FabLightTextOnDarkBackground"
             android:layout_width="wrap_content"
-            android:layout_height="68dp"
+            android:layout_height="@dimen/fab_button_height"
             android:layout_gravity="bottom|center"
             android:layout_margin="16dp"
             android:layout_marginStart="8dp"
