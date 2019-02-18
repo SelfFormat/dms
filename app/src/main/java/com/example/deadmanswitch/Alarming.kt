@@ -1,7 +1,13 @@
 package com.example.deadmanswitch
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.graphics.Color
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -17,6 +23,7 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
 import kotlinx.android.synthetic.main.activity_alarming.*
 import java.util.Random
 
@@ -32,6 +39,7 @@ class Alarming : AppCompatActivity(), SensorEventListener {
     private lateinit var audioManager: AudioManager
     private val USER_AUDIO_VOLUME: Int = 5
     private val EMERGENCY_TIME = 300000
+    private var notificationManager: NotificationManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +59,9 @@ class Alarming : AppCompatActivity(), SensorEventListener {
 
         mSensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         mProximity = mSensorManager!!.getDefaultSensor(Sensor.TYPE_PROXIMITY)
+
+        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notification("Cancel Dead Man's Switch alarm")
 
         audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
         audioManager.setStreamVolume(AudioManager.STREAM_ALARM, USER_AUDIO_VOLUME, 0)
@@ -73,10 +84,9 @@ class Alarming : AppCompatActivity(), SensorEventListener {
 
         alarm.prepareForSms(this, time, Alarm.State.ON)
 
-
         val off = findViewById<View>(R.id.clickableLayOff)
         off.setOnClickListener {
-            textOff.text = "jakisstring"
+            textOff.text = getString(R.string.closing)
             releaseMediaPlayer()
             alarm.prepareForSms(this, null, Alarm.State.OFF)
             onBackPressed()
@@ -84,7 +94,7 @@ class Alarming : AppCompatActivity(), SensorEventListener {
 
         val mute = findViewById<View>(R.id.circle_repeat)
         mute.setOnClickListener {
-            textRepeat.text = "jakisstring"
+            textRepeat.text = getString(R.string.closing)
             releaseMediaPlayer()
             mp = MediaPlayer.create(this, R.raw.old)
             runAlarmAgain()
@@ -102,7 +112,7 @@ class Alarming : AppCompatActivity(), SensorEventListener {
     }
 
     override fun onSensorChanged(event: SensorEvent) {
-        val distance = event?.values?.get(0)?.toInt()
+        val distance = event.values?.get(0)?.toInt()
         if (distance == 0) {
             runAlarmAgain()
         }
@@ -133,7 +143,7 @@ class Alarming : AppCompatActivity(), SensorEventListener {
         releaseMediaPlayer()
         val time = System.currentTimeMillis() + randomTime()
         alarm.prepareForSms(this, null, Alarm.State.OFF)
-        alarm.startAlarm(this, time, Alarm.State.ON)
+        alarm.broadcast(this, time, Alarm.State.ON)
         onBackPressed()
     }
 
@@ -144,6 +154,14 @@ class Alarming : AppCompatActivity(), SensorEventListener {
         }
     }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        textOff.text = getString(R.string.closing)
+        releaseMediaPlayer()
+        alarm.prepareForSms(this, null, Alarm.State.OFF)
+        onBackPressed()
+    }
+
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
 
     private fun randomTime(): Int {
@@ -152,4 +170,64 @@ class Alarming : AppCompatActivity(), SensorEventListener {
         Log.i("init: $initialTime", ", gen: $generated")
         return generated + initialTime
     }
+
+    //region notification
+
+    private fun notification(title: String) {
+
+        val resultPendingIntent = PendingIntent.getActivity(
+            this,
+            0,
+            Intent(this, Alarming::class.java),
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        val mNotificationId = 1
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createNotificationChannel(
+                "com.example.deadmanswitch",
+                "Dead Man Switch",
+                "DMS Channel")
+            val mBuilder = NotificationCompat.Builder(this, "com.example.deadmanswitch")
+                .setContentTitle(title)
+                .setAutoCancel(true)
+                .setContentIntent(resultPendingIntent)
+                .setSmallIcon(R.drawable.ic_moon)
+            notificationManager?.notify(1, mBuilder.build())
+
+        } else {
+            val mBuilder = Notification.Builder(this).apply {
+                setContentTitle(title)
+                setAutoCancel(true)
+                setSmallIcon(R.drawable.ic_moon)
+                setContentIntent(resultPendingIntent)
+            }
+            notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?
+            notificationManager?.notify(mNotificationId, mBuilder.build())
+        }
+    }
+
+    private fun createNotificationChannel(id: String, name: String,
+                                          description: String) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            return
+        } else {
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                NotificationChannel(id, name, importance)
+            } else {
+                TODO("VERSION.SDK_INT < O")
+            }
+            channel.description = description
+            channel.enableLights(true)
+            channel.lightColor = Color.RED
+            channel.enableVibration(true)
+            channel.vibrationPattern =
+                longArrayOf(100, 200, 300, 400, 500, 400, 300, 200, 400)
+            notificationManager?.createNotificationChannel(channel)
+        }
+    }
+
+    //endregion
 }

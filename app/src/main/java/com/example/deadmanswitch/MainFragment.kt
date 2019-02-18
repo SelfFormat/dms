@@ -67,9 +67,8 @@ class MainFragment : Fragment() {
             val time = System.currentTimeMillis() + random
             val sum = "Alarm" + random / 1000 + " seconds"
             showSnackBar(sum)
-            alarm.startAlarm(activity!!.applicationContext, time, Alarm.State.ON)
+            alarm.broadcast(activity!!.applicationContext, time, Alarm.State.ON)
             fab.setText(R.string.turn_off)
-            (activity as MainActivity).notification("Alarm is set", "no body")
         }
     }
 

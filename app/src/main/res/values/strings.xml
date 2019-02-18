@@ -45,4 +45,5 @@
     <string name="repeat">Repeat</string>
     <string name="contact_name">CONTACT NAME</string>
     <string name="sample_contact_name">John Smith</string>
+    <string name="closing">closing..</string>
 </resources>

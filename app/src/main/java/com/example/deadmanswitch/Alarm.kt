@@ -12,7 +12,7 @@ internal class Alarm {
         ON, OFF
     }
 
-    fun startAlarm(context: Context, time: Long?, state: Alarm.State) {
+    fun broadcast(context: Context, time: Long?, state: Alarm.State) {
         val alarmIntent = Intent(context, AlarmReceiver::class.java)
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT)
