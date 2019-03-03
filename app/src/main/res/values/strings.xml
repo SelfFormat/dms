@@ -48,4 +48,6 @@
     <string name="closing">closing..</string>
     <string name="seek_bar_color">#555555</string>
     <string name="custom_ringtone">Custom ringtone</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 </resources>
