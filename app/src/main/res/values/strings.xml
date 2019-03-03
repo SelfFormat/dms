@@ -46,4 +46,6 @@
     <string name="contact_name">CONTACT NAME</string>
     <string name="sample_contact_name">John Smith</string>
     <string name="closing">closing..</string>
+    <string name="seek_bar_color">#555555</string>
+    <string name="custom_ringtone">Custom ringtone</string>
 </resources>

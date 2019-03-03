@@ -27,19 +27,16 @@
             android:id="@+id/textRepeat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="21.2sp"
-            android:textColor="#1a237e"
+            android:textSize="22dp"
+            android:textColor="@color/midnightBlue"
             android:letterSpacing="0.03"
-            android:lineSpacingExtra="6.8sp"
             android:text="@string/repeat"
             android:textAllCaps="true"
             android:fontFamily="@font/raleway_bold"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="@+id/circle_repeat"
-            app:layout_constraintTop_toTopOf="@+id/circle_repeat"
             app:layout_constraintEnd_toEndOf="@+id/circle_repeat"
-            app:layout_constraintBottom_toTopOf="@+id/clickableLayOff"/>
+            app:layout_constraintStart_toStartOf="@+id/circle_repeat"
+            app:layout_constraintBottom_toBottomOf="@+id/circle_repeat"
+            app:layout_constraintTop_toTopOf="@+id/circle_repeat"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/clickableLayOff"

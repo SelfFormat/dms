@@ -2,6 +2,8 @@ package com.example.deadmanswitch
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.media.RingtoneManager
+import android.net.Uri
 import android.os.Bundle
 import android.telephony.SmsManager
 import android.util.Log
@@ -60,6 +62,15 @@ class MainActivity : CustomStatusBarActivity() {
             contact.number, serviceCenterAddress, contact.message,
             null, null
         )
+    }
+
+    fun getRingtoneName() : String? {
+        return sharedPref.getString("ringtoneName",  RingtoneManager.getRingtone(this, RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_RINGTONE)).getTitle(this))
+    }
+
+    fun getRingtoneUri() : Uri? {
+        val uri = sharedPref.getString("ringtone", null) ?: return RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_RINGTONE)
+        return Uri.parse(uri)
     }
 
     //endregion

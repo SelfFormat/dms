@@ -19,11 +19,15 @@
     <TextView
         android:id="@+id/currentAlarmName"
         style="@style/widgetTitle"
-        android:layout_width="wrap_content"
+        android:fontFamily="@font/raleway_medium"
+        android:layout_width="0dp"
+        android:textAlignment="viewEnd"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:text="@string/current_alarm"
-        android:textColor="@color/lightGray"
+        android:textColor="@color/grayButton"
+        android:ellipsize="end"
+        android:maxLines="1"
         app:layout_constraintBottom_toBottomOf="@+id/emergencyCardLabel"
         app:layout_constraintEnd_toStartOf="@+id/chooseToneButton"
         app:layout_constraintHorizontal_bias="1.0"
@@ -40,25 +44,12 @@
         app:layout_constraintTop_toTopOf="@+id/currentAlarmName"
         app:srcCompat="@drawable/ic_keyboard_arrow_right_black_24dp" />
 
-    <CheckBox
-        android:id="@+id/checkBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
-        android:text="@string/random_ringtone"
-        android:textColor="@color/grayButton"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <SeekBar
         android:id="@+id/alarmVolumeSeekBar"
         style="@style/Widget.AppCompat.SeekBar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/grayButton"
         app:layout_constraintBottom_toBottomOf="@+id/volumeIcon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -71,8 +62,20 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/checkBox"
+        app:layout_constraintBottom_toTopOf="@+id/customRingtone"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/ic_volume_up_black_24dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/customRingtone"
+        style="@style/grayButton"
+        android:layout_width="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/custom_ringtone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

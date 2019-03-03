@@ -79,7 +79,7 @@ class EmergencySmsFragment : Fragment() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             MY_PERMISSIONS_REQUEST_SEND_SMS -> {
-                if (permissions[0] == Manifest.permission.SEND_SMS && grantResults[0] === PackageManager.PERMISSION_GRANTED) {
+                if (permissions[0] == Manifest.permission.SEND_SMS && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // Permission was granted. Enable sms button.
 
                     (activity as MainActivity).smsSendMessage()

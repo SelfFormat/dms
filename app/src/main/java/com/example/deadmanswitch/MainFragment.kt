@@ -1,33 +1,45 @@
 package com.example.deadmanswitch
 
-import android.os.Build
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
+import android.graphics.Color
+import android.graphics.PorterDuff
+import android.media.AudioManager
+import android.media.RingtoneManager
+import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.provider.OpenableColumns
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
-import androidx.core.widget.NestedScrollView
+import android.widget.ArrayAdapter
+import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.transaction
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.card_emergency.*
 import kotlinx.android.synthetic.main.card_tone_picker.*
 import kotlinx.android.synthetic.main.fragment_main.*
 import org.jetbrains.anko.startActivity
-import android.animation.ObjectAnimator
-import android.content.Context
-import android.media.AudioManager
-import kotlinx.android.synthetic.main.card_emergency.*
-import android.util.Log
-import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
 class MainFragment : Fragment() {
 
+    private var sharedPref: SharedPreferences? = null
     private val valueMin = 5
     private val valueMax = 10
     private var alarm = Alarm()
     private val randomTime = Random()
     private lateinit var audioManager: AudioManager
+    private lateinit var ringTonePairs: MutableList<Pair<String, String>>
+    private lateinit var tonesAdapter: ArrayAdapter<String>
+    private var defaultRingtoneUri: Uri? = null
+    private val CUSTOM_RINGOTONE_PICKER_REQUEST_CODE = 2
+    private val SYSTEM_RINGTONE_PICKER_REQUEST_CODE = 5
 
     companion object {
         fun newInstance(): MainFragment {
@@ -45,22 +57,21 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         premiumBarMain.setOnClickListener { activity?.startActivity<BuyPremiumActivity>() }
         editEmergency.setOnClickListener { newFrag(EmergencySmsFragment.newInstance()) }
-        chooseToneButton.setOnClickListener { openSoundPicker(view) }
-        currentAlarmName.setOnClickListener { openSoundPicker(view) }
+        chooseToneButton.setOnClickListener {
+            openSystemRingtonePicker()
+        }
+        currentAlarmName.setOnClickListener {
+            openSystemRingtonePicker()
+        }
+        customRingtone.run {
+            visibility = View.VISIBLE
+            setOnClickListener {
+                openCustomSoundPicker()
+            }
+        }
+
         alarmVolumeSeekBar.max = getAlarmMaxVolume()
         alarmVolumeSeekBar.progress = getCurrentAlarmVolume()
-
-        scrollableMainLayout.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
-            if (scrollY > oldScrollY) {
-                val animation = ObjectAnimator.ofFloat(fab, "translationY", 400f)
-                animation.duration = 100
-                animation.start()
-            } else {
-                val animation = ObjectAnimator.ofFloat(fab, "translationY", 0f)
-                animation.duration = 100
-                animation.start()
-            }
-        })
 
         fab.setOnClickListener {
             val random = randomTime()
@@ -70,27 +81,40 @@ class MainFragment : Fragment() {
             alarm.broadcast(activity!!.applicationContext, time, Alarm.State.ON)
             fab.setText(R.string.turn_off)
         }
+        changeSeekBarColor(getString(R.string.seek_bar_color))
+        currentAlarmName.text = (activity as MainActivity).getRingtoneName()
+
+
+        // this makes list of pairs that is:
+        // - sorted alphabetically by String names
+        // - destructed into two separate list by running .unzip
+        ringTonePairs = mutableListOf(
+            "Bndroid" to ("android.resource://" + context!!.packageName + "/" + R.raw.old),
+            "Rndroid" to ("android.resource://" + context!!.packageName + "/" + R.raw.old),
+            "Android" to ("android.resource://" + context!!.packageName + "/" + R.raw.old)
+        )
     }
 
-    private fun openSoundPicker(view: View) {
-        val builder: AlertDialog.Builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        AlertDialog.Builder(view.context)
-        } else {
-            AlertDialog.Builder(view.context)
-        }
+    private fun openSystemRingtonePicker() {
+        val intentUpload = Intent(RingtoneManager.ACTION_RINGTONE_PICKER)
+        intentUpload.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "SYSTEM SOUNDS LIST")
+        intentUpload.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true)
+        intentUpload.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false)
+        intentUpload.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, defaultRingtoneUri)
+        intentUpload.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALL)
+        startActivityForResult(intentUpload, SYSTEM_RINGTONE_PICKER_REQUEST_CODE)
+    }
 
-        builder.setTitle("Credits")
-            .setMessage("Pick favorite")
-            .setPositiveButton(android.R.string.yes) { _, _ -> (activity as MainActivity).smsSendMessage() }
-            .setNegativeButton(android.R.string.no) { _, _ -> }
-            .setIcon(R.drawable.ic_check_green_24dp)
-            .setView(R.layout.single_row_feature) // you could specify your inner layout
-            .show()
+    private fun changeSeekBarColor(hexColor: String) {
+        alarmVolumeSeekBar.progressDrawable.setColorFilter(Color.parseColor(hexColor), PorterDuff.Mode.SRC_IN)
+        alarmVolumeSeekBar.thumb.setColorFilter(Color.parseColor(hexColor), PorterDuff.Mode.SRC_IN)
     }
 
     fun newFrag(fragment: Fragment) {
         activity!!.supportFragmentManager.transaction(allowStateLoss = true) {
-            replace(R.id.mainFrame, fragment).addToBackStack("BUY_PREMIUM")
+            setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+            replace(R.id.mainFrame, fragment)
+            addToBackStack(fragment.toString())
         }
     }
 
@@ -123,6 +147,65 @@ class MainFragment : Fragment() {
         val textSummary = (activity as MainActivity).getEmergencyContact().message ?: getString(R.string.message)
         contactSummary.text = summary
         messageSummary.text = textSummary
+        defaultRingtoneUri = (activity as MainActivity).getRingtoneUri()
         activity?.toolbarTitle?.text = resources.getString(R.string.app_name)
+
+    }
+
+    private fun openCustomSoundPicker() {
+        val soundPickerIntent = Intent()
+        soundPickerIntent.action = Intent.ACTION_GET_CONTENT
+        soundPickerIntent.type = "audio/*"
+        startActivityForResult(
+            Intent.createChooser(soundPickerIntent, "Choose Sound File"), CUSTOM_RINGOTONE_PICKER_REQUEST_CODE
+        )
+    }
+
+
+    private fun saveRingtone(ringtoneResourceID: String, name: String) {
+        sharedPref = context?.getSharedPreferences(
+            "myPrefs",
+            Context.MODE_PRIVATE
+        )
+        val editor= sharedPref!!.edit()
+        editor.putString("ringtoneName", name)
+        editor.putString("ringtone", ringtoneResourceID)
+        editor.commit()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode != Activity.RESULT_OK) return
+        var uri: Uri? = null
+        when (requestCode) {
+            SYSTEM_RINGTONE_PICKER_REQUEST_CODE -> {
+                uri = data?.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI)
+                if (uri != null) {
+                    saveRingtone(uri.toString(),  RingtoneManager.getRingtone(context, uri).getTitle(context))
+                    updateCurrentAlarmName((activity as MainActivity).getRingtoneName()!!)
+                }
+            }
+            CUSTOM_RINGOTONE_PICKER_REQUEST_CODE -> {
+                uri = data?.data
+                if (uri != null) {
+                    val fileName = getFileNameFromIntent(uri)
+                    saveRingtone(uri.toString(), fileName)
+                    updateCurrentAlarmName(fileName)
+                }
+            }
+        }
+        Toast.makeText(context, "$uri ${(activity as MainActivity).getRingtoneName()}", Toast.LENGTH_SHORT).show()
+
+    }
+    private fun getFileNameFromIntent(uri:Uri):String {
+        val returnCursor = context?.contentResolver?.query(uri, null, null, null, null)!!
+        val nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+        returnCursor.moveToFirst()
+        val name = returnCursor.getString(nameIndex)
+        returnCursor.close()
+        return name
+    }
+    private fun updateCurrentAlarmName(name: String) {
+        currentAlarmName.text = name
     }
 }

@@ -77,7 +77,7 @@
                     <include layout="@layout/card_emergency" />
                 </com.google.android.material.card.MaterialCardView>
                 
-                <View android:layout_width="match_parent" android:layout_height="@dimen/fab_button_height"/>
+                <View android:layout_width="match_parent" android:layout_height="86dp"/>
 
             </LinearLayout>
 

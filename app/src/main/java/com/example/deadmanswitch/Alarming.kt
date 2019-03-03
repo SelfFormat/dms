@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.hardware.Sensor
@@ -15,6 +16,7 @@ import android.hardware.SensorManager
 import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
+import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -40,12 +42,22 @@ class Alarming : AppCompatActivity(), SensorEventListener {
     private val USER_AUDIO_VOLUME: Int = 5
     private val EMERGENCY_TIME = 300000
     private var notificationManager: NotificationManager? = null
+    private lateinit var sharedPref: SharedPreferences
+    private var urik: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_alarming)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         Log.i("Alarming activity", " here")
+        sharedPref = getSharedPreferences(
+            "myPrefs",
+            Context.MODE_PRIVATE
+        )
+
+        urik = sharedPref.getString("ringtone", null)
+
+        val uri: Uri = getRingtoneUri()
 
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -73,8 +85,7 @@ class Alarming : AppCompatActivity(), SensorEventListener {
                 .setUsage(AudioAttributes.USAGE_ALARM)
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build())
             setDataSource(
-                applicationContext,
-                Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.old)
+                applicationContext, uri
             )
             prepare()
             start()
@@ -96,9 +107,14 @@ class Alarming : AppCompatActivity(), SensorEventListener {
         mute.setOnClickListener {
             textRepeat.text = getString(R.string.closing)
             releaseMediaPlayer()
-            mp = MediaPlayer.create(this, R.raw.old)
+            mp = MediaPlayer.create(this, uri)
             runAlarmAgain()
         }
+    }
+
+    private fun getRingtoneUri() : Uri {
+        val uri = sharedPref.getString("ringtone", null) ?: return RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_RINGTONE)
+        return Uri.parse(uri)
     }
 
      override fun onResume() {
