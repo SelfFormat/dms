@@ -51,4 +51,7 @@
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
     <string name="run_switch">Run Switch</string>
+    <string name="add_widget_description">You could speed up running alarm by placing widget on your home screen</string>
+    <string name="add_widget_label">Add widget to homescreen</string>
+    <string name="hide_this_hint">Dismiss this hint</string>
 </resources>

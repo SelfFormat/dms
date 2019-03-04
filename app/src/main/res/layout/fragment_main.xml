@@ -76,6 +76,20 @@
                     app:cardElevation="3dp">
                     <include layout="@layout/card_emergency" />
                 </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardWidget"
+                    style="@style/Widget.MaterialComponents.CardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="3dp">
+                    <include layout="@layout/card_addwidget" />
+
+                </com.google.android.material.card.MaterialCardView>
                 
                 <View android:layout_width="match_parent" android:layout_height="86dp"/>
 

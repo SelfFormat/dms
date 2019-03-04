@@ -21,11 +21,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.transaction
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.card_addwidget.*
 import kotlinx.android.synthetic.main.card_emergency.*
 import kotlinx.android.synthetic.main.card_tone_picker.*
 import kotlinx.android.synthetic.main.fragment_main.*
 import org.jetbrains.anko.startActivity
 import java.util.*
+
 
 class MainFragment : Fragment() {
 
@@ -40,6 +42,7 @@ class MainFragment : Fragment() {
     private var defaultRingtoneUri: Uri? = null
     private val CUSTOM_RINGOTONE_PICKER_REQUEST_CODE = 2
     private val SYSTEM_RINGTONE_PICKER_REQUEST_CODE = 5
+    private var widgetCardVisibility = View.VISIBLE
 
     companion object {
         fun newInstance(): MainFragment {
@@ -93,6 +96,14 @@ class MainFragment : Fragment() {
             "Rndroid" to ("android.resource://" + context!!.packageName + "/" + R.raw.old),
             "Android" to ("android.resource://" + context!!.packageName + "/" + R.raw.old)
         )
+
+
+        cardWidget.visibility = widgetCardVisibility
+
+        dismissWidgetHintButton.setOnClickListener {
+            widgetCardVisibility = View.GONE
+            cardWidget.visibility = widgetCardVisibility
+        }
     }
 
     private fun openSystemRingtonePicker() {
@@ -172,6 +183,8 @@ class MainFragment : Fragment() {
         editor.putString("ringtone", ringtoneResourceID)
         editor.commit()
     }
+
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
