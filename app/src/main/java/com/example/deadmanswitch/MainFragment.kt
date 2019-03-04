@@ -28,7 +28,6 @@ import kotlinx.android.synthetic.main.fragment_main.*
 import org.jetbrains.anko.startActivity
 import java.util.*
 
-
 class MainFragment : Fragment() {
 
     private var sharedPref: SharedPreferences? = null
@@ -60,12 +59,8 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         premiumBarMain.setOnClickListener { activity?.startActivity<BuyPremiumActivity>() }
         editEmergency.setOnClickListener { newFrag(EmergencySmsFragment.newInstance()) }
-        chooseToneButton.setOnClickListener {
-            openSystemRingtonePicker()
-        }
-        currentAlarmName.setOnClickListener {
-            openSystemRingtonePicker()
-        }
+        chooseToneButton.setOnClickListener { openSystemRingtonePicker() }
+        currentAlarmName.setOnClickListener { openSystemRingtonePicker() }
         customRingtone.run {
             visibility = View.VISIBLE
             setOnClickListener {
@@ -87,19 +82,7 @@ class MainFragment : Fragment() {
         changeSeekBarColor(getString(R.string.seek_bar_color))
         currentAlarmName.text = (activity as MainActivity).getRingtoneName()
 
-
-        // this makes list of pairs that is:
-        // - sorted alphabetically by String names
-        // - destructed into two separate list by running .unzip
-        ringTonePairs = mutableListOf(
-            "Bndroid" to ("android.resource://" + context!!.packageName + "/" + R.raw.old),
-            "Rndroid" to ("android.resource://" + context!!.packageName + "/" + R.raw.old),
-            "Android" to ("android.resource://" + context!!.packageName + "/" + R.raw.old)
-        )
-
-
         cardWidget.visibility = widgetCardVisibility
-
         dismissWidgetHintButton.setOnClickListener {
             widgetCardVisibility = View.GONE
             cardWidget.visibility = widgetCardVisibility
@@ -172,7 +155,6 @@ class MainFragment : Fragment() {
         )
     }
 
-
     private fun saveRingtone(ringtoneResourceID: String, name: String) {
         sharedPref = context?.getSharedPreferences(
             "myPrefs",
@@ -183,8 +165,6 @@ class MainFragment : Fragment() {
         editor.putString("ringtone", ringtoneResourceID)
         editor.commit()
     }
-
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -208,8 +188,8 @@ class MainFragment : Fragment() {
             }
         }
         Toast.makeText(context, "$uri ${(activity as MainActivity).getRingtoneName()}", Toast.LENGTH_SHORT).show()
-
     }
+
     private fun getFileNameFromIntent(uri:Uri):String {
         val returnCursor = context?.contentResolver?.query(uri, null, null, null, null)!!
         val nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
@@ -218,6 +198,7 @@ class MainFragment : Fragment() {
         returnCursor.close()
         return name
     }
+
     private fun updateCurrentAlarmName(name: String) {
         currentAlarmName.text = name
     }
