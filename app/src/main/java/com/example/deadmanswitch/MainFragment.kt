@@ -15,7 +15,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.transaction
@@ -36,8 +35,6 @@ class MainFragment : Fragment() {
     private var alarm = Alarm()
     private val randomTime = Random()
     private lateinit var audioManager: AudioManager
-    private lateinit var ringTonePairs: MutableList<Pair<String, String>>
-    private lateinit var tonesAdapter: ArrayAdapter<String>
     private var defaultRingtoneUri: Uri? = null
     private val CUSTOM_RINGOTONE_PICKER_REQUEST_CODE = 2
     private val SYSTEM_RINGTONE_PICKER_REQUEST_CODE = 5
@@ -82,10 +79,16 @@ class MainFragment : Fragment() {
         changeSeekBarColor(getString(R.string.seek_bar_color))
         currentAlarmName.text = (activity as MainActivity).getRingtoneName()
 
+        widgetCardVisibility = when {
+            (activity as MainActivity).isWidgetCardVisible() -> View.VISIBLE
+            else -> View.GONE
+        }
         cardWidget.visibility = widgetCardVisibility
+
         dismissWidgetHintButton.setOnClickListener {
             widgetCardVisibility = View.GONE
             cardWidget.visibility = widgetCardVisibility
+            hideWidgetCardForever()
         }
     }
 
@@ -164,6 +167,16 @@ class MainFragment : Fragment() {
         editor.putString("ringtoneName", name)
         editor.putString("ringtone", ringtoneResourceID)
         editor.commit()
+    }
+
+    private fun hideWidgetCardForever() {
+        sharedPref = context?.getSharedPreferences(
+            "myPrefs",
+            Context.MODE_PRIVATE
+        )
+        val editor= sharedPref!!.edit()
+        editor.putBoolean("isWidgetCardVisible", false)
+        editor.apply()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -65,7 +65,11 @@ class MainActivity : CustomStatusBarActivity() {
     }
 
     fun getRingtoneName() : String? {
-        return sharedPref.getString("ringtoneName",  RingtoneManager.getRingtone(this, RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_RINGTONE)).getTitle(this))
+        return sharedPref.getString("ringtoneName", RingtoneManager.getRingtone(this, RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_RINGTONE)).getTitle(this))
+    }
+
+    fun isWidgetCardVisible() : Boolean {
+        return sharedPref.getBoolean("isWidgetCardVisible", true)
     }
 
     fun getRingtoneUri() : Uri? {
