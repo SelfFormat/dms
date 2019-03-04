@@ -24,10 +24,11 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
+import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import kotlinx.android.synthetic.main.activity_alarming.*
-import java.util.Random
+import java.util.*
 
 class Alarming : AppCompatActivity(), SensorEventListener {
 
@@ -104,12 +105,17 @@ class Alarming : AppCompatActivity(), SensorEventListener {
         }
 
         val mute = findViewById<View>(R.id.circle_repeat)
+        animateMuteCircleButton(this)
         mute.setOnClickListener {
             textRepeat.text = getString(R.string.closing)
             releaseMediaPlayer()
             mp = MediaPlayer.create(this, uri)
             runAlarmAgain()
         }
+    }
+
+    private fun animateMuteCircleButton(context: Context) {
+        circle_repeat.startAnimation(AnimationUtils.loadAnimation(context, R.anim.large_circle_anim))
     }
 
     private fun getRingtoneUri() : Uri {
