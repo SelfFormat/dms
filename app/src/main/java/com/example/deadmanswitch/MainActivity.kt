@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : CustomStatusBarActivity() {
     private lateinit var sharedPref: SharedPreferences
+    private var lightTheme = true
 
     override fun onResume() {
         super.onResume()
@@ -28,15 +29,28 @@ class MainActivity : CustomStatusBarActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        sharedPref = getSharedPreferences(
+            "myPrefs",
+            Context.MODE_PRIVATE
+        )
+
+        lightTheme = sharedPref.getBoolean("lightTheme", true)
+
+        setTheme(if (lightTheme) R.style.AppThemeLight else R.style.AppThemeDark)
+
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
         setUpStatusBarAppearance()
         toolbarTitle.text = resources.getString(R.string.app_name)
-        sharedPref = getSharedPreferences(
-            "myPrefs",
-            Context.MODE_PRIVATE
-        )
+
+
+        toolbarTitle.setOnClickListener {
+            sharedPref.edit {
+                putBoolean("lightTheme", !lightTheme)
+            }
+            recreate()
+        }
 
         supportFragmentManager.transaction(allowStateLoss = true) {
             replace(R.id.mainFrame, MainFragment.newInstance(), "MAIN")
