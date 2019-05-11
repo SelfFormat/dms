@@ -5,8 +5,8 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/emergencyCardLabel"
-        style="@style/widgetTitle"
+        android:id="@+id/visibilityModeLabel"
+        style="@style/widgetTitleLightMode"
         android:text="@string/emergency_sms_message"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -23,7 +23,7 @@
         android:layout_marginTop="16dp"
         android:text="@string/contact"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emergencyCardLabel" />
+        app:layout_constraintTop_toBottomOf="@+id/visibilityModeLabel" />
 
     <TextView
         android:id="@+id/contactSummary"
@@ -33,8 +33,6 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="16dp"
         android:textColor="@color/grayButton"
-
-        android:text="@string/example_full_contact"
         app:layout_constraintBaseline_toBaselineOf="@+id/contactLabel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -62,7 +60,6 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:textColor="@color/grayButton"
-        android:text="@string/default_emergency_message"
         app:layout_constraintBottom_toTopOf="@+id/editEmergency"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -71,7 +68,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/editEmergency"
-        style="@style/grayButton"
+        style="@style/grayButtonLightMode"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"

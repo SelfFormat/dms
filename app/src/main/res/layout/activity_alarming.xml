@@ -9,10 +9,10 @@
     android:orientation="vertical"
     android:background="@drawable/gradient_alarming_backgroud"
     android:screenOrientation="portrait"
-    tools:context=".Alarming">
+    tools:context=".AlarmingActivity">
 
     <ImageView
-            android:id="@+id/circle_repeat"
+            android:id="@+id/repeatAlarmButton"
             android:layout_width="230dp"
             android:layout_height="230dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -33,13 +33,13 @@
             android:text="@string/repeat"
             android:textAllCaps="true"
             android:fontFamily="@font/raleway_bold"
-            app:layout_constraintEnd_toEndOf="@+id/circle_repeat"
-            app:layout_constraintStart_toStartOf="@+id/circle_repeat"
-            app:layout_constraintBottom_toBottomOf="@+id/circle_repeat"
-            app:layout_constraintTop_toTopOf="@+id/circle_repeat"/>
+            app:layout_constraintEnd_toEndOf="@+id/repeatAlarmButton"
+            app:layout_constraintStart_toStartOf="@+id/repeatAlarmButton"
+            app:layout_constraintBottom_toBottomOf="@+id/repeatAlarmButton"
+            app:layout_constraintTop_toTopOf="@+id/repeatAlarmButton"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/clickableLayOff"
+            android:id="@+id/turnAlarmOffButton"
             android:layout_width="0dp"
             android:layout_height="369dp"
             android:clickable="true"
@@ -48,7 +48,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/circle_repeat">
+            app:layout_constraintTop_toBottomOf="@id/repeatAlarmButton">
 
         <TextView
                 android:id="@+id/textOff"

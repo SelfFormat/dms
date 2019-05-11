@@ -99,7 +99,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/fab"
-            style="@style/FabLightTextOnDarkBackground"
+            style="@style/FabLightTextOnDarkBackgroundLightMode"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/fab_button_height"
             android:layout_gravity="bottom|center"

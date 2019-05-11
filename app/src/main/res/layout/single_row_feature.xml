@@ -15,7 +15,7 @@
         android:layout_marginEnd="8dp"
         android:textSize="16sp"
         android:fontFamily="@font/raleway_medium"
-        android:textAppearance="@style/Toolbar.Title"
+        android:textAppearance="@style/Toolbar.Title.LightMode"
         app:layout_constraintBottom_toBottomOf="@+id/tickImage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

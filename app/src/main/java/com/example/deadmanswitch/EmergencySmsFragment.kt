@@ -1,26 +1,22 @@
 package com.example.deadmanswitch
 
 import android.Manifest
-import android.content.Context
-import android.content.SharedPreferences
+import android.app.Activity
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.core.content.edit
-import androidx.fragment.app.Fragment
+import com.example.deadmanswitch.base.CustomFragment
+import com.example.deadmanswitch.data.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_emergency_sms.*
-import androidx.core.app.ActivityCompat
-import android.app.Activity
-import android.content.pm.PackageManager
 
-class EmergencySmsFragment : Fragment() {
-
-    private var sharedPref: SharedPreferences? = null
-    private val MY_PERMISSIONS_REQUEST_SEND_SMS = 1
+class EmergencySmsFragment : CustomFragment() {
 
     companion object {
         fun newInstance(): EmergencySmsFragment {
@@ -37,12 +33,8 @@ class EmergencySmsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sharedPref = view.context.getSharedPreferences(
-            "myPrefs",
-            Context.MODE_PRIVATE
-        )
         activity?.toolbarTitle?.text = resources.getString(R.string.set_emergency_contact)
-        setEmergencyContatct()
+        setEmergencyContact()
         saveContactButton.setOnClickListener {
             saveContact()
             checkForSmsPermission()
@@ -62,33 +54,34 @@ class EmergencySmsFragment : Fragment() {
             ActivityCompat.requestPermissions(
                 context as Activity,
                 arrayOf(Manifest.permission.SEND_SMS),
-                MY_PERMISSIONS_REQUEST_SEND_SMS
+                PERMISSIONS_REQUEST_SEND_SMS
             )
         } else {
 
         }
     }
 
-    fun setEmergencyContatct(){
-        contactName.setText(sharedPref?.getString("contactName", null))
-        contactNumber.setText(sharedPref?.getString("contactNumber", null))
-        emergencyMessage.setText(sharedPref?.getString("emergencyMessage", null))
+    private fun setEmergencyContact(){
+        timeout.setText(sharedPref!!.getString(TIMEOUT_UNTIL_EMERGENCY_MESSAGE_KEY, DEFAULT_EMERGENCY_TIME.toString()))
+        contactName.setText(sharedPref!!.getString(CONTACT_NAME_KEY, getString(R.string.sample_contact_name)))
+        contactNumber.setText(sharedPref!!.getString(CONTACT_NUMBER_KEY, getString(R.string.example_phone_number)))
+        emergencyMessage.setText(sharedPref!!.getString(EMERGENCY_MESSAGE_KEY, getString(R.string.default_emergency_message)))
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
-            MY_PERMISSIONS_REQUEST_SEND_SMS -> {
+            PERMISSIONS_REQUEST_SEND_SMS -> {
                 if (permissions[0] == Manifest.permission.SEND_SMS && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // Permission was granted. Enable sms button.
 
-                    (activity as MainActivity).smsSendMessage()
+                    (activity as MainActivity).sendSmsMessage()
 
                 } else {
                     // Permission denied.
                     Log.d("TAG", "No permission")
                     Toast.makeText(
-                        context, "No perission",
+                        context, "No permission",
                         Toast.LENGTH_LONG
                     ).show()
                     // Disable the sms button.
@@ -102,9 +95,10 @@ class EmergencySmsFragment : Fragment() {
     private fun saveContact() {
         Toast.makeText(context, contactName.text.toString(), Toast.LENGTH_SHORT).show()
         sharedPref?.edit {
-            putString("contactName", contactName.text.toString())
-            putString("contactNumber", contactNumber.text.toString())
-            putString("emergencyMessage", emergencyMessage.text.toString())
+            putString(TIMEOUT_UNTIL_EMERGENCY_MESSAGE_KEY, timeout.text.toString())
+            putString(CONTACT_NAME_KEY, contactName.text.toString())
+            putString(CONTACT_NUMBER_KEY, contactNumber.text.toString())
+            putString(EMERGENCY_MESSAGE_KEY, emergencyMessage.text.toString())
         }
     }
 }

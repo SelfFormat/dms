@@ -6,8 +6,8 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/emergencyCardLabel"
-        style="@style/widgetTitle"
+        android:id="@+id/visibilityModeLabel"
+        style="@style/widgetTitleLightMode"
         android:layout_marginBottom="8dp"
         android:text="@string/alarm_sounds"
         app:layout_constraintBottom_toTopOf="@+id/volumeIcon"
@@ -18,7 +18,7 @@
 
     <TextView
         android:id="@+id/currentAlarmName"
-        style="@style/widgetTitle"
+        style="@style/widgetTitleLightMode"
         android:fontFamily="@font/raleway_medium"
         android:layout_width="0dp"
         android:textAlignment="viewEnd"
@@ -28,11 +28,11 @@
         android:textColor="@color/grayButton"
         android:ellipsize="end"
         android:maxLines="1"
-        app:layout_constraintBottom_toBottomOf="@+id/emergencyCardLabel"
+        app:layout_constraintBottom_toBottomOf="@+id/visibilityModeLabel"
         app:layout_constraintEnd_toStartOf="@+id/chooseToneButton"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/emergencyCardLabel"
-        app:layout_constraintTop_toTopOf="@+id/emergencyCardLabel" />
+        app:layout_constraintStart_toEndOf="@+id/visibilityModeLabel"
+        app:layout_constraintTop_toTopOf="@+id/visibilityModeLabel" />
 
     <ImageView
         android:id="@+id/chooseToneButton"
@@ -68,7 +68,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/customRingtone"
-        style="@style/grayButton"
+        style="@style/grayButtonLightMode"
         android:layout_width="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"

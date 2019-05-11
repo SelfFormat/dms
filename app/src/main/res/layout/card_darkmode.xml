@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient_dark">
+    android:background="@drawable/gradient_dark"
+    android:id="@+id/visibiltyModeLayout">
 
     <TextView
-        android:id="@+id/emergencyCardLabel"
-        style="@style/widgetTitle"
+        android:id="@+id/visibilityModeLabel"
+        style="@style/widgetTitleLightMode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/materialButton"
+        android:id="@+id/visibilityModeSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -29,14 +29,14 @@
         android:layout_marginEnd="16dp"
 
         android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/emergencyCardLabel"
+        app:layout_constraintBottom_toBottomOf="@+id/visibilityModeLabel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/emergencyCardLabel"
-        app:layout_constraintTop_toTopOf="@+id/emergencyCardLabel" />
+        app:layout_constraintStart_toEndOf="@+id/visibilityModeLabel"
+        app:layout_constraintTop_toTopOf="@+id/visibilityModeLabel" />
 
     <ImageView
-        android:id="@+id/imageView5"
+        android:id="@+id/visibilityModeImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -44,9 +44,9 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/materialButton"
+        app:layout_constraintEnd_toStartOf="@+id/visibilityModeSwitch"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/emergencyCardLabel"
+        app:layout_constraintStart_toEndOf="@+id/visibilityModeLabel"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/cloud" />
 

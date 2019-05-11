@@ -22,7 +22,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <receiver android:name=".RunAlarmWidget">
+        <receiver android:name=".components.RunAlarmWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -32,7 +32,7 @@
                 android:resource="@xml/run_alarm_widget_info" />
         </receiver>
 
-        <activity android:name=".CustomStatusBarActivity" />
+        <activity android:name=".base.CustomActivity" />
         <activity
             android:name=".BuyPremiumActivity"
             android:parentActivityName=".MainActivity"
@@ -52,7 +52,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Alarming"
+            android:name=".AlarmingActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:showWhenLocked="true"
@@ -63,8 +63,8 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <receiver android:name=".AlarmReceiver" />
-        <receiver android:name=".EmergencySmsReceiver" />
+        <receiver android:name=".components.AlarmReceiver" />
+        <receiver android:name=".components.EmergencySmsReceiver" />
     </application>
 
 </manifest>

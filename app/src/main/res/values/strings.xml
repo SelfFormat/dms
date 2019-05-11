@@ -7,8 +7,6 @@
     <string name="time_range">Time range (in seconds)</string>
     <string name="max">max</string>
     <string name="min">min</string>
-    <string name="min_default_time">15</string>
-    <string name="max_default_time">60</string>
     <string name="calibrate">calibrate</string>
     <string name="proximity_sensor">Proximity sensor</string>
     <string name="alarm_loudness">Volume</string>
@@ -29,7 +27,7 @@
     <string name="contact_number">CONTACT NUMBER</string>
     <string name="example_phone_number">+48 111 222 333</string>
     <string name="timeout">TIMEOUT IN SECONDS</string>
-    <string name="default_emergency_message_timeout">90</string>
+    <string name="default_emergency_timeout">90</string>
     <string name="tick_image">tick image</string>
     <string name="purchase_for_pln_13_39">Purchase for PLN 13.39</string>
     <string name="contact">Contact:</string>
@@ -52,6 +50,10 @@
     <string name="add_widget">Add widget</string>
     <string name="run_switch">Run Switch</string>
     <string name="add_widget_description">You could speed up running alarm by placing widget on your home screen</string>
-    <string name="add_widget_label">Add widget to homescreen</string>
+    <string name="add_widget_label">Add widget to home screen</string>
     <string name="hide_this_hint">Dismiss this hint</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="day_mode">Day mode</string>
+    <string name="channel_description">DMS Channel</string>
+    <string name="cancle_alarm_notification_title">Cancel Dead Man\'s Switch alarm</string>
 </resources>

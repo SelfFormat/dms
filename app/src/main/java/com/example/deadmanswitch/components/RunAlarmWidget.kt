@@ -1,9 +1,10 @@
-package com.example.deadmanswitch
+package com.example.deadmanswitch.components
 
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.widget.RemoteViews
+import com.example.deadmanswitch.R
 
 /**
  * Implementation of App Widget functionality.
