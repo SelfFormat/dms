@@ -7,7 +7,7 @@
 
     <TextView
         android:id="@+id/visibilityModeLabel"
-        style="@style/widgetTitleLightMode"
+        style="@style/widgetTitleDarkMode"
         android:layout_marginBottom="8dp"
         android:text="@string/alarm_sounds"
         app:layout_constraintBottom_toTopOf="@+id/volumeIcon"
@@ -18,7 +18,6 @@
 
     <TextView
         android:id="@+id/currentAlarmName"
-        style="@style/widgetTitleLightMode"
         android:fontFamily="@font/raleway_medium"
         android:layout_width="0dp"
         android:textAlignment="viewEnd"
@@ -31,7 +30,8 @@
         app:layout_constraintEnd_toStartOf="@+id/chooseToneButton"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/visibilityModeLabel"
-        app:layout_constraintTop_toTopOf="@+id/visibilityModeLabel" />
+        app:layout_constraintTop_toTopOf="@+id/visibilityModeLabel"
+        style="@style/dark_mode_text_color"/>
 
     <ImageView
         android:id="@+id/chooseToneButton"
@@ -48,7 +48,7 @@
         style="@style/Widget.AppCompat.SeekBar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/grayButton"
+        android:backgroundTint="@color/lightGray"
         app:layout_constraintBottom_toBottomOf="@+id/volumeIcon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -67,7 +67,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/customRingtone"
-        style="@style/outlineButtonLightMode"
+        style="@style/outlineButtonDarkMode"
         android:layout_width="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"

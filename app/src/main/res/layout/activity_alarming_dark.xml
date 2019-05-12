@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/alarming_lay"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/gradient_alarming_backgroud_dark"
+    android:screenOrientation="portrait"
+    tools:context=".AlarmingActivity">
+
+    <ImageView
+            android:id="@+id/repeatAlarmButton"
+            android:layout_width="230dp"
+            android:layout_height="230dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/repeat_circle_dark"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintVertical_bias="0.25"
+            tools:ignore="ContentDescription"/>
+
+    <TextView
+            android:id="@+id/textRepeat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="22dp"
+            android:textColor="@color/white"
+            android:letterSpacing="0.03"
+            android:text="@string/repeat"
+            android:textAllCaps="true"
+            android:fontFamily="@font/raleway_bold"
+            app:layout_constraintEnd_toEndOf="@+id/repeatAlarmButton"
+            app:layout_constraintStart_toStartOf="@+id/repeatAlarmButton"
+            app:layout_constraintBottom_toBottomOf="@+id/repeatAlarmButton"
+            app:layout_constraintTop_toTopOf="@+id/repeatAlarmButton"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/turnAlarmOffButton"
+            android:layout_width="0dp"
+            android:layout_height="369dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/repeatAlarmButton">
+
+        <TextView
+                android:id="@+id/textOff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="35sp"
+                android:textColor="#ffffff"
+                android:letterSpacing="0.03"
+                android:lineSpacingExtra="-7sp"
+                android:text="@string/turn_off"
+                android:textAllCaps="true"
+                android:fontFamily="@font/raleway_medium"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/turnOffIcon"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+        />
+
+        <ImageView
+                android:id="@+id/turnOffIcon"
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="16dp"
+                android:textAllCaps="true"
+                app:layout_constraintBottom_toBottomOf="@+id/textOff"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textOff"
+                app:layout_constraintTop_toTopOf="@+id/textOff"
+                app:srcCompat="@drawable/ic_cancel_white_46dp"
+                tools:ignore="ContentDescription"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

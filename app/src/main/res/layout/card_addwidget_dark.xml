@@ -6,7 +6,7 @@
 
     <TextView
         android:id="@+id/addWidgetCardLabel"
-        style="@style/widgetTitleLightMode"
+        style="@style/widgetTitleDarkMode"
         android:text="@string/add_widget_label"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -23,16 +23,16 @@
         android:layout_marginBottom="16dp"
         android:fontFamily="@font/raleway_medium"
         android:text="@string/add_widget_description"
-        android:textColor="@color/grayButton"
         app:layout_constraintBottom_toTopOf="@+id/dismissWidgetHintButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addWidgetCardLabel" />
+        app:layout_constraintTop_toBottomOf="@+id/addWidgetCardLabel"
+        style="@style/dark_mode_text_color"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/dismissWidgetHintButton"
-        style="@style/outlineButtonLightMode"
+        style="@style/outlineButtonDarkMode"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"

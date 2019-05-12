@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/black"
     tools:context=".MainActivity">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -29,18 +30,18 @@
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardDarkMode"
-                    style="@style/Widget.MaterialComponents.CardView"
+                    style="@style/Widget.MaterialComponents.CardView.Dark"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="3dp">
-                    <include layout="@layout/card_turn_on_dark_mode" />
+                    <include layout="@layout/card_turn_on_light_mode" />
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardTimeRange"
-                    style="@style/Widget.MaterialComponents.CardView"
+                    style="@style/Widget.MaterialComponents.CardView.Dark"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -48,13 +49,13 @@
                     android:layout_marginBottom="16dp"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="3dp">
-                    <include layout="@layout/card_time_picker" />
+                    <include layout="@layout/card_time_picker_dark" />
                 </com.google.android.material.card.MaterialCardView>
 
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardAlarmSound"
-                    style="@style/Widget.MaterialComponents.CardView"
+                    style="@style/Widget.MaterialComponents.CardView.Dark"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -62,12 +63,12 @@
                     android:layout_marginBottom="16dp"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="3dp">
-                    <include layout="@layout/card_tone_picker" />
+                    <include layout="@layout/card_tone_picker_dark" />
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardEmergency"
-                    style="@style/Widget.MaterialComponents.CardView"
+                    style="@style/Widget.MaterialComponents.CardView.Dark"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -75,12 +76,12 @@
                     android:layout_marginBottom="16dp"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="3dp">
-                    <include layout="@layout/card_emergency" />
+                    <include layout="@layout/card_emergency_dark" />
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardWidget"
-                    style="@style/Widget.MaterialComponents.CardView"
+                    style="@style/Widget.MaterialComponents.CardView.Dark"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -88,7 +89,7 @@
                     android:layout_marginBottom="16dp"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="3dp">
-                    <include layout="@layout/card_addwidget" />
+                    <include layout="@layout/card_addwidget_dark" />
 
                 </com.google.android.material.card.MaterialCardView>
                 
@@ -100,7 +101,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/fab"
-            style="@style/FabLightTextOnDarkBackgroundLightMode"
+            style="@style/FabDarkTextOnLightBackgroundDarkMode"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/fab_button_height"
             android:layout_gravity="bottom|center"
@@ -115,16 +116,12 @@
             app:cornerRadius="56dp"
             app:icon="@drawable/ic_alarm_on_white_28dp"
             app:iconTint="@color/white"
-            app:rippleColor="@color/blueButton"
+            app:rippleColor="@color/grayButton"
             app:layout_constraintBottom_toTopOf="@+id/premiumBarMain"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_behavior="com.example.deadmanswitch.components.MoveButtonUpBehavior"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-    <include
-        android:id="@+id/premiumBarMain"
-        layout="@layout/premium_bar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

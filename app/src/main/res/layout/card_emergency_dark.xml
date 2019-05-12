@@ -6,7 +6,7 @@
 
     <TextView
         android:id="@+id/visibilityModeLabel"
-        style="@style/widgetTitleLightMode"
+        style="@style/widgetTitleDarkMode"
         android:text="@string/emergency_sms_message"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -16,14 +16,14 @@
     <TextView
         android:id="@+id/contactLabel"
         android:fontFamily="@font/raleway_bold"
-        android:textColor="@color/grayButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="@string/contact"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/visibilityModeLabel" />
+        app:layout_constraintTop_toBottomOf="@+id/visibilityModeLabel"
+        style="@style/dark_mode_text_color" />
 
     <TextView
         android:id="@+id/contactSummary"
@@ -32,11 +32,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="16dp"
-        android:textColor="@color/grayButton"
         app:layout_constraintBaseline_toBaselineOf="@+id/contactLabel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/contactLabel" />
+        app:layout_constraintStart_toEndOf="@+id/contactLabel"
+        style="@style/dark_mode_text_color" />
 
     <TextView
         android:id="@+id/messageLabel"
@@ -44,11 +44,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:textColor="@color/grayButton"
         android:text="@string/message_label"
         android:fontFamily="@font/raleway_bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/contactLabel" />
+        app:layout_constraintTop_toBottomOf="@+id/contactLabel"
+        style="@style/dark_mode_text_color" />
 
     <TextView
         android:id="@+id/messageSummary"
@@ -59,16 +59,16 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:textColor="@color/grayButton"
         app:layout_constraintBottom_toTopOf="@+id/editEmergency"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/messageLabel" />
+        app:layout_constraintTop_toBottomOf="@+id/messageLabel"
+        style="@style/dark_mode_text_color" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/editEmergency"
-        style="@style/outlineButtonLightMode"
+        style="@style/outlineButtonDarkMode"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"

@@ -21,6 +21,10 @@ internal class Alarm {
             broadcast(context, time, state, AlarmReceiver::class.java)
         }
 
+        fun cancelAlarm(context: Context) {
+            broadcast(context, null, State.OFF, AlarmReceiver::class.java)
+        }
+
         private fun broadcast(context: Context, time: Long?, state: State, className: Class<*>) {
             val alarmIntent = Intent(context, className)
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager

@@ -26,6 +26,7 @@ import kotlinx.android.synthetic.main.card_addwidget.*
 import kotlinx.android.synthetic.main.card_emergency.*
 import kotlinx.android.synthetic.main.card_time_picker.*
 import kotlinx.android.synthetic.main.card_tone_picker.*
+import kotlinx.android.synthetic.main.card_turn_on_dark_mode.*
 import kotlinx.android.synthetic.main.fragment_main.*
 import org.jetbrains.anko.startActivity
 
@@ -46,12 +47,25 @@ class MainFragment : CustomFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_main, container, false)
+        return if (lightTheme) {
+            inflater.inflate(R.layout.fragment_main, container, false)
+        } else {
+            inflater.inflate(R.layout.fragment_main_dark, container, false)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        premiumBarMain.setOnClickListener { activity?.startActivity<BuyPremiumActivity>() }
+        visibilityModeSwitch.isChecked = !lightTheme
+        visibilityModeSwitch.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                (activity as MainActivity).changeTheme()
+            } else {
+                (activity as MainActivity).changeTheme()
+            }
+        }
+
+        if (lightTheme) premiumBarMain.setOnClickListener { activity?.startActivity<BuyPremiumActivity>() }
         editEmergency.setOnClickListener { newFrag(EmergencySmsFragment.newInstance()) }
         chooseToneButton.setOnClickListener { openSystemRingtonePicker() }
         currentAlarmName.setOnClickListener { openSystemRingtonePicker() }
@@ -60,15 +74,6 @@ class MainFragment : CustomFragment() {
             setOnClickListener {
                 openCustomSoundPicker()
             }
-        }
-
-        fab.setOnClickListener {
-            val random = randomTime(minTime, maxTime)
-            val time = System.currentTimeMillis() + random
-            val sum = "Alarm" + random / 1000 + " seconds"
-            Snackbar.make(view!!.findViewById(R.id.scrollableMainLayout), sum, Snackbar.LENGTH_LONG).show()
-            Alarm.prepareForAlarm(activity!!.applicationContext, time, Alarm.State.ON)
-            fab.setText(R.string.turn_off)
         }
 
         val emergencyContact = (activity as MainActivity).getEmergencyContact()
@@ -83,6 +88,26 @@ class MainFragment : CustomFragment() {
 
         changeSeekBarColor(getString(R.string.seek_bar_color))
         currentAlarmName.text = (activity as MainActivity).getRingtoneName()
+
+
+        fab.run {
+            fab.text = if (alarmOn) getString(R.string.turn_off) else getString(R.string.run_switch)
+            setOnClickListener {
+                if (alarmOn) {
+                    Alarm.cancelAlarm(activity!!.applicationContext)
+                    saveAlarmState(false)
+                    fab.text = getString(R.string.run_switch)
+                    Snackbar.make(view!!.findViewById(R.id.coordinatorMainFragment), getString(R.string.alarm_canceled_snackbar_message), Snackbar.LENGTH_SHORT).show()
+                } else {
+                    saveAlarmState(true)
+                    val random = randomTime(minTime, maxTime)
+                    val time = System.currentTimeMillis() + random
+                    Snackbar.make(view!!.findViewById(R.id.coordinatorMainFragment), snackBarMessage(random), Snackbar.LENGTH_SHORT).show()
+                    Alarm.prepareForAlarm(activity!!.applicationContext, time, Alarm.State.ON)
+                    fab.text = getString(R.string.turn_off)
+                }
+            }
+        }
 
         widgetCardVisibility = when {
             (activity as MainActivity).isWidgetCardVisible() -> View.VISIBLE
@@ -105,6 +130,15 @@ class MainFragment : CustomFragment() {
 
     override fun onResume() {
         super.onResume()
+        sharedPref?.let {
+            if(it.getString(TIME_TO_NEXT_ALARM_KEY, EMPTY) != "empty") {
+                val timeToNextAlarm = it.getString(TIME_TO_NEXT_ALARM_KEY, "empty").toInt()
+                Snackbar.make(view!!.findViewById(R.id.coordinatorMainFragment), snackBarMessage(timeToNextAlarm), Snackbar.LENGTH_SHORT).show()
+                it.edit(true) {
+                    putString(TIME_TO_NEXT_ALARM_KEY, "empty")
+                }
+            }
+        }
         getCurrentAlarmVolume()
         alarmVolumeSeekBar.progress = getCurrentAlarmVolume()
         val summary = "${(activity as MainActivity).getEmergencyContact().name ?: getString(R.string.sample_contact_name)} (${(activity as MainActivity).getEmergencyContact().number ?: getString(R.string.sample_contact_name)})"
@@ -118,6 +152,8 @@ class MainFragment : CustomFragment() {
         activity?.toolbarTitle?.setTextColor(if (lightTheme) Color.BLACK else Color.WHITE)
         activity?.toolbarTitle?.text = resources.getString(R.string.app_name)
     }
+
+    private fun snackBarMessage(timeToNextAlarm: Int) = "New alarm in " + timeToNextAlarm / 1000 + " seconds"
 
     private fun hideWidgetCardForever() {
         //TODO: add popup "are you sure?"
@@ -146,6 +182,7 @@ class MainFragment : CustomFragment() {
             setText(maxTime.toString())
             setOnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) {
+                    //TODO: crashes if leaved empty
                     maxTime = maxTimeText.text.toString().toInt()
                     (activity as MainActivity).saveRingtoneTime("ringtoneMaxTime", maxTime)
                 }

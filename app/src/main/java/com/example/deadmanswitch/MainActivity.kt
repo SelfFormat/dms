@@ -1,6 +1,5 @@
 package com.example.deadmanswitch
 
-import android.graphics.Color
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Bundle
@@ -11,7 +10,6 @@ import androidx.core.content.edit
 import androidx.fragment.app.transaction
 import com.example.deadmanswitch.base.CustomActivity
 import com.example.deadmanswitch.data.*
-import kotlinx.android.synthetic.main.card_darkmode.*
 
 class MainActivity : CustomActivity() {
 
@@ -21,24 +19,18 @@ class MainActivity : CustomActivity() {
         if (shouldSendEmergencySMS) {
             Log.i("SENDING", "SMS")
             sendSmsMessage()
-            sharedPref.edit {
+            sharedPref.edit(true) {
                 putBoolean(EMERGENCY_SMS_KEY, false)
             }
         }
-
-        when {
-            lightTheme -> enableSwitchToDarkMode()
-            else -> enableSwitchToLightMode()
-        }
-
-        visibilityModeSwitch.isChecked = !lightTheme
-        visibilityModeSwitch.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                changeTheme()
-            } else {
-                changeTheme()
-            }
-        }
+//        visibilityModeSwitch.isChecked = !lightTheme
+//        visibilityModeSwitch.setOnCheckedChangeListener { _, isChecked ->
+//            if (isChecked) {
+//                changeTheme()
+//            } else {
+//                changeTheme()
+//            }
+//        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,20 +44,8 @@ class MainActivity : CustomActivity() {
 
     //region mode change
 
-    private fun enableSwitchToDarkMode() {
-        visibilityModeLabel.text = getString(R.string.night_mode)
-        visibilityModeLabel.setTextColor(Color.WHITE)
-        visibiltyModeLayout.background = getDrawable(R.drawable.gradient_dark)
-    }
-
-    private fun enableSwitchToLightMode() {
-        visibilityModeLabel.text = getString(R.string.day_mode)
-        visibilityModeLabel.setTextColor(Color.BLACK)
-        visibiltyModeLayout.setBackgroundColor(Color.WHITE)
-    }
-
-    private fun changeTheme() {
-        sharedPref.edit {
+    fun changeTheme() {
+        sharedPref.edit(true) {
             putBoolean(LIGHT_THEME_KEY, !lightTheme)
         }
         recreate()

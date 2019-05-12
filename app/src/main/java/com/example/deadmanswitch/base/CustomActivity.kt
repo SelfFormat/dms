@@ -7,6 +7,8 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.edit
+import com.example.deadmanswitch.data.ALARM_STATUS_KEY
 import com.example.deadmanswitch.data.LIGHT_THEME_KEY
 import com.example.deadmanswitch.data.PREFERENCES_KEY
 
@@ -14,19 +16,28 @@ open class CustomActivity : AppCompatActivity() {
 
     lateinit var sharedPref: SharedPreferences
     var lightTheme = true
+    var alarmOn = false
 
     override fun onResume() {
         super.onResume()
         lightTheme = sharedPref.getBoolean(LIGHT_THEME_KEY, true)
+        alarmOn = sharedPref.getBoolean(ALARM_STATUS_KEY, false)
         setUpStatusBarAppearance()
     }
 
-    public override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         sharedPref = getSharedPreferences(
             PREFERENCES_KEY,
             Context.MODE_PRIVATE
         )
+        lightTheme = sharedPref.getBoolean(LIGHT_THEME_KEY, true)
+    }
+
+    fun saveAlarmState(alarmIsRunning: Boolean) {
+        sharedPref.edit(true) {
+            putBoolean(ALARM_STATUS_KEY, alarmIsRunning)
+        }
     }
 
     private fun setUpStatusBarAppearance() {

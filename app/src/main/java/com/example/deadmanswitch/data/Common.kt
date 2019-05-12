@@ -20,6 +20,9 @@ const val RINGTONE_KEY = "ringtone"
 const val RINGTONE_NAME_KEY = "ringtone_name"
 const val DEFAULT_EMERGENCY_TIME = 300000
 const val TIMEOUT_UNTIL_EMERGENCY_MESSAGE_KEY = "timeout"
+const val ALARM_STATUS_KEY = "alarm_status_key"
+const val TIME_TO_NEXT_ALARM_KEY = "time_to_next_alarm"
+const val EMPTY = "empty"
 
 fun randomTime(minTime: Int, maxTime: Int): Int {
     val initialTime = minTime * 1000

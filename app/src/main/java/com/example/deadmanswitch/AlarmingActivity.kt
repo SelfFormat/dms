@@ -23,6 +23,7 @@ import android.view.KeyEvent
 import android.view.WindowManager
 import android.view.animation.AnimationUtils
 import androidx.core.app.NotificationCompat
+import androidx.core.content.edit
 import com.example.deadmanswitch.base.CustomActivity
 import com.example.deadmanswitch.components.Alarm
 import com.example.deadmanswitch.data.*
@@ -42,7 +43,13 @@ class AlarmingActivity : CustomActivity(), SensorEventListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_alarming)
+        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        if (lightTheme) {
+            setContentView(R.layout.activity_alarming)
+        } else {
+            setContentView(R.layout.activity_alarming_dark)
+        }
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -80,8 +87,10 @@ class AlarmingActivity : CustomActivity(), SensorEventListener {
 
         turnAlarmOffButton.setOnClickListener {
             textOff.text = getString(R.string.closing)
-            releaseMediaPlayer()
             Alarm.cancelSms(this)
+            Alarm.cancelAlarm(this)
+            releaseMediaPlayer()
+            saveAlarmState(false)
             onBackPressed()
         }
 
@@ -90,6 +99,7 @@ class AlarmingActivity : CustomActivity(), SensorEventListener {
             textRepeat.text = getString(R.string.closing)
             releaseMediaPlayer()
             mp = MediaPlayer.create(this, uri)
+            saveAlarmState(true)
             runAlarmAgain()
         }
     }
@@ -100,9 +110,13 @@ class AlarmingActivity : CustomActivity(), SensorEventListener {
     }
 
     private fun runAlarmAgain() {
+        val timeToNextAlarm = randomTime(minTime, maxTime)
+        sharedPref.edit(true) {
+            putString(TIME_TO_NEXT_ALARM_KEY, timeToNextAlarm.toString())
+        }
         Alarm.cancelSms(this)
         releaseMediaPlayer()
-        Alarm.prepareForAlarm(this, getTimeUntilNextAlarm(), Alarm.State.ON)
+        Alarm.prepareForAlarm(this, System.currentTimeMillis() + timeToNextAlarm, Alarm.State.ON)
         onBackPressed()
     }
 
@@ -119,10 +133,6 @@ class AlarmingActivity : CustomActivity(), SensorEventListener {
             stop()
             release()
         }
-    }
-
-    private fun getTimeUntilNextAlarm(): Long {
-        return System.currentTimeMillis() + randomTime(minTime, maxTime)
     }
 
     private fun getTimeUntilEmergencyMessage(): Long {
