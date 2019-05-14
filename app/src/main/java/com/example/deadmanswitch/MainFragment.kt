@@ -91,7 +91,6 @@ class MainFragment : CustomFragment() {
 
 
         fab.run {
-            fab.text = if (alarmOn) getString(R.string.turn_off) else getString(R.string.run_switch)
             setOnClickListener {
                 if (alarmOn) {
                     Alarm.cancelAlarm(activity!!.applicationContext)
@@ -140,6 +139,7 @@ class MainFragment : CustomFragment() {
             }
         }
         getCurrentAlarmVolume()
+        fab.text = if (alarmOn) getString(R.string.turn_off) else getString(R.string.run_switch)
         alarmVolumeSeekBar.progress = getCurrentAlarmVolume()
         val summary = "${(activity as MainActivity).getEmergencyContact().name ?: getString(R.string.sample_contact_name)} (${(activity as MainActivity).getEmergencyContact().number ?: getString(R.string.sample_contact_name)})"
         val textSummary = (activity as MainActivity).getEmergencyContact().message ?: getString(R.string.message)
