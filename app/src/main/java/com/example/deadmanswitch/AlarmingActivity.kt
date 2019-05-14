@@ -39,7 +39,6 @@ class AlarmingActivity : CustomActivity(), SensorEventListener {
     private lateinit var uri: Uri
     private var minTime = MIN_DEFAULT_TIME
     private var maxTime = MAX_DEFAULT_TIME
-    private val volume = DEFAULT_RINGTONE_VOLUME
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +66,6 @@ class AlarmingActivity : CustomActivity(), SensorEventListener {
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         setUpNotification(getString(R.string.cancle_alarm_notification_title))
         audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        audioManager.setStreamVolume(AudioManager.STREAM_ALARM, volume, 0)
         uri = getRingtoneUri()
 
         mp = MediaPlayer()

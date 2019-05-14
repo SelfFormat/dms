@@ -13,6 +13,7 @@ import android.provider.OpenableColumns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import android.widget.Toast
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
@@ -83,8 +84,21 @@ class MainFragment : CustomFragment() {
 
         setTimeRange()
 
-        alarmVolumeSeekBar.max = getAlarmMaxVolume()
-        alarmVolumeSeekBar.progress = getCurrentAlarmVolume()
+        alarmVolumeSeekBar.run {
+            max = getAlarmMaxVolume()
+            progress = getCurrentAlarmVolume()
+            setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(p0: SeekBar?, volume: Int, p2: Boolean) {
+                    saveAlarmVolume(volume)
+                    if (volume == 0) mutedAlarmSnackBarWarning()
+                }
+                override fun onStartTrackingTouch(p0: SeekBar?) {
+                }
+
+                override fun onStopTrackingTouch(p0: SeekBar?) {
+                }
+            })
+        }
 
         changeSeekBarColor(getString(R.string.seek_bar_color))
         currentAlarmName.text = (activity as MainActivity).getRingtoneName()
@@ -98,12 +112,17 @@ class MainFragment : CustomFragment() {
                     fab.text = getString(R.string.run_switch)
                     Snackbar.make(view!!.findViewById(R.id.coordinatorMainFragment), getString(R.string.alarm_canceled_snackbar_message), Snackbar.LENGTH_SHORT).show()
                 } else {
-                    saveAlarmState(true)
-                    val random = randomTime(minTime, maxTime)
-                    val time = System.currentTimeMillis() + random
-                    Snackbar.make(view!!.findViewById(R.id.coordinatorMainFragment), snackBarMessage(random), Snackbar.LENGTH_SHORT).show()
-                    Alarm.prepareForAlarm(activity!!.applicationContext, time, Alarm.State.ON)
-                    fab.text = getString(R.string.turn_off)
+                    if (getCurrentAlarmVolume() <= 0) {
+                        Toast.makeText(context, getCurrentAlarmVolume().toString(), Toast.LENGTH_SHORT).show()
+                        mutedAlarmSnackBarWarning()
+                    } else {
+                        saveAlarmState(true)
+                        val random = randomTime(minTime, maxTime)
+                        val time = System.currentTimeMillis() + random
+                        Snackbar.make(view!!.findViewById(R.id.coordinatorMainFragment), snackBarMessage(random), Snackbar.LENGTH_SHORT).show()
+                        Alarm.prepareForAlarm(activity!!.applicationContext, time, Alarm.State.ON)
+                        fab.text = getString(R.string.turn_off)
+                    }
                 }
             }
         }
@@ -117,6 +136,11 @@ class MainFragment : CustomFragment() {
         dismissWidgetHintButton.setOnClickListener {
             hideWidgetCardForever()
         }
+    }
+
+    private fun mutedAlarmSnackBarWarning() {
+        Snackbar.make(view!!.findViewById(R.id.coordinatorMainFragment),
+            "Running alarm isn't available when sound is muted", Snackbar.LENGTH_LONG).show()
     }
 
     private fun newFrag(fragment: Fragment) {
@@ -138,7 +162,6 @@ class MainFragment : CustomFragment() {
                 }
             }
         }
-        getCurrentAlarmVolume()
         fab.text = if (alarmOn) getString(R.string.turn_off) else getString(R.string.run_switch)
         alarmVolumeSeekBar.progress = getCurrentAlarmVolume()
         val summary = "${(activity as MainActivity).getEmergencyContact().name ?: getString(R.string.sample_contact_name)} (${(activity as MainActivity).getEmergencyContact().number ?: getString(R.string.sample_contact_name)})"
@@ -209,12 +232,16 @@ class MainFragment : CustomFragment() {
 
     private fun getCurrentAlarmVolume() : Int {
         audioManager = context?.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        return  audioManager.getStreamVolume(AudioManager.STREAM_ALARM) - 1 // -1 because of return shift value
+        return  audioManager.getStreamVolume(AudioManager.STREAM_ALARM) -1 // -1 because of return shift value
     }
 
     private fun getAlarmMaxVolume() : Int {
         audioManager = context?.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        return audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM) - 1 // -1 because of return shift value
+        return audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM) -1 // -1 because of return shift value
+    }
+
+    private fun saveAlarmVolume(volume: Int) {
+        audioManager.setStreamVolume(AudioManager.STREAM_ALARM, volume, 0)
     }
 
     private fun openCustomSoundPicker() {

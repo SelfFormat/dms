@@ -23,14 +23,6 @@ class MainActivity : CustomActivity() {
                 putBoolean(EMERGENCY_SMS_KEY, false)
             }
         }
-//        visibilityModeSwitch.isChecked = !lightTheme
-//        visibilityModeSwitch.setOnCheckedChangeListener { _, isChecked ->
-//            if (isChecked) {
-//                changeTheme()
-//            } else {
-//                changeTheme()
-//            }
-//        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
