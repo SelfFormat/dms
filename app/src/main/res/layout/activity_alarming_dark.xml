@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/gradient_alarming_backgroud_dark"
+    android:background="@drawable/gradient_alarming_background_dark"
     android:screenOrientation="portrait"
     tools:context=".AlarmingActivity">
 
