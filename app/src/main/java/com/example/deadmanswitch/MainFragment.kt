@@ -87,10 +87,18 @@ class MainFragment : CustomFragment() {
         alarmVolumeSeekBar.run {
             max = getAlarmMaxVolume()
             progress = getCurrentAlarmVolume()
+            if (progress <= 0) {
+                volumeIcon.setImageResource(R.drawable.ic_volume_off_black_24dp)
+            }
             setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(p0: SeekBar?, volume: Int, p2: Boolean) {
                     saveAlarmVolume(volume)
-                    if (volume == 0) mutedAlarmSnackBarWarning()
+                    if (volume == 0) {
+                        mutedAlarmSnackBarWarning()
+                        volumeIcon.setImageResource(R.drawable.ic_volume_off_black_24dp)
+                    } else {
+                        volumeIcon.setImageResource(R.drawable.ic_volume_up_black_24dp)
+                    }
                 }
                 override fun onStartTrackingTouch(p0: SeekBar?) {
                 }
@@ -232,12 +240,12 @@ class MainFragment : CustomFragment() {
 
     private fun getCurrentAlarmVolume() : Int {
         audioManager = context?.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        return  audioManager.getStreamVolume(AudioManager.STREAM_ALARM) -1 // -1 because of return shift value
+        return audioManager.getStreamVolume(AudioManager.STREAM_ALARM)
     }
 
     private fun getAlarmMaxVolume() : Int {
         audioManager = context?.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        return audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM) -1 // -1 because of return shift value
+        return audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM)
     }
 
     private fun saveAlarmVolume(volume: Int) {
