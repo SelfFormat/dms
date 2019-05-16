@@ -134,8 +134,7 @@ class AlarmingActivity : CustomActivity(), SensorEventListener {
     }
 
     private fun getTimeUntilEmergencyMessage(): Long {
-        //TODO: change it to time from preferences
-        return System.currentTimeMillis() + DEFAULT_EMERGENCY_TIME
+        return System.currentTimeMillis() + (sharedPref.getString(TIMEOUT_UNTIL_EMERGENCY_MESSAGE_KEY, DEFAULT_EMERGENCY_TIME.toString()).toLong() * 1000)
     }
 
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
