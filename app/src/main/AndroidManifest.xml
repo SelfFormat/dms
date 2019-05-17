@@ -44,7 +44,8 @@
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden">
+            android:windowSoftInputMode="stateHidden"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -52,7 +53,7 @@
         </activity>
         <activity
             android:name=".AlarmingActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:showWhenLocked="true"
             android:turnScreenOn="true"
@@ -64,6 +65,8 @@
 
         <receiver android:name=".components.AlarmReceiver" />
         <receiver android:name=".components.EmergencySmsReceiver" />
+
+        <service android:name=".components.SmsService" />
     </application>
 
 </manifest>

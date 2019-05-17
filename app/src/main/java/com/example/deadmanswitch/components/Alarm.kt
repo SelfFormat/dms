@@ -10,15 +10,15 @@ internal class Alarm {
 
     companion object {
         fun prepareForSms(context: Context, time: Long?) {
-            broadcast(context, time, State.ON,  EmergencySmsReceiver::class.java)
+            broadcast(context, time, State.ON, EmergencySmsReceiver::class.java)
         }
 
         fun cancelSms(context: Context) {
-            broadcast(context, null, State.OFF,  EmergencySmsReceiver::class.java)
+            broadcast(context, null, State.OFF, EmergencySmsReceiver::class.java)
         }
 
-        fun prepareForAlarm(context: Context, time: Long?, state: State) {
-            broadcast(context, time, state, AlarmReceiver::class.java)
+        fun prepareForAlarm(context: Context, time: Long?) {
+            broadcast(context, time, State.ON, AlarmReceiver::class.java)
         }
 
         fun cancelAlarm(context: Context) {

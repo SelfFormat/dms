@@ -114,7 +114,7 @@ class AlarmingActivity : CustomActivity(), SensorEventListener {
         }
         Alarm.cancelSms(this)
         releaseMediaPlayer()
-        Alarm.prepareForAlarm(this, System.currentTimeMillis() + timeToNextAlarm, Alarm.State.ON)
+        Alarm.prepareForAlarm(this, System.currentTimeMillis() + timeToNextAlarm)
         onBackPressed()
     }
 
@@ -169,6 +169,12 @@ class AlarmingActivity : CustomActivity(), SensorEventListener {
     override fun onPause() {
         super.onPause()
         sensorManager!!.unregisterListener(this)
+    }
+
+    override fun onDestroy() {
+        mp.release()
+        Alarm.cancelSms(this)
+        super.onDestroy()
     }
 
     override fun onSensorChanged(event: SensorEvent) {

@@ -128,7 +128,7 @@ class MainFragment : CustomFragment() {
                         val random = randomTime(minTime, maxTime)
                         val time = System.currentTimeMillis() + random
                         Snackbar.make(view!!.findViewById(R.id.coordinatorMainFragment), snackBarMessage(random), Snackbar.LENGTH_SHORT).show()
-                        Alarm.prepareForAlarm(activity!!.applicationContext, time, Alarm.State.ON)
+                        Alarm.prepareForAlarm(activity!!.applicationContext, time)
                         fab.text = getString(R.string.turn_off)
                     }
                 }
