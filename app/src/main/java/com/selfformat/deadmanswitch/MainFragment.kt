@@ -90,7 +90,6 @@ class MainFragment : CustomFragment() {
         setTimeRange()
 
         alarmVolumeSeekBar.run {
-            //TODO: Fix that volume slider is not responding to volume change from physical keys
             max = getAlarmMaxVolume()
             progress = getCurrentAlarmVolume()
             if (progress <= 0) {
