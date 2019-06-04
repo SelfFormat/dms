@@ -3,6 +3,7 @@ package com.selfformat.deadmanswitch
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Bundle
+import android.view.KeyEvent
 import androidx.core.content.edit
 import androidx.fragment.app.transaction
 import com.selfformat.deadmanswitch.base.CustomActivity
@@ -62,6 +63,31 @@ class MainActivity : CustomActivity() {
             sharedPref.getString(EMERGENCY_MESSAGE_KEY, getString(R.string.default_emergency_message)),
             sharedPref.getString(CONTACT_NAME_KEY, getString(R.string.sample_contact_name))
         )
+    }
+
+    //endregion
+
+
+    //region updating slider after alarm volume change
+
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        super.dispatchKeyEvent(event)
+        val fragment = supportFragmentManager.findFragmentByTag(MAIN_FRAGMENT) as MainFragment
+        return when (event.keyCode) {
+            KeyEvent.KEYCODE_VOLUME_UP -> {
+                if (event.action == KeyEvent.ACTION_DOWN) {
+                    fragment.updateVolumeSlider()
+                }
+                true
+            }
+            KeyEvent.KEYCODE_VOLUME_DOWN -> {
+                if (event.action == KeyEvent.ACTION_DOWN) {
+                    fragment.updateVolumeSlider()
+                }
+                true
+            }
+            else -> super.dispatchKeyEvent(event)
+        }
     }
 
     //endregion

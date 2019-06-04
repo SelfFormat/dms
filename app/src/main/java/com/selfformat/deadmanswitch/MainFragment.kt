@@ -165,6 +165,10 @@ class MainFragment : CustomFragment() {
         }
     }
 
+    fun updateVolumeSlider() {
+        alarmVolumeSeekBar.progress = getCurrentAlarmVolume()
+    }
+
     override fun onResume() {
         super.onResume()
         sharedPref?.let {

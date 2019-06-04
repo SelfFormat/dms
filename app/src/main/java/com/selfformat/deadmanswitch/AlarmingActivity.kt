@@ -13,13 +13,11 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.media.AudioAttributes
-import android.media.AudioManager
 import android.media.MediaPlayer
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.view.KeyEvent
 import android.view.WindowManager
 import android.view.animation.AnimationUtils
 import androidx.core.app.NotificationCompat
@@ -36,7 +34,6 @@ class AlarmingActivity : CustomActivity(), SensorEventListener {
     private lateinit var mp: MediaPlayer
     private var sensorManager: SensorManager? = null
     private var proximitySensor: Sensor? = null
-    private lateinit var audioManager: AudioManager
     private var notificationManager: NotificationManager? = null
     private lateinit var uri: Uri
 
@@ -65,7 +62,6 @@ class AlarmingActivity : CustomActivity(), SensorEventListener {
         proximitySensor = sensorManager!!.getDefaultSensor(Sensor.TYPE_PROXIMITY)
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         setUpNotification(getString(R.string.cancle_alarm_notification_title))
-        audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
         uri = getRingtoneUri()
 
         mp = MediaPlayer()
@@ -147,26 +143,6 @@ class AlarmingActivity : CustomActivity(), SensorEventListener {
         mp.release()
         super.onDestroy()
     }
-
-    //region showing UI of alarm volume change
-    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
-        return when (event.keyCode) {
-            KeyEvent.KEYCODE_VOLUME_UP -> {
-                if (event.action == KeyEvent.ACTION_DOWN) {
-                    audioManager.adjustStreamVolume(AudioManager.STREAM_ALARM, AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI)
-                }
-                true
-            }
-            KeyEvent.KEYCODE_VOLUME_DOWN -> {
-                if (event.action == KeyEvent.ACTION_DOWN) {
-                    audioManager.adjustStreamVolume(AudioManager.STREAM_ALARM, AudioManager.ADJUST_LOWER, AudioManager.FLAG_SHOW_UI)
-                }
-                true
-            }
-            else -> super.dispatchKeyEvent(event)
-        }
-    }
-    //endregion
 
     //region proximity sensor
 
