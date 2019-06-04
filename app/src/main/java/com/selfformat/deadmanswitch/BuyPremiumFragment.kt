@@ -31,9 +31,6 @@ class BuyPremiumFragment : Fragment() {
         arrayOfFeatures.add(SingleFeature(getString(R.string.feature_emergency_sms)))
         arrayOfFeatures.add(SingleFeature(getString(R.string.feature_dark_mode)))
         arrayOfFeatures.add(SingleFeature(getString(R.string.feature_widget)))
-
-        //TODO: add button to enable features if user already bought them previousle
-
         val listView = view.findViewById<ListView>(R.id.listOfFeatures)
         listView.adapter = FeatureAdapter(view.context, arrayOfFeatures)
     }

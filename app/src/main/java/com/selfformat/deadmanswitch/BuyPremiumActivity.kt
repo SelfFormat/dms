@@ -14,7 +14,7 @@ class BuyPremiumActivity : CustomActivity() {
         closeButton.setOnClickListener { onBackPressed() }
         noThanksButton.setOnClickListener { onBackPressed() }
         restorePurchasedItemsButton.setOnClickListener {
-            //TODO: run buypremium fragment/activity
+            //TODO: implement in-app popup
         }
 
         supportFragmentManager.transaction(allowStateLoss = true) {
