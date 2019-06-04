@@ -1,4 +1,4 @@
-package com.example.deadmanswitch.components
+package com.selfformat.deadmanswitch.components
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import com.example.deadmanswitch.R
-import com.example.deadmanswitch.data.SingleFeature
+import com.selfformat.deadmanswitch.R
+import com.selfformat.deadmanswitch.data.SingleFeature
 import java.util.*
 
 class FeatureAdapter(context: Context, features: ArrayList<SingleFeature>) :

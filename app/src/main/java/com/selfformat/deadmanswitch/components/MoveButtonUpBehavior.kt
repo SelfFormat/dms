@@ -1,4 +1,4 @@
-package com.example.deadmanswitch.components
+package com.selfformat.deadmanswitch.components
 
 import android.content.Context
 import android.util.AttributeSet

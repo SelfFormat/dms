@@ -13,7 +13,7 @@ buildscript {
         fragmentKtxVersion = '1.0.0'
         coreKtxVersion = '1.0.2'
         ankoVersion = '0.10.8'
-        gradleVersion = '3.4.0'
+        gradleVersion = '3.4.1'
 
     }
     repositories {

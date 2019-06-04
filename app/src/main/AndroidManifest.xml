@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.deadmanswitch">
+    package="com.selfformat.deadmanswitch">
 
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="com.android.vending.BILLING" />
 
     <uses-feature
         android:name="android.hardware.sensor.proximity"
@@ -22,7 +23,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <receiver android:name=".components.RunAlarmWidget">
+        <receiver android:name="com.selfformat.deadmanswitch.components.RunAlarmWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -32,17 +33,17 @@
                 android:resource="@xml/run_alarm_widget_info" />
         </receiver>
 
-        <activity android:name=".base.CustomActivity" />
+        <activity android:name="com.selfformat.deadmanswitch.base.CustomActivity" />
         <activity
-            android:name=".BuyPremiumActivity"
-            android:parentActivityName=".MainActivity"
+            android:name="com.selfformat.deadmanswitch.BuyPremiumActivity"
+            android:parentActivityName="com.selfformat.deadmanswitch.MainActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.deadmanswitch.MainActivity" />
+                android:value="com.selfformat.deadmanswitch.MainActivity" />
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name="com.selfformat.deadmanswitch.MainActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"
             android:launchMode="singleTask">
@@ -52,7 +53,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AlarmingActivity"
+            android:name="com.selfformat.deadmanswitch.AlarmingActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:showWhenLocked="true"
@@ -63,10 +64,10 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <receiver android:name=".components.AlarmReceiver" />
+        <receiver android:name="com.selfformat.deadmanswitch.components.AlarmReceiver" />
         <receiver android:name=".components.EmergencySmsReceiver" />
 
-        <service android:name=".components.SmsService" />
+        <service android:name="com.selfformat.deadmanswitch.components.SmsService" />
     </application>
 
 </manifest>

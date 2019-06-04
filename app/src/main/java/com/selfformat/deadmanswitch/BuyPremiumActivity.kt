@@ -1,8 +1,8 @@
-package com.example.deadmanswitch
+package com.selfformat.deadmanswitch
 
 import android.os.Bundle
 import androidx.fragment.app.transaction
-import com.example.deadmanswitch.base.CustomActivity
+import com.selfformat.deadmanswitch.base.CustomActivity
 import kotlinx.android.synthetic.main.activity_buy_premium.*
 
 class BuyPremiumActivity : CustomActivity() {
@@ -13,6 +13,9 @@ class BuyPremiumActivity : CustomActivity() {
 
         closeButton.setOnClickListener { onBackPressed() }
         noThanksButton.setOnClickListener { onBackPressed() }
+        restorePurchasedItemsButton.setOnClickListener {
+            //TODO: run buypremium fragment/activity
+        }
 
         supportFragmentManager.transaction(allowStateLoss = true) {
             add(

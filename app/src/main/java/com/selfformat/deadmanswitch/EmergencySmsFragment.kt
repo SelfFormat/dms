@@ -1,4 +1,4 @@
-package com.example.deadmanswitch
+package com.selfformat.deadmanswitch
 
 import android.Manifest
 import android.app.Activity
@@ -11,8 +11,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.edit
-import com.example.deadmanswitch.base.CustomFragment
-import com.example.deadmanswitch.data.*
+import com.selfformat.deadmanswitch.base.CustomFragment
+import com.selfformat.deadmanswitch.data.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_emergency_sms.*
 
@@ -34,15 +34,15 @@ class EmergencySmsFragment : CustomFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         activity?.toolbarTitle?.text = resources.getString(R.string.set_emergency_contact)
+        askUserForSmsPermission()
         setEmergencyContact()
         saveContactButton.setOnClickListener {
             saveContact()
-            checkForSmsPermission()
             (activity as MainActivity).onBackPressed()
         }
     }
 
-    private fun checkForSmsPermission() {
+    private fun askUserForSmsPermission() {
         if (context?.let {
                 ActivityCompat.checkSelfPermission(
                     it,
@@ -57,7 +57,6 @@ class EmergencySmsFragment : CustomFragment() {
                 PERMISSIONS_REQUEST_SEND_SMS
             )
         } else {
-
         }
     }
 
@@ -74,9 +73,6 @@ class EmergencySmsFragment : CustomFragment() {
             PERMISSIONS_REQUEST_SEND_SMS -> {
                 if (permissions[0] == Manifest.permission.SEND_SMS && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // Permission was granted. Enable sms button.
-
-                    (activity as MainActivity).sendSmsMessage()
-
                 } else {
                     // Permission denied.
                     Log.d("TAG", "No permission")
@@ -93,7 +89,7 @@ class EmergencySmsFragment : CustomFragment() {
     //TODO: edittext fields validation
 
     private fun saveContact() {
-        Toast.makeText(context, contactName.text.toString(), Toast.LENGTH_SHORT).show()
+        Log.i("EmergencySmsFragment", "Contact saved")
         sharedPref?.edit {
             putString(TIMEOUT_UNTIL_EMERGENCY_MESSAGE_KEY, timeout.text.toString())
             putString(CONTACT_NAME_KEY, contactName.text.toString())

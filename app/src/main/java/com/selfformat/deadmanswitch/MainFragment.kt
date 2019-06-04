@@ -1,4 +1,4 @@
-package com.example.deadmanswitch
+package com.selfformat.deadmanswitch
 
 import android.app.Activity
 import android.content.Context
@@ -8,6 +8,7 @@ import android.graphics.PorterDuff
 import android.media.AudioManager
 import android.media.RingtoneManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.OpenableColumns
 import android.view.LayoutInflater
@@ -15,13 +16,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.transaction
-import com.example.deadmanswitch.base.CustomFragment
-import com.example.deadmanswitch.components.Alarm
-import com.example.deadmanswitch.data.*
 import com.google.android.material.snackbar.Snackbar
+import com.selfformat.deadmanswitch.base.CustomFragment
+import com.selfformat.deadmanswitch.components.Alarm
+import com.selfformat.deadmanswitch.data.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.card_addwidget.*
 import kotlinx.android.synthetic.main.card_emergency.*
@@ -85,6 +87,7 @@ class MainFragment : CustomFragment() {
         setTimeRange()
 
         alarmVolumeSeekBar.run {
+            //TODO: Fix that volume slider is not responding to volume change from physical keys
             max = getAlarmMaxVolume()
             progress = getCurrentAlarmVolume()
             if (progress <= 0) {
@@ -184,27 +187,50 @@ class MainFragment : CustomFragment() {
         activity?.toolbarTitle?.text = resources.getString(R.string.app_name)
     }
 
-    private fun snackBarMessage(timeToNextAlarm: Int) = "New alarm in " + timeToNextAlarm / 1000 + " seconds"
+    private fun snackBarMessage(timeToNextAlarm: Int) = "New alarm in ${timeToNextAlarm / 1000} seconds"
 
     private fun hideWidgetCardForever() {
-        //TODO: add popup "are you sure?"
-        widgetCardVisibility = View.GONE
-        cardWidget.visibility = widgetCardVisibility
-        sharedPref?.edit(true) {
-            putBoolean("isWidgetCardVisible", false)
+        val builder: AlertDialog.Builder = when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> AlertDialog.Builder(context!!, android.R.style.Theme_Material_Dialog_Alert)
+            else -> AlertDialog.Builder(context!!)
         }
+        builder.setTitle(getString(R.string.hide_widget_popup_title))
+            .setMessage(
+                getString(R.string.hide_widget_popup_description)
+            )
+            .setPositiveButton(android.R.string.yes) { _, _ ->
+                widgetCardVisibility = View.GONE
+                cardWidget.visibility = widgetCardVisibility
+                sharedPref?.edit(true) {
+                    putBoolean(IS_WIDGET_CARD_VISIBLE_KEY, false)
+                }
+            }
+            .setNegativeButton(android.R.string.cancel) { _, _ ->
+                //Do nothing
+            }
+            .setIcon(android.R.drawable.ic_dialog_info)
+            .show()
     }
 
     private fun setTimeRange() {
-        minTime = (activity as MainActivity).getRingtoneMinTime()
-        maxTime = (activity as MainActivity).getRingtoneMaxTime()
+        minTime = getRingtoneMinTime(sharedPref)
+        maxTime = getRingtoneMaxTime(sharedPref)
 
         minTimeText.run {
             setText(minTime.toString())
             setOnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) {
-                    minTime = minTimeText.text.toString().toInt()
-                    (activity as MainActivity).saveRingtoneTime("ringtoneMinTime", minTime)
+                    if (!minTimeText.text.isNullOrBlank()) {
+                        if (minTimeText.text.toString().toInt() > maxTimeText.text.toString().toInt()) {
+                            minTimeText.error = "Min value cannot be higher then max"
+                            minTimeText.text = maxTimeText.text
+                        } else {
+                        minTime = minTimeText.text.toString().toInt()
+                        (activity as MainActivity).saveRingtoneTime("ringtoneMinTime", minTime)
+                        }
+                    } else {
+                        minTimeText.error = "Min value cannot be empty"
+                    }
                 }
             }
         }

@@ -1,4 +1,4 @@
-package com.example.deadmanswitch
+package com.selfformat.deadmanswitch
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
 import androidx.fragment.app.Fragment
-import com.example.deadmanswitch.components.FeatureAdapter
-import com.example.deadmanswitch.data.SingleFeature
+import com.selfformat.deadmanswitch.components.FeatureAdapter
+import com.selfformat.deadmanswitch.data.SingleFeature
 
 class BuyPremiumFragment : Fragment() {
     companion object {
@@ -26,10 +26,13 @@ class BuyPremiumFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val arrayOfFeatures = ArrayList<SingleFeature>()
-        arrayOfFeatures.add(SingleFeature("No ads"))
-        arrayOfFeatures.add(SingleFeature("More alarm sounds"))
-        arrayOfFeatures.add(SingleFeature("Emergency sms"))
-        arrayOfFeatures.add(SingleFeature("Dark mode"))
+        arrayOfFeatures.add(SingleFeature(getString(R.string.feature_no_ads)))
+        arrayOfFeatures.add(SingleFeature(getString(R.string.feature_custom_alarms)))
+        arrayOfFeatures.add(SingleFeature(getString(R.string.feature_emergency_sms)))
+        arrayOfFeatures.add(SingleFeature(getString(R.string.feature_dark_mode)))
+        arrayOfFeatures.add(SingleFeature(getString(R.string.feature_widget)))
+
+        //TODO: add button to enable features if user already bought them previousle
 
         val listView = view.findViewById<ListView>(R.id.listOfFeatures)
         listView.adapter = FeatureAdapter(view.context, arrayOfFeatures)

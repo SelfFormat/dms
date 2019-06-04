@@ -1,4 +1,4 @@
-package com.example.deadmanswitch.base
+package com.selfformat.deadmanswitch.base
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -8,9 +8,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
-import com.example.deadmanswitch.data.ALARM_STATUS_KEY
-import com.example.deadmanswitch.data.LIGHT_THEME_KEY
-import com.example.deadmanswitch.data.PREFERENCES_KEY
+import com.selfformat.deadmanswitch.data.ALARM_STATUS_KEY
+import com.selfformat.deadmanswitch.data.LIGHT_THEME_KEY
+import com.selfformat.deadmanswitch.data.PREFERENCES_KEY
 
 open class CustomActivity : AppCompatActivity() {
 

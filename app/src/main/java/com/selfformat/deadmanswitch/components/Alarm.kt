@@ -1,4 +1,4 @@
-package com.example.deadmanswitch.components
+package com.selfformat.deadmanswitch.components
 
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -9,14 +9,6 @@ import android.util.Log
 internal class Alarm {
 
     companion object {
-        fun prepareForSms(context: Context, time: Long?) {
-            broadcast(context, time, State.ON, EmergencySmsReceiver::class.java)
-        }
-
-        fun cancelSms(context: Context) {
-            broadcast(context, null, State.OFF, EmergencySmsReceiver::class.java)
-        }
-
         fun prepareForAlarm(context: Context, time: Long?) {
             broadcast(context, time, State.ON, AlarmReceiver::class.java)
         }

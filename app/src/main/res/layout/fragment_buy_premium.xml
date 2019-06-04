@@ -49,6 +49,19 @@
         app:layout_constraintTop_toBottomOf="@+id/listOfFeatures"
         app:srcCompat="@drawable/car" />
 
+    <ImageView
+        android:id="@+id/carRoadImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="8dp"
+        android:adjustViewBounds="true"
+        android:minHeight="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/buyPremiumButton"
+        app:layout_constraintEnd_toEndOf="@+id/buyPremiumButton"
+        app:layout_constraintStart_toStartOf="@+id/buyPremiumButton"
+        app:layout_constraintTop_toBottomOf="@+id/listOfFeatures"
+        app:srcCompat="@drawable/car_road" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/buyPremiumButton"
         android:layout_width="@+id/carImage"
