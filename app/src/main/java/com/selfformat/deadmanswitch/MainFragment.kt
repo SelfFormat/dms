@@ -226,17 +226,24 @@ class MainFragment : CustomFragment() {
             setText(minTime.toString())
             addTextChangedListener(object: TextWatcher {
                 override fun afterTextChanged(p0: Editable?) {
-                    when {
-                        minTimeText.text.isNullOrBlank() -> minTimeText.error = "Min value cannot be empty"
-                        !minTimeText.text.toString().isDigitsOnly() -> minTimeText.error = "Min value must be positive number"
-                        minTimeText.text.toString().toInt() > maxTimeText.text.toString().toInt() -> minTimeText.error = "Min value cannot be higher then max"
-                    }
                 }
 
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 }
 
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+                    when {
+                        minTimeText.text.isNullOrBlank() -> minTimeText.error = "Min value cannot be empty"
+                        !minTimeText.text.toString().isDigitsOnly() -> minTimeText.error = "Min value must be positive number"
+                        minTimeText.text.toString().length > 3 -> {
+                            minTimeText.error = "Min value cannot be higher then max"
+                            minTimeText.text = maxTimeText.text
+                        }
+                        minTimeText.text.toString().toInt() > maxTimeText.text.toString().toInt() -> {
+                            minTimeText.error = "Min value cannot be higher then max"
+                        }
+                    }
                 }
             })
             setOnFocusChangeListener { _, hasFocus ->
@@ -249,7 +256,11 @@ class MainFragment : CustomFragment() {
                         }
                         else if (minTimeText.text.toString().toInt() > maxTimeText.text.toString().toInt()) {
                             minTimeText.text = maxTimeText.text
-                        } else {
+                        }
+                        else if (minTimeText.text.toString().length > 3) {
+                            minTimeText.text = maxTimeText.text
+                        }
+                        else {
                             minTime = minTimeText.text.toString().toInt()
                             (activity as MainActivity).saveRingtoneTime("ringtoneMinTime", minTime)
                         }
@@ -262,17 +273,23 @@ class MainFragment : CustomFragment() {
             setText(maxTime.toString())
             addTextChangedListener(object: TextWatcher {
                 override fun afterTextChanged(p0: Editable?) {
-                    when {
-                        maxTimeText.text.isNullOrBlank() -> maxTimeText.error = "Max value cannot be empty"
-                        !maxTimeText.text.toString().isDigitsOnly() -> maxTimeText.error = "Max value must be positive number"
-                        maxTimeText.text.toString().toInt() < minTimeText.text.toString().toInt() -> maxTimeText.error = "Max value cannot be lower then min"
-                    }
                 }
 
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 }
 
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                    when {
+                        maxTimeText.text.isNullOrBlank() -> maxTimeText.error = "Max value cannot be empty"
+                        !maxTimeText.text.toString().isDigitsOnly() -> maxTimeText.error = "Max value must be positive number"
+                        maxTimeText.text.toString().length > 3 -> {
+                            maxTimeText.error = "Up to 999 seconds"
+                            maxTimeText.text = minTimeText.text
+                        }
+                        maxTimeText.text.toString().toInt() < minTimeText.text.toString().toInt() -> {
+                            maxTimeText.error = "Max value cannot be lower then min"
+                        }
+                    }
                 }
             })
             setOnFocusChangeListener { _, hasFocus ->
@@ -281,6 +298,7 @@ class MainFragment : CustomFragment() {
                         maxTimeText.text = minTimeText.text
                     } else {
                         if (!maxTimeText.text.toString().isDigitsOnly()) {
+                        } else if (maxTimeText.text.toString().length > 3) {
                             maxTimeText.text = minTimeText.text
                         } else if (maxTimeText.text.toString().toInt() < minTimeText.text.toString().toInt()) {
                             maxTimeText.text = minTimeText.text
