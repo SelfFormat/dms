@@ -13,11 +13,13 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.media.AudioAttributes
+import android.media.AudioManager
 import android.media.MediaPlayer
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.WindowManager
 import android.view.animation.AnimationUtils
 import androidx.core.app.NotificationCompat
@@ -32,6 +34,7 @@ import kotlin.concurrent.thread
 class AlarmingActivity : CustomActivity(), SensorEventListener {
 
     private lateinit var mp: MediaPlayer
+    private lateinit var audioManager: AudioManager
     private var sensorManager: SensorManager? = null
     private var proximitySensor: Sensor? = null
     private var notificationManager: NotificationManager? = null
@@ -58,6 +61,7 @@ class AlarmingActivity : CustomActivity(), SensorEventListener {
             )
         }
 
+        audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         proximitySensor = sensorManager!!.getDefaultSensor(Sensor.TYPE_PROXIMITY)
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -221,6 +225,28 @@ class AlarmingActivity : CustomActivity(), SensorEventListener {
             channel.vibrationPattern =
                 longArrayOf(100, 200, 300, 400, 500, 400, 300, 200, 400)
             notificationManager?.createNotificationChannel(channel)
+        }
+    }
+
+    //endregion
+
+    //region showing UI of alarm volume change
+
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        return when (event.keyCode) {
+            KeyEvent.KEYCODE_VOLUME_UP -> {
+                if (event.action == KeyEvent.ACTION_DOWN) {
+                    audioManager.adjustStreamVolume(AudioManager.STREAM_ALARM, AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI)
+                }
+                true
+            }
+            KeyEvent.KEYCODE_VOLUME_DOWN -> {
+                if (event.action == KeyEvent.ACTION_DOWN) {
+                    audioManager.adjustStreamVolume(AudioManager.STREAM_ALARM, AudioManager.ADJUST_LOWER, AudioManager.FLAG_SHOW_UI)
+                }
+                true
+            }
+            else -> super.dispatchKeyEvent(event)
         }
     }
 

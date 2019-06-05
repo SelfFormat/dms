@@ -3,10 +3,8 @@ package com.selfformat.deadmanswitch.base
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
-import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
-import android.view.KeyEvent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
@@ -17,7 +15,6 @@ import com.selfformat.deadmanswitch.data.PREFERENCES_KEY
 open class CustomActivity : AppCompatActivity() {
 
     lateinit var sharedPref: SharedPreferences
-    lateinit var audioManager: AudioManager
     var lightTheme = true
     var alarmOn = false
 
@@ -35,7 +32,6 @@ open class CustomActivity : AppCompatActivity() {
             Context.MODE_PRIVATE
         )
         lightTheme = sharedPref.getBoolean(LIGHT_THEME_KEY, true)
-        audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
     }
 
     fun saveAlarmState(alarmIsRunning: Boolean) {
@@ -50,26 +46,4 @@ open class CustomActivity : AppCompatActivity() {
             window.statusBarColor = Color.WHITE
         }
     }
-
-    //region showing UI of alarm volume change
-
-    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
-        return when (event.keyCode) {
-            KeyEvent.KEYCODE_VOLUME_UP -> {
-                if (event.action == KeyEvent.ACTION_DOWN) {
-                    audioManager.adjustStreamVolume(AudioManager.STREAM_ALARM, AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI)
-                }
-                true
-            }
-            KeyEvent.KEYCODE_VOLUME_DOWN -> {
-                if (event.action == KeyEvent.ACTION_DOWN) {
-                    audioManager.adjustStreamVolume(AudioManager.STREAM_ALARM, AudioManager.ADJUST_LOWER, AudioManager.FLAG_SHOW_UI)
-                }
-                true
-            }
-            else -> super.dispatchKeyEvent(event)
-        }
-    }
-
-    //endregion
 }
