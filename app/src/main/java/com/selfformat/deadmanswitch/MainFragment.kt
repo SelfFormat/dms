@@ -1,8 +1,10 @@
 package com.selfformat.deadmanswitch
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.media.AudioManager
@@ -13,12 +15,14 @@ import android.os.Bundle
 import android.provider.OpenableColumns
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.PermissionChecker.checkSelfPermission
 import androidx.core.content.edit
 import androidx.core.text.isDigitsOnly
 import androidx.fragment.app.Fragment
@@ -72,7 +76,16 @@ class MainFragment : CustomFragment() {
         }
 
         if (lightTheme) premiumBarMain.setOnClickListener { activity?.startActivity<BuyPremiumActivity>() }
-        editEmergency.setOnClickListener { newFrag(EmergencySmsFragment.newInstance()) }
+        editEmergency.setOnClickListener {
+            if (isSmsPermissionGranted()) {
+                newFrag(EmergencySmsFragment.newInstance())
+            } else {
+                requestPermissions(
+                    arrayOf(Manifest.permission.SEND_SMS),
+                    PERMISSIONS_REQUEST_SEND_SMS
+                )
+            }
+        }
         chooseToneButton.setOnClickListener { openSystemRingtonePicker() }
         currentAlarmName.setOnClickListener { openSystemRingtonePicker() }
         customRingtone.run {
@@ -164,10 +177,6 @@ class MainFragment : CustomFragment() {
         }
     }
 
-    fun updateVolumeSlider() {
-        alarmVolumeSeekBar.progress = getCurrentAlarmVolume()
-    }
-
     override fun onResume() {
         super.onResume()
         sharedPref?.let {
@@ -217,6 +226,8 @@ class MainFragment : CustomFragment() {
             .setIcon(android.R.drawable.ic_dialog_info)
             .show()
     }
+
+    //region timeRange
 
     private fun setTimeRange() {
         minTime = getRingtoneMinTime(sharedPref)
@@ -312,6 +323,8 @@ class MainFragment : CustomFragment() {
         }
     }
 
+    //endregion
+
     //region soundPicker
 
     private fun openSystemRingtonePicker() {
@@ -390,6 +403,47 @@ class MainFragment : CustomFragment() {
         val name = returnCursor.getString(nameIndex)
         returnCursor.close()
         return name
+    }
+
+    //endregion
+
+    //region sms permissions
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            PERMISSIONS_REQUEST_SEND_SMS -> {
+                if (permissions[0] == Manifest.permission.SEND_SMS && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission was granted. Enable emergency contact.
+                    Log.d("TAG", "Permission granted :)")
+                    newFrag(EmergencySmsFragment.newInstance())
+                } else {
+                    // Permission denied.®
+                    Log.d("TAG", "No permission :(")
+                    Toast.makeText(
+                        context, "No permission",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    // Disable emergency contact.
+                }
+            }
+        }
+    }
+
+    private fun isSmsPermissionGranted(): Boolean {
+        return if (context?.let {
+                checkSelfPermission(
+                    it,
+                    Manifest.permission.SEND_SMS
+                )
+            } == PackageManager.PERMISSION_GRANTED
+        ) {
+            Log.d("TAG", "Permission granted")
+            true
+        } else {
+            Log.d("TAG", "Permission not granted")
+            false
+        }
     }
 
     //endregion
