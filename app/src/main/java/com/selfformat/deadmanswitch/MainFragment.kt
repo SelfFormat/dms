@@ -243,14 +243,9 @@ class MainFragment : CustomFragment() {
                 }
 
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
                     when {
                         minTimeText.text.isNullOrBlank() -> minTimeText.error = "Min value cannot be empty"
                         !minTimeText.text.toString().isDigitsOnly() -> minTimeText.error = "Min value must be positive number"
-                        minTimeText.text.toString().length > 3 -> {
-                            minTimeText.error = "Min value cannot be higher then max"
-                            minTimeText.text = maxTimeText.text
-                        }
                         minTimeText.text.toString().toInt() > maxTimeText.text.toString().toInt() -> {
                             minTimeText.error = "Min value cannot be higher then max"
                         }
@@ -262,18 +257,14 @@ class MainFragment : CustomFragment() {
                     if (minTimeText.text.isNullOrBlank()) {
                         minTimeText.text = maxTimeText.text
                     } else {
-                        if (!minTimeText.text.toString().isDigitsOnly()) {
-                            minTimeText.text = maxTimeText.text
-                        }
-                        else if (minTimeText.text.toString().toInt() > maxTimeText.text.toString().toInt()) {
-                            minTimeText.text = maxTimeText.text
-                        }
-                        else if (minTimeText.text.toString().length > 3) {
-                            minTimeText.text = maxTimeText.text
-                        }
-                        else {
-                            minTime = minTimeText.text.toString().toInt()
-                            (activity as MainActivity).saveRingtoneTime("ringtoneMinTime", minTime)
+                        when {
+                            !minTimeText.text.toString().isDigitsOnly() -> minTimeText.text = maxTimeText.text
+                            minTimeText.text.toString().toInt() > maxTimeText.text.toString().toInt() -> minTimeText.text = maxTimeText.text
+                            else -> {
+                                minTimeText.error = null
+                                minTime = minTimeText.text.toString().toInt()
+                                (activity as MainActivity).saveRingtoneTime("ringtoneMinTime", minTime)
+                            }
                         }
                     }
                 }
@@ -293,10 +284,6 @@ class MainFragment : CustomFragment() {
                     when {
                         maxTimeText.text.isNullOrBlank() -> maxTimeText.error = "Max value cannot be empty"
                         !maxTimeText.text.toString().isDigitsOnly() -> maxTimeText.error = "Max value must be positive number"
-                        maxTimeText.text.toString().length > 3 -> {
-                            maxTimeText.error = "Up to 999 seconds"
-                            maxTimeText.text = minTimeText.text
-                        }
                         maxTimeText.text.toString().toInt() < minTimeText.text.toString().toInt() -> {
                             maxTimeText.error = "Max value cannot be lower then min"
                         }
@@ -308,14 +295,14 @@ class MainFragment : CustomFragment() {
                     if (maxTimeText.text.isNullOrBlank()) {
                         maxTimeText.text = minTimeText.text
                     } else {
-                        if (!maxTimeText.text.toString().isDigitsOnly()) {
-                        } else if (maxTimeText.text.toString().length > 3) {
-                            maxTimeText.text = minTimeText.text
-                        } else if (maxTimeText.text.toString().toInt() < minTimeText.text.toString().toInt()) {
-                            maxTimeText.text = minTimeText.text
-                        } else {
-                            maxTime = maxTimeText.text.toString().toInt()
-                            (activity as MainActivity).saveRingtoneTime("ringtoneMaxTime", maxTime)
+                        when {
+                            !maxTimeText.text.toString().isDigitsOnly() -> maxTimeText.text = minTimeText.text
+                            maxTimeText.text.toString().toInt() < minTimeText.text.toString().toInt() -> maxTimeText.text = minTimeText.text
+                            else -> {
+                                maxTimeText.error = null
+                                maxTime = maxTimeText.text.toString().toInt()
+                                (activity as MainActivity).saveRingtoneTime("ringtoneMaxTime", maxTime)
+                            }
                         }
                     }
                 }

@@ -40,8 +40,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/raleway_medium"
-                android:inputType="numberSigned"
-                app:counterMaxLength="3"/>
+                android:inputType="number|numberSigned"
+                android:maxLength="3"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -64,10 +64,10 @@
                 android:id="@+id/contactName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"/>
+                android:inputType="text"
+                android:maxLength="100"/>
 
     </com.google.android.material.textfield.TextInputLayout>
-
 
     <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/contactNumberLabel"
@@ -87,7 +87,8 @@
                 android:fontFamily="@font/raleway_medium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="phone"/>
+                android:inputType="phone"
+                android:maxLength="30"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -111,7 +112,8 @@
                 android:fontFamily="@font/raleway_medium"
                 android:gravity="top"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:maxLength="240"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
