@@ -33,10 +33,9 @@
             android:id="@+id/minTimeText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="numberSigned"
+            android:inputType="number|numberSigned"
             android:textAlignment="center"
-            app:counterEnabled="true"
-            app:counterMaxLength="3" />
+            android:maxLength="3"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -60,8 +59,9 @@
             android:id="@+id/maxTimeText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="numberSigned"
-            android:textAlignment="center" />
+            android:inputType="number|numberSigned"
+            android:textAlignment="center"
+            android:maxLength="3"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
