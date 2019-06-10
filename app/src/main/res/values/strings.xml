@@ -30,7 +30,6 @@
     <string name="default_emergency_timeout">90</string>
     <string name="tick_image">tick image</string>
     <string name="purchase_for_pln_13_39">Purchase for PLN 13.39</string>
-    <string name="contact">Contact:</string>
     <string name="example_full_contact">Anna (+48 111222333)</string>
     <string name="message_label">Message:</string>
     <string name="edit">edit</string>
@@ -65,4 +64,7 @@
     <string name="feature_dark_mode">Dark mode</string>
     <string name="feature_widget">Widget</string>
     <string name="restore_purchased_items">restore purchased items</string>
+    <string name="number">Number:</string>
+    <string name="contact">Contact:</string>
+    <string name="timeout_label">Timeout:</string>
 </resources>

@@ -36,7 +36,7 @@
             app:layout_constraintTop_toBottomOf="@+id/emergencyContactLabelDescription">
 
         <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/timeout"
+                android:id="@+id/timeoutInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/raleway_medium"
@@ -61,7 +61,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
                 android:fontFamily="@font/raleway_medium"
-                android:id="@+id/contactName"
+                android:id="@+id/contactNameInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
@@ -83,7 +83,7 @@
             app:layout_constraintTop_toBottomOf="@+id/contactNameLabel">
 
         <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/contactNumber"
+                android:id="@+id/contactNumberInput"
                 android:fontFamily="@font/raleway_medium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -108,7 +108,7 @@
             app:layout_constraintTop_toBottomOf="@+id/contactNumberLabel">
 
         <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/emergencyMessage"
+                android:id="@+id/emergencyMessageInput"
                 android:fontFamily="@font/raleway_medium"
                 android:gravity="top"
                 android:layout_width="match_parent"

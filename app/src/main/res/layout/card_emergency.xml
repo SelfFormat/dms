@@ -14,51 +14,94 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/contactLabel"
-        android:fontFamily="@font/raleway_bold"
-        android:textColor="@color/grayButton"
+        android:id="@+id/timeoutLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/contact"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/raleway_bold"
+        android:text="@string/timeout_label"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/visibilityModeLabel" />
 
     <TextView
-        android:id="@+id/contactSummary"
+        android:id="@+id/timeout"
         android:fontFamily="@font/raleway_medium"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="16dp"
-        android:textColor="@color/grayButton"
-        app:layout_constraintBaseline_toBaselineOf="@+id/contactLabel"
+        app:layout_constraintBaseline_toBaselineOf="@+id/timeoutLabel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/contactLabel" />
+        app:layout_constraintStart_toEndOf="@+id/timeoutLabel" />
+
+    <TextView
+        android:id="@+id/contactNumberLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:fontFamily="@font/raleway_bold"
+        android:text="@string/number"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/timeout" />
+
+    <TextView
+        android:id="@+id/contactNumber"
+        android:fontFamily="@font/raleway_medium"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/contactNumberLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/contactNumberLabel" />
+
+    <TextView
+        android:id="@+id/contactNameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:fontFamily="@font/raleway_bold"
+        android:text="@string/contact"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/contactNumber" />
+
+    <TextView
+        android:id="@+id/contactName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:fontFamily="@font/raleway_medium"
+        app:layout_constraintBaseline_toBaselineOf="@+id/contactNameLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/contactNumberLabel" />
 
     <TextView
         android:id="@+id/messageLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:textColor="@color/grayButton"
-        android:text="@string/message_label"
+        android:layout_marginTop="4dp"
         android:fontFamily="@font/raleway_bold"
+        android:text="@string/message_label"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/contactLabel" />
+        app:layout_constraintTop_toBottomOf="@+id/contactName" />
 
     <TextView
         android:id="@+id/messageSummary"
-        android:fontFamily="@font/raleway_medium"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
+        android:fontFamily="@font/raleway_medium"
         android:textColor="@color/grayButton"
         app:layout_constraintBottom_toTopOf="@+id/editEmergency"
         app:layout_constraintEnd_toEndOf="parent"
@@ -74,6 +117,16 @@
         android:layout_marginBottom="16dp"
         android:text="@string/edit"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/emergencySmsSwitch"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/emergencySmsSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:theme="@style/SwitchTheme"
+        app:layout_constraintBottom_toBottomOf="@+id/editEmergency"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/editEmergency" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -51,7 +51,7 @@ class EmergencySmsFragment : CustomFragment() {
     }
 
     private fun setFieldValidation() {
-        timeout.run {
+        timeoutInput.run {
             addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(p0: Editable?) {
                 }
@@ -61,19 +61,19 @@ class EmergencySmsFragment : CustomFragment() {
 
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                     when {
-                        timeout.text.isNullOrBlank() -> timeout.error = "Timeout cannot be empty"
-                        !timeout.text.toString().isDigitsOnly() -> timeout.error = "Timeout must be positive number"
+                        timeoutInput.text.isNullOrBlank() -> timeoutInput.error = "Timeout cannot be empty"
+                        !timeoutInput.text.toString().isDigitsOnly() -> timeoutInput.error = "Timeout must be positive number"
                     }
                 }
             })
             setOnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) {
-                    if (timeout.text.isNullOrBlank() || !timeout.text.toString().isDigitsOnly()) timeout.setText("30", TextView.BufferType.EDITABLE)
-                    else timeout.error = null
+                    if (timeoutInput.text.isNullOrBlank() || !timeoutInput.text.toString().isDigitsOnly()) timeoutInput.setText("30", TextView.BufferType.EDITABLE)
+                    else timeoutInput.error = null
                 }
             }
         }
-        contactName.run {
+        contactNameInput.run {
             addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(p0: Editable?) {
                 }
@@ -82,17 +82,17 @@ class EmergencySmsFragment : CustomFragment() {
                 }
 
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    if (contactName.text.isNullOrBlank()) contactName.error = "Contact name cannot be empty"
+                    if (contactNameInput.text.isNullOrBlank()) contactNameInput.error = "Contact name cannot be empty"
                 }
             })
             setOnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) {
-                    if (contactName.text.isNullOrBlank()) contactName.setText("default name", TextView.BufferType.EDITABLE)
-                    else contactName.error = null
+                    if (contactNameInput.text.isNullOrBlank()) contactNameInput.setText("default name", TextView.BufferType.EDITABLE)
+                    else contactNameInput.error = null
                 }
             }
         }
-        contactNumber.run {
+        contactNumberInput.run {
             addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(p0: Editable?) {
                 }
@@ -101,17 +101,23 @@ class EmergencySmsFragment : CustomFragment() {
                 }
 
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    if (contactNumber.text.isNullOrBlank()) contactNumber.error = "Contact number cannot be empty"
+                    when {
+                        contactNumberInput.text.isNullOrBlank() -> contactNumberInput.error = "Contact number cannot be empty"
+                        !(contactNumberInput.text.toString().trim()).isDigitsOnly() -> contactNumberInput.error = "Number has to be digits only"
+                    }
                 }
             })
             setOnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) {
-                    if (contactNumber.text.isNullOrBlank()) contactNumber.setText("default number", TextView.BufferType.EDITABLE)
-                    else contactNumber.error = null
+                    when {
+                        contactNumberInput.text.isNullOrBlank() -> contactNumberInput.setText("default number", TextView.BufferType.EDITABLE)
+                        !(contactNumberInput.text.toString().trim()).isDigitsOnly() -> contactNumberInput.setText("123 456 789", TextView.BufferType.EDITABLE)
+                        else -> contactNumberInput.error = null
+                    }
                 }
             }
         }
-        emergencyMessage.run {
+        emergencyMessageInput.run {
             addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(p0: Editable?) {
                 }
@@ -120,40 +126,40 @@ class EmergencySmsFragment : CustomFragment() {
                 }
 
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    if (emergencyMessage.text.isNullOrBlank()) emergencyMessage.error = "Message cannot be empty"
+                    if (emergencyMessageInput.text.isNullOrBlank()) emergencyMessageInput.error = "Message cannot be empty"
                 }
             })
             setOnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) {
-                    if (emergencyMessage.text.isNullOrBlank()) emergencyMessage.setText("default message", TextView.BufferType.EDITABLE)
-                    else emergencyMessage.error = null
+                    if (emergencyMessageInput.text.isNullOrBlank()) emergencyMessageInput.setText("default message", TextView.BufferType.EDITABLE)
+                    else emergencyMessageInput.error = null
                 }
             }
         }
     }
 
     private fun setEmergencyContact(){
-        timeout.setText(sharedPref!!.getString(TIMEOUT_UNTIL_EMERGENCY_MESSAGE_KEY, DEFAULT_EMERGENCY_TIME.toString()))
-        contactName.setText(sharedPref!!.getString(CONTACT_NAME_KEY, getString(R.string.sample_contact_name)))
-        contactNumber.setText(sharedPref!!.getString(CONTACT_NUMBER_KEY, getString(R.string.example_phone_number)))
-        emergencyMessage.setText(sharedPref!!.getString(EMERGENCY_MESSAGE_KEY, getString(R.string.default_emergency_message)))
+        timeoutInput.setText(sharedPref!!.getString(TIMEOUT_UNTIL_EMERGENCY_MESSAGE_KEY, DEFAULT_EMERGENCY_TIME.toString()))
+        contactNameInput.setText(sharedPref!!.getString(CONTACT_NAME_KEY, getString(R.string.sample_contact_name)))
+        contactNumberInput.setText(sharedPref!!.getString(CONTACT_NUMBER_KEY, getString(R.string.example_phone_number)))
+        emergencyMessageInput.setText(sharedPref!!.getString(EMERGENCY_MESSAGE_KEY, getString(R.string.default_emergency_message)))
     }
 
     private fun saveContact() {
         Log.i("EmergencySmsFragment", "Contact saved")
         sharedPref?.edit {
-            putString(TIMEOUT_UNTIL_EMERGENCY_MESSAGE_KEY, timeout.text.toString())
-            putString(CONTACT_NAME_KEY, contactName.text.toString())
-            putString(CONTACT_NUMBER_KEY, contactNumber.text.toString())
-            putString(EMERGENCY_MESSAGE_KEY, emergencyMessage.text.toString())
+            putString(TIMEOUT_UNTIL_EMERGENCY_MESSAGE_KEY, timeoutInput.text.toString())
+            putString(CONTACT_NAME_KEY, contactNameInput.text.toString())
+            putString(CONTACT_NUMBER_KEY, contactNumberInput.text.toString().trim()) //TODO: add number validation regexp (convert it to number only)
+            putString(EMERGENCY_MESSAGE_KEY, emergencyMessageInput.text.toString())
         }
     }
 
     private fun fieldsHasErrorMessages(): Boolean {
-        if (emergencyMessage.error != null ||
-                contactName.error != null ||
-                contactNumber.error != null ||
-                timeout.error != null) {
+        if (emergencyMessageInput.error != null ||
+                contactNameInput.error != null ||
+                contactNumberInput.error != null ||
+                timeoutInput.error != null) {
             return true
         }
         return false

@@ -33,10 +33,13 @@ import com.selfformat.deadmanswitch.components.Alarm
 import com.selfformat.deadmanswitch.data.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.card_addwidget.*
-import kotlinx.android.synthetic.main.card_emergency.*
+import kotlinx.android.synthetic.main.card_emergency.contactNumber
+import kotlinx.android.synthetic.main.card_emergency.editEmergency
+import kotlinx.android.synthetic.main.card_emergency.messageSummary
+import kotlinx.android.synthetic.main.card_emergency_dark.*
 import kotlinx.android.synthetic.main.card_time_picker.*
 import kotlinx.android.synthetic.main.card_tone_picker.*
-import kotlinx.android.synthetic.main.card_turn_on_dark_mode.*
+import kotlinx.android.synthetic.main.card_turn_on_light_mode.*
 import kotlinx.android.synthetic.main.fragment_main.*
 import org.jetbrains.anko.startActivity
 
@@ -97,11 +100,6 @@ class MainFragment : CustomFragment() {
                 openCustomSoundPicker()
             }
         }
-
-        val emergencyContact = (activity as MainActivity).getEmergencyContact()
-        val contactSummaryText = "${emergencyContact.name} (${emergencyContact.number})"
-        contactSummary.text = contactSummaryText
-        messageSummary.text = emergencyContact.message
 
         setTimeRange()
 
@@ -197,16 +195,25 @@ class MainFragment : CustomFragment() {
         }
         fab.text = if (alarmOn) getString(R.string.turn_off) else getString(R.string.run_switch)
         alarmVolumeSeekBar.progress = getCurrentAlarmVolume()
-        val summary = "${(activity as MainActivity).getEmergencyContact().name ?: getString(R.string.sample_contact_name)} (${(activity as MainActivity).getEmergencyContact().number ?: getString(R.string.sample_contact_name)})"
-        val textSummary = (activity as MainActivity).getEmergencyContact().message ?: getString(R.string.message)
-        contactSummary.text = summary
-        messageSummary.text = textSummary
+
+        setEmergencySmsSummary()
+
         defaultRingtoneUri = (activity as MainActivity).getRingtoneUri()
 
         activity?.toolbarTitle?.setBackgroundColor(if (lightTheme) Color.WHITE else Color.BLACK)
         activity?.mainToolbar?.setBackgroundColor(if (lightTheme) Color.WHITE else Color.BLACK)
         activity?.toolbarTitle?.setTextColor(if (lightTheme) Color.BLACK else Color.WHITE)
         activity?.toolbarTitle?.text = resources.getString(R.string.app_name)
+    }
+
+    private fun setEmergencySmsSummary() {
+        val emergencyContact = (activity as MainActivity).getEmergencyContact()
+        val timeoutTime =
+            "${sharedPref?.getString(TIMEOUT_UNTIL_EMERGENCY_MESSAGE_KEY, DEFAULT_EMERGENCY_TIME.toString())} seconds"
+        contactNumber.text = emergencyContact.number
+        contactName.text = emergencyContact.name
+        timeout.text = timeoutTime
+        messageSummary.text = emergencyContact.message
     }
 
     private fun snackBarMessage(timeToNextAlarm: Int) = "New alarm in ${timeToNextAlarm / 1000} seconds"
