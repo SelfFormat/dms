@@ -46,7 +46,7 @@ class EmergencySmsFragment : CustomFragment() {
         }
 
         //TODO: add on/off to emergency sms feature with "are you sure" popup
-        //TODO: Add timeout to summary in widget
+        //TODO: Add timeoutInput to summary in widget
 
     }
 

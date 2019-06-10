@@ -86,6 +86,9 @@ class MainFragment : CustomFragment() {
                 )
             }
         }
+
+        //TODO: move every card to separate class
+
         chooseToneButton.setOnClickListener { openSystemRingtonePicker() }
         currentAlarmName.setOnClickListener { openSystemRingtonePicker() }
         customRingtone.run {
@@ -129,9 +132,13 @@ class MainFragment : CustomFragment() {
         changeSeekBarColor(getString(R.string.seek_bar_color))
         currentAlarmName.text = (activity as MainActivity).getRingtoneName()
 
+        //TODO: add card with ad
 
         fab.run {
             setOnClickListener {
+
+                //TODO: add lock to editing other fields, when run-switch is on
+
                 if (alarmOn) {
                     Alarm.cancelAlarm(activity!!.applicationContext)
                     saveAlarmState(false)
@@ -308,11 +315,17 @@ class MainFragment : CustomFragment() {
                 }
             }
         }
+
+        //TODO: Add better description to what is time range (and what is timeout)
     }
 
     //endregion
 
-    //region soundPicker
+    //region soundPickerCard
+
+    //TODO: AFTER RELEASE: add vibration on/off option
+
+    //TODO: ADD BUTTON that appears when scrolled down. It should appear on the right side of FAB. (i) -> info, privacy policy etc. -> copy activity from bekind
 
     private fun openSystemRingtonePicker() {
         val intentUpload = Intent(RingtoneManager.ACTION_RINGTONE_PICKER)
