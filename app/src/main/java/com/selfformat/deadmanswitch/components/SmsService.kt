@@ -1,5 +1,6 @@
 package com.selfformat.deadmanswitch.components
 
+import android.app.ActivityManager
 import android.app.IntentService
 import android.content.Context
 import android.content.Intent
@@ -12,17 +13,20 @@ import com.selfformat.deadmanswitch.data.*
 class SmsService : IntentService("SmsService") {
 
     lateinit var sharedPref: SharedPreferences
+    var premium = false
+    var emergencyEnabled = false
 
     override fun onHandleIntent(p0: Intent?) {
         sharedPref = getSharedPreferences(
             PREFERENCES_KEY,
             Context.MODE_PRIVATE
         )
-        //TODO: add check if AlarmingActivity is dead. If yes then don't send sms (it means that user kills activity)
-        //TODO: add check if user has paid version
-        //TODO: add check if user enabled sms feature
-        //TODO: add check for SMS permission
-        sendSmsMessage()
+        premium = sharedPref.getBoolean(PREMIUM_FEATURES_KEY, false)
+        emergencyEnabled = sharedPref.getBoolean(EMERGENCY_ENABLED_KEY, false)
+        if (premium && emergencyEnabled && isSmsPermissionGranted(this)
+            && isAppStillRunning(this)) {
+            sendSmsMessage()
+        }
         goToMainScreen(this)
     }
 
@@ -43,5 +47,20 @@ class SmsService : IntentService("SmsService") {
             contact.number, serviceCenterAddress, contact.message,
             null, null
         )
+    }
+
+    private fun isAppStillRunning(context: Context): Boolean {
+        val am = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val runningProcesses = am.runningAppProcesses
+        for (processInfo in runningProcesses) {
+            if (processInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                for (activeProcess in processInfo.pkgList) {
+                    if (activeProcess == context.packageName) {
+                        return true
+                    }
+                }
+            }
+        }
+        return false
     }
 }
