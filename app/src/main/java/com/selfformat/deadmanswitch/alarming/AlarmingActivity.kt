@@ -1,4 +1,5 @@
-package com.selfformat.deadmanswitch
+//Don't move this from this package - it's checked in service to ensure it is running or dead
+package com.selfformat.deadmanswitch.alarming
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -24,6 +25,7 @@ import android.view.WindowManager
 import android.view.animation.AnimationUtils
 import androidx.core.app.NotificationCompat
 import androidx.core.content.edit
+import com.selfformat.deadmanswitch.R
 import com.selfformat.deadmanswitch.base.CustomActivity
 import com.selfformat.deadmanswitch.components.Alarm
 import com.selfformat.deadmanswitch.components.SmsService

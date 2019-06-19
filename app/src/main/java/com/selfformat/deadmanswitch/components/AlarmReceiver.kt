@@ -3,7 +3,7 @@ package com.selfformat.deadmanswitch.components
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.selfformat.deadmanswitch.AlarmingActivity
+import com.selfformat.deadmanswitch.alarming.AlarmingActivity
 
 class AlarmReceiver : BroadcastReceiver() {
 

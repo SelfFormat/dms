@@ -9,7 +9,7 @@
     android:orientation="vertical"
     android:background="@drawable/gradient_alarming_background"
     android:screenOrientation="portrait"
-    tools:context=".AlarmingActivity">
+    tools:context=".alarming.AlarmingActivity">
 
     <ImageView
             android:id="@+id/repeatAlarmButton"

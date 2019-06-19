@@ -53,7 +53,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.selfformat.deadmanswitch.AlarmingActivity"
+            android:name="com.selfformat.deadmanswitch.alarming.AlarmingActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:showWhenLocked="true"
