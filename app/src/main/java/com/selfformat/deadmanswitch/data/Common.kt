@@ -1,9 +1,12 @@
 package com.selfformat.deadmanswitch.data
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.util.Log
+import androidx.core.content.PermissionChecker
 import com.selfformat.deadmanswitch.MainActivity
 import java.util.*
 
@@ -17,6 +20,7 @@ const val RINGTONE_NAME_KEY = "ringtone_name"
 const val TIMEOUT_UNTIL_EMERGENCY_MESSAGE_KEY = "timeout"
 const val ALARM_STATUS_KEY = "alarm_status_key"
 const val PREMIUM_FEATURES_KEY = "premium_features"
+const val EMERGENCY_ENABLED_KEY = "emergency_enabled"
 const val TIME_TO_NEXT_ALARM_KEY = "time_to_next_alarm"
 const val IS_WIDGET_CARD_VISIBLE_KEY = "is_widget_card_visible"
 
@@ -50,4 +54,20 @@ fun randomTime(minTime: Int, maxTime: Int): Int {
     val generated = Random().nextInt(maxTime + 1 - minTime) * 1000
     Log.i("init: $initialTime", ", gen: $generated")
     return generated + initialTime
+}
+
+fun isSmsPermissionGranted(context: Context?): Boolean {
+    return if (context?.let {
+            PermissionChecker.checkSelfPermission(
+                it,
+                Manifest.permission.SEND_SMS
+            )
+        } == PackageManager.PERMISSION_GRANTED
+    ) {
+        Log.d("TAG", "Permission granted")
+        true
+    } else {
+        Log.d("TAG", "Permission not granted")
+        false
+    }
 }
