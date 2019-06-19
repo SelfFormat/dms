@@ -22,7 +22,6 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.PermissionChecker.checkSelfPermission
 import androidx.core.content.edit
 import androidx.core.text.isDigitsOnly
 import androidx.fragment.app.Fragment
@@ -36,7 +35,9 @@ import kotlinx.android.synthetic.main.card_addwidget.*
 import kotlinx.android.synthetic.main.card_emergency.contactNumber
 import kotlinx.android.synthetic.main.card_emergency.editEmergency
 import kotlinx.android.synthetic.main.card_emergency.messageSummary
-import kotlinx.android.synthetic.main.card_emergency_dark.*
+import kotlinx.android.synthetic.main.card_emergency_dark.contactName
+import kotlinx.android.synthetic.main.card_emergency_dark.emergencySmsSwitch
+import kotlinx.android.synthetic.main.card_emergency_dark.timeout
 import kotlinx.android.synthetic.main.card_time_picker.*
 import kotlinx.android.synthetic.main.card_tone_picker.*
 import kotlinx.android.synthetic.main.card_turn_on_light_mode.*
@@ -50,6 +51,7 @@ class MainFragment : CustomFragment() {
     private lateinit var audioManager: AudioManager
     private var defaultRingtoneUri: Uri? = null
     private var widgetCardVisibility = View.VISIBLE
+    private var emergencySmsFeature = false
 
     companion object {
         fun newInstance(): MainFragment {
@@ -79,8 +81,25 @@ class MainFragment : CustomFragment() {
         }
 
         if (lightTheme) premiumBarMain.setOnClickListener { activity?.startActivity<BuyPremiumActivity>() }
+
+        emergencySmsFeature = sharedPref?.getBoolean(EMERGENCY_ENABLED_KEY, false) ?: false
+
+        emergencySmsSwitch.isEnabled = premium
+        emergencySmsSwitch.setOnClickListener { if (!premium) activity?.startActivity<BuyPremiumActivity>() }
+        emergencySmsSwitch.isChecked = emergencySmsFeature
+        emergencySmsSwitch.setOnCheckedChangeListener { _, isChecked ->
+                editEmergency.isEnabled = isChecked
+                sharedPref?.edit(true) {
+                    putBoolean(EMERGENCY_ENABLED_KEY, isChecked)
+                }
+                emergencySmsFeature = isChecked
+                changeAlphaOfEditEmergencySMSButton()
+        }
+        changeAlphaOfEditEmergencySMSButton()
+
+        editEmergency.isEnabled = emergencySmsFeature
         editEmergency.setOnClickListener {
-            if (isSmsPermissionGranted()) {
+            if (isSmsPermissionGranted(context)) {
                 newFrag(EmergencySmsFragment.newInstance())
             } else {
                 requestPermissions(
@@ -166,6 +185,14 @@ class MainFragment : CustomFragment() {
 
         dismissWidgetHintButton.setOnClickListener {
             hideWidgetCardForever()
+        }
+    }
+
+    private fun changeAlphaOfEditEmergencySMSButton() {
+        if (emergencySmsFeature) {
+            editEmergency.alpha = 1f
+        } else {
+            editEmergency.alpha = 0.1f
         }
     }
 
@@ -434,22 +461,6 @@ class MainFragment : CustomFragment() {
                     // Disable emergency contact.
                 }
             }
-        }
-    }
-
-    private fun isSmsPermissionGranted(): Boolean {
-        return if (context?.let {
-                checkSelfPermission(
-                    it,
-                    Manifest.permission.SEND_SMS
-                )
-            } == PackageManager.PERMISSION_GRANTED
-        ) {
-            Log.d("TAG", "Permission granted")
-            true
-        } else {
-            Log.d("TAG", "Permission not granted")
-            false
         }
     }
 
