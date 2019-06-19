@@ -11,17 +11,18 @@ import androidx.core.content.edit
 import com.selfformat.deadmanswitch.data.ALARM_STATUS_KEY
 import com.selfformat.deadmanswitch.data.LIGHT_THEME_KEY
 import com.selfformat.deadmanswitch.data.PREFERENCES_KEY
+import com.selfformat.deadmanswitch.data.PREMIUM_FEATURES_KEY
 
 open class CustomActivity : AppCompatActivity() {
 
     lateinit var sharedPref: SharedPreferences
     var lightTheme = true
     var alarmOn = false
+    var premium = false
 
     override fun onResume() {
         super.onResume()
-        lightTheme = sharedPref.getBoolean(LIGHT_THEME_KEY, true)
-        alarmOn = sharedPref.getBoolean(ALARM_STATUS_KEY, false)
+        updateImportantBooleansFromPrefs()
         setUpStatusBarAppearance()
     }
 
@@ -31,7 +32,13 @@ open class CustomActivity : AppCompatActivity() {
             PREFERENCES_KEY,
             Context.MODE_PRIVATE
         )
+        updateImportantBooleansFromPrefs()
+    }
+
+    private fun updateImportantBooleansFromPrefs() {
         lightTheme = sharedPref.getBoolean(LIGHT_THEME_KEY, true)
+        alarmOn = sharedPref.getBoolean(ALARM_STATUS_KEY, false)
+        premium = sharedPref.getBoolean(PREMIUM_FEATURES_KEY, false)
     }
 
     fun saveAlarmState(alarmIsRunning: Boolean) {

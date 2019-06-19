@@ -16,6 +16,7 @@ const val RINGTONE_KEY = "ringtone"
 const val RINGTONE_NAME_KEY = "ringtone_name"
 const val TIMEOUT_UNTIL_EMERGENCY_MESSAGE_KEY = "timeout"
 const val ALARM_STATUS_KEY = "alarm_status_key"
+const val PREMIUM_FEATURES_KEY = "premium_features"
 const val TIME_TO_NEXT_ALARM_KEY = "time_to_next_alarm"
 const val IS_WIDGET_CARD_VISIBLE_KEY = "is_widget_card_visible"
 

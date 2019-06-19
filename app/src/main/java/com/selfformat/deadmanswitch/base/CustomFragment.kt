@@ -8,12 +8,14 @@ import androidx.fragment.app.Fragment
 import com.selfformat.deadmanswitch.data.ALARM_STATUS_KEY
 import com.selfformat.deadmanswitch.data.LIGHT_THEME_KEY
 import com.selfformat.deadmanswitch.data.PREFERENCES_KEY
+import com.selfformat.deadmanswitch.data.PREMIUM_FEATURES_KEY
 
 open class CustomFragment : Fragment() {
 
     var sharedPref: SharedPreferences? = null
     var lightTheme = true
     var alarmOn = false
+    var premium = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,13 +23,18 @@ open class CustomFragment : Fragment() {
             PREFERENCES_KEY,
             Context.MODE_PRIVATE
         )
-        lightTheme = sharedPref?.getBoolean(LIGHT_THEME_KEY, true) ?: true
+        updateImportantBooleansFromPrefs()
     }
 
     override fun onResume() {
         super.onResume()
+        updateImportantBooleansFromPrefs()
+    }
+
+    private fun updateImportantBooleansFromPrefs() {
         lightTheme = sharedPref?.getBoolean(LIGHT_THEME_KEY, true) ?: true
         alarmOn = sharedPref?.getBoolean(ALARM_STATUS_KEY, false) ?: false
+        premium = sharedPref?.getBoolean(PREMIUM_FEATURES_KEY, false) ?: false
     }
 
     fun saveAlarmState(isAlarmRunning: Boolean) {
