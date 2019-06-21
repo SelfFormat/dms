@@ -73,6 +73,24 @@ class MainFragment : CustomFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initVisibilityModeSwitch()
+        initBuyPremiumBar()
+        initEmergencySmsCard()
+        initTimeRange()
+        initAlarmSoundCard()
+        initRunSwitch(view)
+        initWidgetCard()
+        //TODO: add card with ad
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateUI()
+    }
+
+    //region darkMode Card
+
+    private fun initVisibilityModeSwitch() {
         visibilityModeSwitch.isChecked = !lightTheme
         visibilityModeSwitch.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
@@ -81,81 +99,15 @@ class MainFragment : CustomFragment() {
                 (activity as MainActivity).changeTheme()
             }
         }
+    }
 
-        if (lightTheme) premiumBarMain.setOnClickListener { activity?.startActivity<BuyPremiumActivity>() }
+    //endregion
 
-        emergencySmsFeature = sharedPref?.getBoolean(EMERGENCY_ENABLED_KEY, false) ?: false
+    //region RunSwitch FAB
 
-        emergencySmsSwitch.isEnabled = premium
-        emergencySmsSwitch.setOnClickListener { if (!premium) activity?.startActivity<BuyPremiumActivity>() }
-        emergencySmsSwitch.isChecked = emergencySmsFeature
-        emergencySmsSwitch.setOnCheckedChangeListener { _, isChecked ->
-                editEmergency.isEnabled = isChecked
-                sharedPref?.edit(true) {
-                    putBoolean(EMERGENCY_ENABLED_KEY, isChecked)
-                }
-                emergencySmsFeature = isChecked
-                changeAlphaOfEditEmergencySMSButton()
-        }
-        changeAlphaOfEditEmergencySMSButton()
-
-        editEmergency.isEnabled = emergencySmsFeature
-        editEmergency.setOnClickListener {
-            if (isSmsPermissionGranted(context)) {
-                newFrag(EmergencySmsFragment.newInstance())
-            } else {
-                requestPermissions(
-                    arrayOf(Manifest.permission.SEND_SMS),
-                    PERMISSIONS_REQUEST_SEND_SMS
-                )
-            }
-        }
-
-        //TODO: move every card to separate class
-
-        chooseToneButton.setOnClickListener { openSystemRingtonePicker() }
-        currentAlarmName.setOnClickListener { openSystemRingtonePicker() }
-        customRingtone.run {
-            visibility = View.VISIBLE
-            setOnClickListener {
-                openCustomSoundPicker()
-            }
-        }
-
-        setTimeRange()
-
-        alarmVolumeSeekBar.run {
-            max = getAlarmMaxVolume()
-            progress = getCurrentAlarmVolume()
-            if (progress <= 0) {
-                volumeIcon.setImageResource(R.drawable.ic_volume_off_black_24dp)
-            }
-            setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
-                override fun onProgressChanged(p0: SeekBar?, volume: Int, p2: Boolean) {
-                    saveAlarmVolume(volume)
-                    if (volume == 0) {
-                        mutedAlarmSnackBarWarning()
-                        volumeIcon.setImageResource(R.drawable.ic_volume_off_black_24dp)
-                    } else {
-                        volumeIcon.setImageResource(R.drawable.ic_volume_up_black_24dp)
-                    }
-                }
-                override fun onStartTrackingTouch(p0: SeekBar?) {
-                }
-
-                override fun onStopTrackingTouch(p0: SeekBar?) {
-                }
-            })
-        }
-
-        changeSeekBarColor(getString(R.string.seek_bar_color))
-        currentAlarmName.text = (activity as MainActivity).getRingtoneName()
-
-        //TODO: add card with ad
-
+    private fun initRunSwitch(view: View) {
         fab.run {
             setOnClickListener {
-
                 //TODO: add lock to editing other fields, when run-switch is on
 
                 if (alarmOn) {
@@ -163,79 +115,47 @@ class MainFragment : CustomFragment() {
                     saveAlarmState(false)
                     fab.text = getString(R.string.run_switch)
                     notification.cancelNotifications()
-                    Snackbar.make(view!!.findViewById(R.id.coordinatorMainFragment), getString(R.string.alarm_canceled_snackbar_message), Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(
+                        view!!.findViewById(R.id.coordinatorMainFragment),
+                        getString(R.string.alarm_canceled_snackbar_message),
+                        Snackbar.LENGTH_SHORT
+                    ).show()
                 } else {
                     if (getCurrentAlarmVolume() <= 0) {
                         Toast.makeText(context, getCurrentAlarmVolume().toString(), Toast.LENGTH_SHORT).show()
-                        mutedAlarmSnackBarWarning()
+                        showMutedAlarmSnackBarWarningSnackBar()
                     } else {
                         saveAlarmState(true)
                         notification.setUpNotification(context, getString(R.string.cancle_alarm_notification_title))
                         val random = randomTime(minTime, maxTime)
                         val time = System.currentTimeMillis() + random
-                        Snackbar.make(view!!.findViewById(R.id.coordinatorMainFragment), snackBarMessage(random), Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(
+                            view!!.findViewById(R.id.coordinatorMainFragment),
+                            snackBarMessage(random),
+                            Snackbar.LENGTH_SHORT
+                        ).show()
                         Alarm.prepareForAlarm(activity!!.applicationContext, time)
                         fab.text = getString(R.string.turn_off)
                     }
                 }
             }
         }
-
-        widgetCardVisibility = when {
-            (activity as MainActivity).isWidgetCardVisible() -> View.VISIBLE
-            else -> View.GONE
-        }
-        cardWidget.visibility = widgetCardVisibility
-
-        dismissWidgetHintButton.setOnClickListener {
-            hideWidgetCardForever()
-        }
     }
 
-    private fun changeAlphaOfEditEmergencySMSButton() {
-        if (emergencySmsFeature) {
-            editEmergency.alpha = 1f
-        } else {
-            editEmergency.alpha = 0.1f
+    //endregion
+
+    //region BuyPremium Bar
+
+    private fun initBuyPremiumBar() {
+        when {
+            premium -> premiumBarMain.visibility = View.GONE
+            !premium -> premiumBarMain.setOnClickListener { activity?.startActivity<BuyPremiumActivity>() }
         }
     }
 
-    private fun mutedAlarmSnackBarWarning() {
-        Snackbar.make(view!!.findViewById(R.id.coordinatorMainFragment),
-            "Running alarm isn't available when sound is muted", Snackbar.LENGTH_LONG).show()
-    }
+    //endregion
 
-    private fun newFrag(fragment: Fragment) {
-        activity!!.supportFragmentManager.transaction(allowStateLoss = true) {
-            setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
-            replace(R.id.mainFrame, fragment)
-            addToBackStack(fragment.toString())
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        sharedPref?.let {
-            if(it.getString(TIME_TO_NEXT_ALARM_KEY, EMPTY) != "empty") {
-                val timeToNextAlarm = it.getString(TIME_TO_NEXT_ALARM_KEY, "empty").toInt()
-                Snackbar.make(view!!.findViewById(R.id.coordinatorMainFragment), snackBarMessage(timeToNextAlarm), Snackbar.LENGTH_SHORT).show()
-                it.edit(true) {
-                    putString(TIME_TO_NEXT_ALARM_KEY, "empty")
-                }
-            }
-        }
-        fab.text = if (alarmOn) getString(R.string.turn_off) else getString(R.string.run_switch)
-        alarmVolumeSeekBar.progress = getCurrentAlarmVolume()
-
-        setEmergencySmsSummary()
-
-        defaultRingtoneUri = (activity as MainActivity).getRingtoneUri()
-
-        activity?.toolbarTitle?.setBackgroundColor(if (lightTheme) Color.WHITE else Color.BLACK)
-        activity?.mainToolbar?.setBackgroundColor(if (lightTheme) Color.WHITE else Color.BLACK)
-        activity?.toolbarTitle?.setTextColor(if (lightTheme) Color.BLACK else Color.WHITE)
-        activity?.toolbarTitle?.text = resources.getString(R.string.app_name)
-    }
+    //region emergencySMS Card
 
     private fun setEmergencySmsSummary() {
         val emergencyContact = (activity as MainActivity).getEmergencyContact()
@@ -247,7 +167,47 @@ class MainFragment : CustomFragment() {
         messageSummary.text = emergencyContact.message
     }
 
-    private fun snackBarMessage(timeToNextAlarm: Int) = "New alarm in ${timeToNextAlarm / 1000} seconds"
+    private fun initEmergencySmsCard() {
+        emergencySmsFeature = sharedPref?.getBoolean(EMERGENCY_ENABLED_KEY, false) ?: false
+
+        emergencySmsSwitch.isEnabled = premium
+        emergencySmsSwitch.setOnClickListener { if (!premium) activity?.startActivity<BuyPremiumActivity>() }
+        emergencySmsSwitch.isChecked = emergencySmsFeature
+        emergencySmsSwitch.setOnCheckedChangeListener { _, isChecked ->
+            editEmergency.isEnabled = isChecked
+            sharedPref?.edit(true) {
+                putBoolean(EMERGENCY_ENABLED_KEY, isChecked)
+            }
+            emergencySmsFeature = isChecked
+            changeAlphaOfEditEmergencySMSButton()
+        }
+
+        changeAlphaOfEditEmergencySMSButton()
+
+        editEmergency.isEnabled = emergencySmsFeature
+        editEmergency.setOnClickListener {
+            if (isSmsPermissionGranted(context)) {
+                replaceFragmentWithTransition(EmergencySmsFragment.newInstance())
+            } else {
+                requestPermissions(
+                    arrayOf(Manifest.permission.SEND_SMS),
+                    PERMISSIONS_REQUEST_SEND_SMS
+                )
+            }
+        }
+    }
+
+    private fun changeAlphaOfEditEmergencySMSButton() {
+        if (emergencySmsFeature) {
+            editEmergency.alpha = 1f
+        } else {
+            editEmergency.alpha = 0.1f
+        }
+    }
+
+    //endregion
+
+    //region hideWidgetForever Card
 
     private fun hideWidgetCardForever() {
         val builder: AlertDialog.Builder = when {
@@ -272,9 +232,23 @@ class MainFragment : CustomFragment() {
             .show()
     }
 
-    //region timeRange
+    private fun initWidgetCard() {
+        widgetCardVisibility = when {
+            (activity as MainActivity).isWidgetCardVisible() -> View.VISIBLE
+            else -> View.GONE
+        }
+        cardWidget.visibility = widgetCardVisibility
 
-    private fun setTimeRange() {
+        dismissWidgetHintButton.setOnClickListener {
+            hideWidgetCardForever()
+        }
+    }
+
+    //endregion
+
+    //region timeRange Card
+
+    private fun initTimeRange() {
         minTime = getRingtoneMinTime(sharedPref)
         maxTime = getRingtoneMaxTime(sharedPref)
 
@@ -359,9 +333,47 @@ class MainFragment : CustomFragment() {
 
     //endregion
 
-    //region soundPickerCard
+    //region alarm sound Card
 
     //TODO: AFTER RELEASE: add vibration on/off option
+
+    private fun initAlarmSoundCard() {
+        chooseToneButton.setOnClickListener { openSystemRingtonePicker() }
+        currentAlarmName.setOnClickListener { openSystemRingtonePicker() }
+        customRingtone.run {
+            visibility = View.VISIBLE
+            setOnClickListener {
+                openCustomSoundPicker()
+            }
+        }
+        alarmVolumeSeekBar.run {
+            max = getAlarmMaxVolume()
+            progress = getCurrentAlarmVolume()
+            if (progress <= 0) {
+                volumeIcon.setImageResource(R.drawable.ic_volume_off_black_24dp)
+            }
+            setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(p0: SeekBar?, volume: Int, p2: Boolean) {
+                    saveAlarmVolume(volume)
+                    if (volume == 0) {
+                        showMutedAlarmSnackBarWarningSnackBar()
+                        volumeIcon.setImageResource(R.drawable.ic_volume_off_black_24dp)
+                    } else {
+                        volumeIcon.setImageResource(R.drawable.ic_volume_up_black_24dp)
+                    }
+                }
+
+                override fun onStartTrackingTouch(p0: SeekBar?) {
+                }
+
+                override fun onStopTrackingTouch(p0: SeekBar?) {
+                }
+            })
+        }
+
+        changeSeekBarColor(getString(R.string.seek_bar_color))
+        currentAlarmName.text = (activity as MainActivity).getRingtoneName()
+    }
 
     //TODO: ADD BUTTON that appears when scrolled down. It should appear on the right side of FAB. (i) -> info, privacy policy etc. -> copy activity from bekind
 
@@ -434,15 +446,6 @@ class MainFragment : CustomFragment() {
         Toast.makeText(context, "$uri ${(activity as MainActivity).getRingtoneName()}", Toast.LENGTH_SHORT).show()
     }
 
-    private fun getFileNameFromIntent(uri:Uri):String {
-        val returnCursor = context?.contentResolver?.query(uri, null, null, null, null)!!
-        val nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-        returnCursor.moveToFirst()
-        val name = returnCursor.getString(nameIndex)
-        returnCursor.close()
-        return name
-    }
-
     //endregion
 
     //region sms permissions
@@ -454,7 +457,7 @@ class MainFragment : CustomFragment() {
                 if (permissions[0] == Manifest.permission.SEND_SMS && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // Permission was granted. Enable emergency contact.
                     Log.d("TAG", "Permission granted :)")
-                    newFrag(EmergencySmsFragment.newInstance())
+                    replaceFragmentWithTransition(EmergencySmsFragment.newInstance())
                 } else {
                     // Permission denied.®
                     Log.d("TAG", "No permission :(")
@@ -466,6 +469,67 @@ class MainFragment : CustomFragment() {
                 }
             }
         }
+    }
+
+    //endregion
+
+    //region utils
+
+    private fun updateUI() {
+        showSnackBarWithRemainingTimeIfNeeded()
+        fab.text = if (alarmOn) getString(R.string.turn_off) else getString(R.string.run_switch)
+        alarmVolumeSeekBar.progress = getCurrentAlarmVolume()
+        setEmergencySmsSummary()
+        defaultRingtoneUri = (activity as MainActivity).getRingtoneUri()
+        setToolbarBasedOnTheme()
+    }
+
+    private fun showSnackBarWithRemainingTimeIfNeeded() {
+        sharedPref?.run {
+            if (getString(TIME_TO_NEXT_ALARM_KEY, EMPTY) != EMPTY) {
+                val timeToNextAlarm = getString(TIME_TO_NEXT_ALARM_KEY, EMPTY).toInt()
+                Snackbar.make(
+                    view!!.findViewById(R.id.coordinatorMainFragment),
+                    snackBarMessage(timeToNextAlarm),
+                    Snackbar.LENGTH_SHORT
+                ).show()
+                edit(true) {
+                    putString(TIME_TO_NEXT_ALARM_KEY, EMPTY)
+                }
+            }
+        }
+    }
+
+    private fun snackBarMessage(timeToNextAlarm: Int) = "New alarm in ${timeToNextAlarm / 1000} seconds"
+
+    private fun showMutedAlarmSnackBarWarningSnackBar() {
+        Snackbar.make(view!!.findViewById(R.id.coordinatorMainFragment),
+            "Running alarm isn't available when sound is muted", Snackbar.LENGTH_LONG).show()
+    }
+
+    private fun replaceFragmentWithTransition(fragment: Fragment) {
+        activity!!.supportFragmentManager.transaction(allowStateLoss = true) {
+            setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+            replace(R.id.mainFrame, fragment)
+            addToBackStack(fragment.toString())
+        }
+    }
+
+    private fun setToolbarBasedOnTheme() {
+        activity?.toolbarTitle?.setBackgroundColor(if (lightTheme) Color.WHITE else Color.BLACK)
+        activity?.mainToolbar?.setBackgroundColor(if (lightTheme) Color.WHITE else Color.BLACK)
+        activity?.toolbarTitle?.setTextColor(if (lightTheme) Color.BLACK else Color.WHITE)
+        activity?.toolbarTitle?.text = resources.getString(R.string.app_name)
+    }
+
+
+    private fun getFileNameFromIntent(uri: Uri): String {
+        val returnCursor = context?.contentResolver?.query(uri, null, null, null, null)!!
+        val nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+        returnCursor.moveToFirst()
+        val name = returnCursor.getString(nameIndex)
+        returnCursor.close()
+        return name
     }
 
     //endregion
