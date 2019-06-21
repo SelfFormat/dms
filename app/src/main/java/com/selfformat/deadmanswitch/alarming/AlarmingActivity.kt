@@ -1,14 +1,9 @@
 //Don't move this from this package - it's checked in service to ensure it is running or dead
 package com.selfformat.deadmanswitch.alarming
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
-import android.graphics.Color
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -23,11 +18,11 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.view.WindowManager
 import android.view.animation.AnimationUtils
-import androidx.core.app.NotificationCompat
 import androidx.core.content.edit
 import com.selfformat.deadmanswitch.R
 import com.selfformat.deadmanswitch.base.CustomActivity
 import com.selfformat.deadmanswitch.components.Alarm
+import com.selfformat.deadmanswitch.components.NotificationCancelAlarm
 import com.selfformat.deadmanswitch.components.SmsService
 import com.selfformat.deadmanswitch.data.*
 import kotlinx.android.synthetic.main.activity_alarming.*
@@ -39,8 +34,8 @@ class AlarmingActivity : CustomActivity(), SensorEventListener {
     private lateinit var audioManager: AudioManager
     private var sensorManager: SensorManager? = null
     private var proximitySensor: Sensor? = null
-    private var notificationManager: NotificationManager? = null
     private lateinit var uri: Uri
+    private val notification = NotificationCancelAlarm()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,8 +61,7 @@ class AlarmingActivity : CustomActivity(), SensorEventListener {
         audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         proximitySensor = sensorManager!!.getDefaultSensor(Sensor.TYPE_PROXIMITY)
-        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        setUpNotification(getString(R.string.cancle_alarm_notification_title))
+        notification.setUpNotification(this, getString(R.string.cancle_alarm_notification_title))
         uri = getRingtoneUri()
 
         mp = MediaPlayer()
@@ -147,6 +141,7 @@ class AlarmingActivity : CustomActivity(), SensorEventListener {
 
     override fun onDestroy() {
         mp.release()
+        notification.cancelNotifications()
         super.onDestroy()
     }
 
@@ -168,65 +163,6 @@ class AlarmingActivity : CustomActivity(), SensorEventListener {
         val distance = event.values?.get(0)?.toInt()
         if (distance == 0) {
             scheduleNextAlarm()
-        }
-    }
-
-    //endregion
-
-    //region setUpNotification
-
-    private fun setUpNotification(title: String) {
-        val resultPendingIntent = PendingIntent.getActivity(
-            this,
-            0,
-            Intent(this, AlarmingActivity::class.java),
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
-
-        val mNotificationId = 1
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            createNotificationChannel(
-                CHANNEL_ID,
-                getString(R.string.app_name),
-                getString(R.string.channel_description))
-            val mBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle(title)
-                .setAutoCancel(true)
-                .setContentIntent(resultPendingIntent)
-                .setSmallIcon(R.drawable.ic_moon)
-            notificationManager?.notify(1, mBuilder.build())
-
-        } else {
-            val mBuilder = Notification.Builder(this).apply {
-                setContentTitle(title)
-                setAutoCancel(true)
-                setSmallIcon(R.drawable.ic_moon)
-                setContentIntent(resultPendingIntent)
-            }
-            notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?
-            notificationManager?.notify(mNotificationId, mBuilder.build())
-        }
-    }
-
-    private fun createNotificationChannel(id: String, name: String,
-                                          description: String) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            return
-        } else {
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                NotificationChannel(id, name, importance)
-            } else {
-                TODO("VERSION.SDK_INT < O")
-            }
-            channel.description = description
-            channel.enableLights(true)
-            channel.lightColor = Color.RED
-            channel.enableVibration(true)
-            channel.vibrationPattern =
-                longArrayOf(100, 200, 300, 400, 500, 400, 300, 200, 400)
-            notificationManager?.createNotificationChannel(channel)
         }
     }
 
