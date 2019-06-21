@@ -29,6 +29,7 @@ import androidx.fragment.app.transaction
 import com.google.android.material.snackbar.Snackbar
 import com.selfformat.deadmanswitch.base.CustomFragment
 import com.selfformat.deadmanswitch.components.Alarm
+import com.selfformat.deadmanswitch.components.NotificationCancelAlarm
 import com.selfformat.deadmanswitch.data.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.card_addwidget.*
@@ -52,6 +53,7 @@ class MainFragment : CustomFragment() {
     private var defaultRingtoneUri: Uri? = null
     private var widgetCardVisibility = View.VISIBLE
     private var emergencySmsFeature = false
+    private val notification = NotificationCancelAlarm()
 
     companion object {
         fun newInstance(): MainFragment {
@@ -157,9 +159,10 @@ class MainFragment : CustomFragment() {
                 //TODO: add lock to editing other fields, when run-switch is on
 
                 if (alarmOn) {
-                    Alarm.cancelAlarm(activity!!.applicationContext)
+                    Alarm.cancelPendingAlarm(activity!!.applicationContext)
                     saveAlarmState(false)
                     fab.text = getString(R.string.run_switch)
+                    notification.cancelNotifications()
                     Snackbar.make(view!!.findViewById(R.id.coordinatorMainFragment), getString(R.string.alarm_canceled_snackbar_message), Snackbar.LENGTH_SHORT).show()
                 } else {
                     if (getCurrentAlarmVolume() <= 0) {
@@ -167,6 +170,7 @@ class MainFragment : CustomFragment() {
                         mutedAlarmSnackBarWarning()
                     } else {
                         saveAlarmState(true)
+                        notification.setUpNotification(context, getString(R.string.cancle_alarm_notification_title))
                         val random = randomTime(minTime, maxTime)
                         val time = System.currentTimeMillis() + random
                         Snackbar.make(view!!.findViewById(R.id.coordinatorMainFragment), snackBarMessage(random), Snackbar.LENGTH_SHORT).show()

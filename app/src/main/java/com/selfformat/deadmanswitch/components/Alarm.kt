@@ -13,7 +13,7 @@ internal class Alarm {
             broadcast(context, time, State.ON, AlarmReceiver::class.java)
         }
 
-        fun cancelAlarm(context: Context) {
+        fun cancelPendingAlarm(context: Context) {
             broadcast(context, null, State.OFF, AlarmReceiver::class.java)
         }
 

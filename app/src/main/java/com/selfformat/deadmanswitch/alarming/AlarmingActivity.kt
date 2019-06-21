@@ -22,7 +22,6 @@ import androidx.core.content.edit
 import com.selfformat.deadmanswitch.R
 import com.selfformat.deadmanswitch.base.CustomActivity
 import com.selfformat.deadmanswitch.components.Alarm
-import com.selfformat.deadmanswitch.components.NotificationCancelAlarm
 import com.selfformat.deadmanswitch.components.SmsService
 import com.selfformat.deadmanswitch.data.*
 import kotlinx.android.synthetic.main.activity_alarming.*
@@ -35,7 +34,6 @@ class AlarmingActivity : CustomActivity(), SensorEventListener {
     private var sensorManager: SensorManager? = null
     private var proximitySensor: Sensor? = null
     private lateinit var uri: Uri
-    private val notification = NotificationCancelAlarm()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,7 +59,6 @@ class AlarmingActivity : CustomActivity(), SensorEventListener {
         audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         proximitySensor = sensorManager!!.getDefaultSensor(Sensor.TYPE_PROXIMITY)
-        notification.setUpNotification(this, getString(R.string.cancle_alarm_notification_title))
         uri = getRingtoneUri()
 
         mp = MediaPlayer()
@@ -81,7 +78,7 @@ class AlarmingActivity : CustomActivity(), SensorEventListener {
 
         turnAlarmOffButton.setOnClickListener {
             textOff.text = getString(R.string.closing)
-            Alarm.cancelAlarm(this)
+            Alarm.cancelPendingAlarm(this)
             releaseMediaPlayer()
             saveAlarmState(false)
             onBackPressed()
@@ -141,7 +138,6 @@ class AlarmingActivity : CustomActivity(), SensorEventListener {
 
     override fun onDestroy() {
         mp.release()
-        notification.cancelNotifications()
         super.onDestroy()
     }
 
