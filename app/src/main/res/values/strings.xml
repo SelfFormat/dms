@@ -67,4 +67,5 @@
     <string name="number">Number:</string>
     <string name="contact">Contact:</string>
     <string name="timeout_label">Timeout:</string>
+    <string name="ad">Ad</string>
 </resources>

@@ -23,6 +23,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="@string/AD_APPLICATION_ID"/>
+        <!-- Provide your own AD_APPLICATION_ID in gradle.properties through build.gradle -->
         <receiver android:name="com.selfformat.deadmanswitch.components.RunAlarmWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

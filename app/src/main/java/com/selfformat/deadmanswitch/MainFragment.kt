@@ -27,12 +27,15 @@ import androidx.core.content.edit
 import androidx.core.text.isDigitsOnly
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.transaction
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
 import com.google.android.material.snackbar.Snackbar
 import com.selfformat.deadmanswitch.base.CustomFragment
 import com.selfformat.deadmanswitch.components.Alarm
 import com.selfformat.deadmanswitch.components.NotificationCancelAlarm
 import com.selfformat.deadmanswitch.data.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.ad_card.*
 import kotlinx.android.synthetic.main.card_addwidget.*
 import kotlinx.android.synthetic.main.card_emergency.contactNumber
 import kotlinx.android.synthetic.main.card_emergency.editEmergency
@@ -98,7 +101,12 @@ class MainFragment : CustomFragment() {
         initRunSwitch(view)
         initWidgetCard()
         initBuyPremiumBar()
-        //TODO: add card with ad
+        initAd()
+    }
+
+    private fun initAd() {
+        MobileAds.initialize(context, BuildConfig.APP_KEY)
+        adView.loadAd(AdRequest.Builder().build())
     }
 
     override fun onDestroyView() {

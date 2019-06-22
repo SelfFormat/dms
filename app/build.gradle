@@ -14,6 +14,10 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary true
+        //provide your unique APP_KEY and AD_UNIT_ID in gradle.properties file
+        buildConfigField("String", "APP_KEY", APP_KEY)
+        resValue "string", "AD_UNIT_ID", AD_UNIT_ID
+        resValue "string", "AD_APPLICATION_ID", AD_APPLICATION_ID
     }
     buildTypes {
         release {
@@ -42,4 +46,5 @@ dependencies {
     implementation "org.jetbrains.anko:anko-commons:$ankoVersion"
     implementation "org.jetbrains.anko:anko-design:$ankoVersion"
     implementation 'com.android.billingclient:billing:2.0.0'
+    implementation 'com.google.android.gms:play-services-ads:18.0.0'
 }
