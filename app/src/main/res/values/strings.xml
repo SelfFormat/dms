@@ -25,7 +25,7 @@
     <string name="message">MESSAGE</string>
     <string name="default_emergency_message">Hi, It\'s John. I\'m probably in trouble now - it\'s emergency alert from \"Keep Driver Awake\". Please try to reach me to verify that I could respond now.</string>
     <string name="contact_number">CONTACT NUMBER</string>
-    <string name="example_phone_number">+48 111 222 333</string>
+    <string name="example_phone_number">111222333444555</string>
     <string name="timeout">TIMEOUT IN SECONDS</string>
     <string name="default_emergency_timeout">90</string>
     <string name="tick_image">tick image</string>
