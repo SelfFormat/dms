@@ -10,19 +10,18 @@ import android.graphics.Color
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.selfformat.deadmanswitch.R
-import com.selfformat.deadmanswitch.alarming.AlarmingActivity
 import com.selfformat.deadmanswitch.data.CHANNEL_ID
 
-class NotificationCancelAlarm {
+class NotificationCancelAlarm(val context: Context) {
 
     lateinit var notificationManager: NotificationManager
 
-    fun setUpNotification(context: Context, title: String) {
-        notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val resultPendingIntent = PendingIntent.getActivity(
+    fun setUpNotification(title: String) {
+        init()
+        val resultPendingIntent = PendingIntent.getService(
             context,
             0,
-            Intent(context, AlarmingActivity::class.java),
+            Intent(context, CancelAlarmService::class.java),
             PendingIntent.FLAG_UPDATE_CURRENT
         )
 
@@ -52,7 +51,12 @@ class NotificationCancelAlarm {
         }
     }
 
+    private fun init() {
+        notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    }
+
     fun cancelNotifications() {
+        init()
         notificationManager.cancelAll()
     }
 

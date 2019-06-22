@@ -15,6 +15,7 @@ import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.WindowManager
 import android.view.animation.AnimationUtils
@@ -29,16 +30,77 @@ import kotlin.concurrent.thread
 
 class AlarmingActivity : CustomActivity(), SensorEventListener {
 
-    private lateinit var mp: MediaPlayer
+    private lateinit var mediaPlayer: MediaPlayer
     private lateinit var audioManager: AudioManager
     private var sensorManager: SensorManager? = null
     private var proximitySensor: Sensor? = null
     private lateinit var uri: Uri
+    private lateinit var thread: Thread
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        initActivityLayoutAndSettings()
+        initManagers()
+        initMediaPlayer()
+        runSendEmergencyMessageThread()
+        turnAlarmOffButton.setOnClickListener {
+            textOff.text = getString(R.string.closing)
+            turnOffAlarm()
+            onBackPressed()
+        }
+        repeatAlarmButton.setOnClickListener { scheduleNextAlarm() }
+        repeatAlarmButton.startAnimation(AnimationUtils.loadAnimation(this, R.anim.large_circle_anim))
+    }
+
+    override fun onDestroy() {
+        mediaPlayer.release()
+        super.onDestroy()
+        if (::thread.isInitialized) {
+            thread.interrupt()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        sensorManager?.registerListener(this, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        sensorManager?.unregisterListener(this)
+    }
+
+    //region initializer
+
+    private fun initManagers() {
+        audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        proximitySensor = sensorManager!!.getDefaultSensor(Sensor.TYPE_PROXIMITY)
+    }
+
+    private fun initMediaPlayer() {
+        uri = getRingtoneUri()
+        mediaPlayer = MediaPlayer()
+        mediaPlayer.run {
+            isLooping = true
+            setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ALARM)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build()
+            )
+            setDataSource(
+                applicationContext, uri
+            )
+            prepare()
+            start()
+        }
+    }
+
+    private fun initActivityLayoutAndSettings() {
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN
+        )
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         if (lightTheme) {
             setContentView(R.layout.activity_alarming)
@@ -51,64 +113,44 @@ class AlarmingActivity : CustomActivity(), SensorEventListener {
             window.addFlags(
                 WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or
                         WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
-                        WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON  or
+                        WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or
                         WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
             )
         }
+    }
 
-        audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        proximitySensor = sensorManager!!.getDefaultSensor(Sensor.TYPE_PROXIMITY)
-        uri = getRingtoneUri()
+    //endregion
 
-        mp = MediaPlayer()
-        mp.run {
-            isLooping = true
-            setAudioAttributes(AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_ALARM)
-                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build())
-            setDataSource(
-                applicationContext, uri
-            )
-            prepare()
-            start()
-        }
+    //region alarm lifecycle
 
-        runSendEmergencyMessageThread()
-
-        turnAlarmOffButton.setOnClickListener {
-            textOff.text = getString(R.string.closing)
-            Alarm.cancelPendingAlarm(this)
-            releaseMediaPlayer()
-            saveAlarmState(false)
-            onBackPressed()
-        }
-
-        repeatAlarmButton.startAnimation(AnimationUtils.loadAnimation(this, R.anim.large_circle_anim))
-        repeatAlarmButton.setOnClickListener {
-            textRepeat.text = getString(R.string.closing)
-            releaseMediaPlayer()
-            mp = MediaPlayer.create(this, uri)
-            scheduleNextAlarm()
-        }
+    private fun turnOffAlarm() {
+        Alarm.cancelPendingAlarm(this)
+        releaseMediaPlayer()
+        saveAlarmState(false)
     }
 
     private fun runSendEmergencyMessageThread() {
-        thread {
-            //If user stop alarm or re-schedule alarm, or kills activity thread will also die, so it won't send emergency sms
-            val timeToSms = sharedPref.getString(
-                TIMEOUT_UNTIL_EMERGENCY_MESSAGE_KEY,
-                DEFAULT_EMERGENCY_TIME.toString()
-            ).toLong() * 1000
-            Thread.sleep(timeToSms)
-            val smsIntent = Intent(this, SmsService::class.java)
-            startService(smsIntent)
+        if (premium && emergencyEnabled && isSmsPermissionGranted(this)) {
+            thread = thread(start = true) {
+                val timeToSms = getTimeUntilEmergencySms()
+                if (timeToSms != null) {
+                    try {
+                        Thread.sleep(timeToSms)
+                        startService(Intent(this, SmsService::class.java))
+                        turnOffAlarm()
+                        runOnUiThread {
+                            textOff.text = getString(R.string.closing)
+                            onBackPressed()
+                        }
+                    } catch (e: InterruptedException) {
+                        Log.i("tag", "InterruptedException")
+                    }
+                } else {
+                    Log.w("tag", "timeToSms was null -> probably not specified")
+                }
+                //If user stop alarm or re-schedule alarm, or kills activity thread will also die, so it won't send emergency sms
+            }
         }
-    }
-
-    private fun getRingtoneUri() : Uri {
-        val uri = sharedPref.getString(RINGTONE_KEY, null) ?: return RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_RINGTONE)
-        return Uri.parse(uri)
     }
 
     private fun scheduleNextAlarm() {
@@ -122,42 +164,40 @@ class AlarmingActivity : CustomActivity(), SensorEventListener {
         onBackPressed()
     }
 
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        textOff.text = getString(R.string.closing)
-        releaseMediaPlayer()
-        onBackPressed()
-    }
+    //endregion
+
+    //region utils
 
     private fun releaseMediaPlayer() {
-        mp.run {
+        mediaPlayer.run {
             stop()
             release()
         }
     }
 
-    override fun onDestroy() {
-        mp.release()
-        super.onDestroy()
+    private fun getRingtoneUri() : Uri {
+        val uri = sharedPref.getString(RINGTONE_KEY, null) ?: return RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_RINGTONE)
+        return Uri.parse(uri)
     }
+
+    private fun getTimeUntilEmergencySms(): Long? {
+        val time = sharedPref.getString(
+            TIMEOUT_UNTIL_EMERGENCY_MESSAGE_KEY, null)?.toLong()
+        return if (time != null) {
+            time * 1000
+        } else time
+    }
+
+    //endregion
 
     //region proximity sensor
-
-    override fun onResume() {
-         super.onResume()
-         sensorManager!!.registerListener(this, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        sensorManager!!.unregisterListener(this)
-    }
 
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
 
     override fun onSensorChanged(event: SensorEvent) {
         val distance = event.values?.get(0)?.toInt()
         if (distance == 0) {
+            //USER SWIPE IN FRONT OF PROXIMITY SENSOR -> SCHEDULE NEXT ALARM
             scheduleNextAlarm()
         }
     }

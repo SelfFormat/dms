@@ -9,6 +9,7 @@ import android.telephony.SmsManager
 import android.util.Log
 import com.selfformat.deadmanswitch.R
 import com.selfformat.deadmanswitch.data.*
+import org.jetbrains.anko.defaultSharedPreferences
 
 class SmsService : IntentService("SmsService") {
 
@@ -17,17 +18,13 @@ class SmsService : IntentService("SmsService") {
     var emergencyEnabled = false
 
     override fun onHandleIntent(p0: Intent?) {
-        sharedPref = getSharedPreferences(
-            PREFERENCES_KEY,
-            Context.MODE_PRIVATE
-        )
+        sharedPref = defaultSharedPreferences
         premium = sharedPref.getBoolean(PREMIUM_FEATURES_KEY, false)
         emergencyEnabled = sharedPref.getBoolean(EMERGENCY_ENABLED_KEY, false)
         if (premium && emergencyEnabled && isSmsPermissionGranted(this)
             && isAppStillRunning(this)) {
             sendSmsMessage()
         }
-        goToMainScreen(this)
     }
 
     private fun getEmergencyContact(): EmergencyContact {
@@ -50,6 +47,7 @@ class SmsService : IntentService("SmsService") {
     }
 
     private fun isAppStillRunning(context: Context): Boolean {
+        //TODO: change implementation to isAlarmingActivity still running, because now it's true when any activity of this app is running
         val am = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         val runningProcesses = am.runningAppProcesses
         for (processInfo in runningProcesses) {

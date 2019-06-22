@@ -44,8 +44,6 @@ class EmergencySmsFragment : CustomFragment() {
                 (activity as MainActivity).onBackPressed()
             }
         }
-
-        //TODO: add on/off to emergency sms feature with "are you sure" popup
         //TODO: Add timeoutInput to summary in widget
 
     }

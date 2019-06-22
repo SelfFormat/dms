@@ -53,7 +53,7 @@ class MainFragment : CustomFragment() {
     private var defaultRingtoneUri: Uri? = null
     private var widgetCardVisibility = View.VISIBLE
     private var emergencySmsFeature = false
-    private val notification = NotificationCancelAlarm()
+    private lateinit var notification: NotificationCancelAlarm
 
     companion object {
         fun newInstance(): MainFragment {
@@ -73,14 +73,20 @@ class MainFragment : CustomFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        notification = NotificationCancelAlarm(context!!)
         initVisibilityModeSwitch()
-        initBuyPremiumBar()
         initEmergencySmsCard()
         initTimeRange()
         initAlarmSoundCard()
         initRunSwitch(view)
         initWidgetCard()
+        initBuyPremiumBar()
         //TODO: add card with ad
+    }
+
+    override fun onDestroyView() {
+        notification.cancelNotifications()
+        super.onDestroyView()
     }
 
     override fun onResume() {
@@ -126,7 +132,7 @@ class MainFragment : CustomFragment() {
                         showMutedAlarmSnackBarWarningSnackBar()
                     } else {
                         saveAlarmState(true)
-                        notification.setUpNotification(context, getString(R.string.cancle_alarm_notification_title))
+                        notification.setUpNotification(getString(R.string.cancle_alarm_notification_title))
                         val random = randomTime(minTime, maxTime)
                         val time = System.currentTimeMillis() + random
                         Snackbar.make(
@@ -147,9 +153,9 @@ class MainFragment : CustomFragment() {
     //region BuyPremium Bar
 
     private fun initBuyPremiumBar() {
-        when {
-            premium -> premiumBarMain.visibility = View.GONE
-            !premium -> premiumBarMain.setOnClickListener { activity?.startActivity<BuyPremiumActivity>() }
+        if (premium) premiumBarMain?.visibility = View.GONE
+        else {
+            premiumBarMain.setOnClickListener { activity?.startActivity<BuyPremiumActivity>() }
         }
     }
 
@@ -174,17 +180,26 @@ class MainFragment : CustomFragment() {
         emergencySmsSwitch.setOnClickListener { if (!premium) activity?.startActivity<BuyPremiumActivity>() }
         emergencySmsSwitch.isChecked = emergencySmsFeature
         emergencySmsSwitch.setOnCheckedChangeListener { _, isChecked ->
-            editEmergency.isEnabled = isChecked
             sharedPref?.edit(true) {
                 putBoolean(EMERGENCY_ENABLED_KEY, isChecked)
             }
-            emergencySmsFeature = isChecked
-            changeAlphaOfEditEmergencySMSButton()
+            val emergencyNumber = sharedPref?.getString(CONTACT_NUMBER_KEY, null)
+            if (emergencyNumber != null && emergencyNumber != getString(R.string.example_phone_number)) {
+                emergencySmsFeature = isChecked
+                changeAlphaOfEditEmergencySMSButton()
+            } else {
+                Snackbar.make(
+                    view!!.findViewById(R.id.coordinatorMainFragment),
+                    "Cannot turn feature on because no number is provided",
+                    Snackbar.LENGTH_SHORT
+                ).show()
+                emergencySmsSwitch.isChecked = false
+            }
         }
 
         changeAlphaOfEditEmergencySMSButton()
 
-        editEmergency.isEnabled = emergencySmsFeature
+        editEmergency.isEnabled = premium
         editEmergency.setOnClickListener {
             if (isSmsPermissionGranted(context)) {
                 replaceFragmentWithTransition(EmergencySmsFragment.newInstance())
@@ -198,7 +213,7 @@ class MainFragment : CustomFragment() {
     }
 
     private fun changeAlphaOfEditEmergencySMSButton() {
-        if (emergencySmsFeature) {
+        if (editEmergency.isEnabled) {
             editEmergency.alpha = 1f
         } else {
             editEmergency.alpha = 0.1f
@@ -476,15 +491,6 @@ class MainFragment : CustomFragment() {
     //region utils
 
     private fun updateUI() {
-        showSnackBarWithRemainingTimeIfNeeded()
-        fab.text = if (alarmOn) getString(R.string.turn_off) else getString(R.string.run_switch)
-        alarmVolumeSeekBar.progress = getCurrentAlarmVolume()
-        setEmergencySmsSummary()
-        defaultRingtoneUri = (activity as MainActivity).getRingtoneUri()
-        setToolbarBasedOnTheme()
-    }
-
-    private fun showSnackBarWithRemainingTimeIfNeeded() {
         sharedPref?.run {
             if (getString(TIME_TO_NEXT_ALARM_KEY, EMPTY) != EMPTY) {
                 val timeToNextAlarm = getString(TIME_TO_NEXT_ALARM_KEY, EMPTY).toInt()
@@ -496,8 +502,15 @@ class MainFragment : CustomFragment() {
                 edit(true) {
                     putString(TIME_TO_NEXT_ALARM_KEY, EMPTY)
                 }
+            } else {
+                notification?.cancelNotifications()
             }
         }
+        fab.text = if (alarmOn) getString(R.string.turn_off) else getString(R.string.run_switch)
+        alarmVolumeSeekBar.progress = getCurrentAlarmVolume()
+        setEmergencySmsSummary()
+        defaultRingtoneUri = (activity as MainActivity).getRingtoneUri()
+        setToolbarBasedOnTheme()
     }
 
     private fun snackBarMessage(timeToNextAlarm: Int) = "New alarm in ${timeToNextAlarm / 1000} seconds"
@@ -531,6 +544,12 @@ class MainFragment : CustomFragment() {
         returnCursor.close()
         return name
     }
+
+    override fun updateFAB() {
+        fab?.text = if (alarmOn) "ON" else "OFF"
+        Log.i("tag", "fab updated")
+    }
+
 
     //endregion
 }

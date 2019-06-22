@@ -68,6 +68,7 @@
         <receiver android:name=".components.EmergencySmsReceiver" />
 
         <service android:name="com.selfformat.deadmanswitch.components.SmsService" />
+        <service android:name=".components.CancelAlarmService" />
     </application>
 
 </manifest>

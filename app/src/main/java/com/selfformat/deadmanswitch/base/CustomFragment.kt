@@ -1,28 +1,26 @@
 package com.selfformat.deadmanswitch.base
 
-import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import com.selfformat.deadmanswitch.data.ALARM_STATUS_KEY
 import com.selfformat.deadmanswitch.data.LIGHT_THEME_KEY
-import com.selfformat.deadmanswitch.data.PREFERENCES_KEY
-import com.selfformat.deadmanswitch.data.PREMIUM_FEATURES_KEY
+import org.jetbrains.anko.defaultSharedPreferences
+import kotlin.properties.Delegates
 
 open class CustomFragment : Fragment() {
 
     var sharedPref: SharedPreferences? = null
     var lightTheme = true
-    var alarmOn = false
+    var alarmOn : Boolean by Delegates.observable(false) { _, _, _ ->
+        updateFAB()
+    }
     var premium = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sharedPref = context?.getSharedPreferences(
-            PREFERENCES_KEY,
-            Context.MODE_PRIVATE
-        )
+        sharedPref = context?.defaultSharedPreferences
         updateImportantBooleansFromPrefs()
     }
 
@@ -42,5 +40,9 @@ open class CustomFragment : Fragment() {
         sharedPref!!.edit(true) {
             putBoolean(ALARM_STATUS_KEY, isAlarmRunning)
         }
+    }
+
+    open fun updateFAB() {
+
     }
 }

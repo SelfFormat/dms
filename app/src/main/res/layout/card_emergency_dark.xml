@@ -123,6 +123,7 @@
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
         android:text="@string/edit"
+        android:enabled="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/emergencySmsSwitch"
         app:layout_constraintStart_toStartOf="parent" />
@@ -133,6 +134,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:theme="@style/SwitchTheme"
+        android:enabled="false"
         app:layout_constraintBottom_toBottomOf="@+id/editEmergency"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/editEmergency" />

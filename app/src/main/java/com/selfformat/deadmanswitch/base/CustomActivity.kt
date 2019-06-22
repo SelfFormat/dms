@@ -1,6 +1,5 @@
 package com.selfformat.deadmanswitch.base
 
-import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Build
@@ -9,9 +8,9 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
 import com.selfformat.deadmanswitch.data.ALARM_STATUS_KEY
+import com.selfformat.deadmanswitch.data.EMERGENCY_ENABLED_KEY
 import com.selfformat.deadmanswitch.data.LIGHT_THEME_KEY
-import com.selfformat.deadmanswitch.data.PREFERENCES_KEY
-import com.selfformat.deadmanswitch.data.PREMIUM_FEATURES_KEY
+import org.jetbrains.anko.defaultSharedPreferences
 
 open class CustomActivity : AppCompatActivity() {
 
@@ -19,6 +18,7 @@ open class CustomActivity : AppCompatActivity() {
     var lightTheme = true
     var alarmOn = false
     var premium = false
+    var emergencyEnabled = false
 
     override fun onResume() {
         super.onResume()
@@ -28,11 +28,18 @@ open class CustomActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sharedPref = getSharedPreferences(
-            PREFERENCES_KEY,
-            Context.MODE_PRIVATE
-        )
+        sharedPref = defaultSharedPreferences
         updateImportantBooleansFromPrefs()
+//        PreferenceManager.getDefaultSharedPreferences(this)
+//            .registerOnSharedPreferenceChangeListener {pref, key ->
+//                if(key== ALARM_STATUS_KEY) {
+//                    if (pref.getBoolean(ALARM_STATUS_KEY, false)) {
+//                        //TODO: update alarm FAB etc -> ON, or if it's currently on, do nothing
+//                    } else {
+//                        //TODO: update alarm FAB etc -> OFF, or if it's currently off, do nothing
+//                    }
+//                }
+//            }
     }
 
     private fun updateImportantBooleansFromPrefs() {
