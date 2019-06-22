@@ -12,6 +12,7 @@ import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.provider.OpenableColumns
 import android.text.Editable
 import android.text.TextWatcher
@@ -59,6 +60,7 @@ class MainFragment : CustomFragment() {
         fun newInstance(): MainFragment {
             return MainFragment()
         }
+        private val TAG = "MainFragment"
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -73,6 +75,21 @@ class MainFragment : CustomFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        PreferenceManager.getDefaultSharedPreferences(context)
+            .registerOnSharedPreferenceChangeListener {pref, key ->
+                if(key == ALARM_STATUS_KEY) {
+                    if (pref.getBoolean(ALARM_STATUS_KEY, false)) {
+                        Log.i(TAG, ":true key ")
+                        //TODO: update alarm FAB etc -> ON, or if it's currently on, do nothing
+                        //TODO: LOCK settings changing
+                    } else {
+                        Log.i(TAG, "false key: ")
+                        //TODO: update alarm FAB etc -> OFF, or if it's currently off, do nothing
+                        //TODO: UNLOCK settings changing
+
+                    }
+                }
+            }
         notification = NotificationCancelAlarm(context!!)
         initVisibilityModeSwitch()
         initEmergencySmsCard()

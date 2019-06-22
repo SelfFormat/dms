@@ -30,16 +30,6 @@ open class CustomActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         sharedPref = defaultSharedPreferences
         updateImportantBooleansFromPrefs()
-//        PreferenceManager.getDefaultSharedPreferences(this)
-//            .registerOnSharedPreferenceChangeListener {pref, key ->
-//                if(key== ALARM_STATUS_KEY) {
-//                    if (pref.getBoolean(ALARM_STATUS_KEY, false)) {
-//                        //TODO: update alarm FAB etc -> ON, or if it's currently on, do nothing
-//                    } else {
-//                        //TODO: update alarm FAB etc -> OFF, or if it's currently off, do nothing
-//                    }
-//                }
-//            }
     }
 
     private fun updateImportantBooleansFromPrefs() {
