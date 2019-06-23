@@ -13,9 +13,13 @@ import org.jetbrains.anko.defaultSharedPreferences
 
 class SmsService : IntentService("SmsService") {
 
-    lateinit var sharedPref: SharedPreferences
+    private lateinit var sharedPref: SharedPreferences
     var premium = false
     var emergencyEnabled = false
+
+    companion object {
+        private const val TAG = "SmsService"
+    }
 
     override fun onHandleIntent(p0: Intent?) {
         sharedPref = defaultSharedPreferences
@@ -39,7 +43,7 @@ class SmsService : IntentService("SmsService") {
         val contact = getEmergencyContact()
         val serviceCenterAddress: String? = null
         val smsManager = SmsManager.getDefault()
-        Log.i("SENDING", "SMS")
+        Log.i(TAG, "SENDING SMS")
         smsManager.sendTextMessage(
             contact.number, serviceCenterAddress, contact.message,
             null, null
@@ -47,7 +51,6 @@ class SmsService : IntentService("SmsService") {
     }
 
     private fun isAppStillRunning(context: Context): Boolean {
-        //TODO: change implementation to isAlarmingActivity still running, because now it's true when any activity of this app is running
         val am = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         val runningProcesses = am.runningAppProcesses
         for (processInfo in runningProcesses) {
