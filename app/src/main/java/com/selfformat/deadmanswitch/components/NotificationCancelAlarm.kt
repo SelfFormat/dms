@@ -1,6 +1,5 @@
 package com.selfformat.deadmanswitch.components
 
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -14,7 +13,7 @@ import com.selfformat.deadmanswitch.data.CHANNEL_ID
 
 class NotificationCancelAlarm(val context: Context) {
 
-    lateinit var notificationManager: NotificationManager
+    private lateinit var notificationManager: NotificationManager
 
     fun setUpNotification(title: String) {
         init()
@@ -25,30 +24,21 @@ class NotificationCancelAlarm(val context: Context) {
             PendingIntent.FLAG_UPDATE_CURRENT
         )
 
-        val mNotificationId = 1
+        val mNotificationId = 14199
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createNotificationChannel(
                 CHANNEL_ID,
                 context.getString(R.string.app_name),
                 context.getString(R.string.channel_description), notificationManager)
-            val mBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
-                .setContentTitle(title)
-                .setAutoCancel(true)
-                .setContentIntent(resultPendingIntent)
-                .setDeleteIntent(resultPendingIntent)
-                .setSmallIcon(R.drawable.ic_moon)
-            notificationManager.notify(1, mBuilder.build())
-
-        } else {
-            val mBuilder = Notification.Builder(context).apply {
-                setContentTitle(title)
-                setAutoCancel(true)
-                setSmallIcon(R.drawable.ic_moon)
-                setContentIntent(resultPendingIntent)
-            }
-            notificationManager.notify(mNotificationId, mBuilder.build())
         }
+        val mBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
+            .setContentTitle(title)
+            .setAutoCancel(true)
+            .setContentIntent(resultPendingIntent)
+            .setDeleteIntent(resultPendingIntent)
+            .setSmallIcon(R.drawable.ic_moon)
+        notificationManager.notify(mNotificationId, mBuilder.build())
     }
 
     private fun init() {
@@ -62,15 +52,9 @@ class NotificationCancelAlarm(val context: Context) {
 
     private fun createNotificationChannel(id: String, name: String,
                                           description: String, notificationManager: NotificationManager) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            return
-        } else {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                NotificationChannel(id, name, importance)
-            } else {
-                TODO("VERSION.SDK_INT < O")
-            }
+            val channel = NotificationChannel(id, name, importance)
             channel.description = description
             channel.enableLights(true)
             channel.lightColor = Color.RED

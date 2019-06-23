@@ -44,8 +44,7 @@ class EmergencySmsFragment : CustomFragment() {
                 (activity as MainActivity).onBackPressed()
             }
         }
-        //TODO: Add timeoutInput to summary in widget
-
+        //TODO AFTER RELEASE: add "send test sms to contact"
     }
 
     private fun setFieldValidation() {
@@ -148,7 +147,7 @@ class EmergencySmsFragment : CustomFragment() {
         sharedPref?.edit {
             putString(TIMEOUT_UNTIL_EMERGENCY_MESSAGE_KEY, timeoutInput.text.toString())
             putString(CONTACT_NAME_KEY, contactNameInput.text.toString())
-            putString(CONTACT_NUMBER_KEY, contactNumberInput.text.toString().trim()) //TODO: add number validation regexp (convert it to number only)
+            putString(CONTACT_NUMBER_KEY, contactNumberInput.text.toString().trim())
             putString(EMERGENCY_MESSAGE_KEY, emergencyMessageInput.text.toString())
         }
     }

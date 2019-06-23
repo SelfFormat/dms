@@ -2,17 +2,16 @@ package com.selfformat.deadmanswitch
 
 import android.Manifest
 import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.graphics.PorterDuff
 import android.media.AudioManager
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.provider.OpenableColumns
 import android.text.Editable
 import android.text.TextWatcher
@@ -27,6 +26,7 @@ import androidx.core.content.edit
 import androidx.core.text.isDigitsOnly
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.transaction
+import androidx.preference.PreferenceManager
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.snackbar.Snackbar
@@ -63,7 +63,7 @@ class MainFragment : CustomFragment() {
         fun newInstance(): MainFragment {
             return MainFragment()
         }
-        private val TAG = "MainFragment"
+        private const val TAG = "MainFragment"
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -78,21 +78,7 @@ class MainFragment : CustomFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        PreferenceManager.getDefaultSharedPreferences(context)
-            .registerOnSharedPreferenceChangeListener {pref, key ->
-                if(key == ALARM_STATUS_KEY) {
-                    if (pref.getBoolean(ALARM_STATUS_KEY, false)) {
-                        Log.i(TAG, ":true key ")
-                        //TODO: update alarm FAB etc -> ON, or if it's currently on, do nothing
-                        //TODO: LOCK settings changing
-                    } else {
-                        Log.i(TAG, "false key: ")
-                        //TODO: update alarm FAB etc -> OFF, or if it's currently off, do nothing
-                        //TODO: UNLOCK settings changing
-
-                    }
-                }
-            }
+        listenForAlarmStatusChanges()
         notification = NotificationCancelAlarm(context!!)
         initVisibilityModeSwitch()
         initEmergencySmsCard()
@@ -139,7 +125,7 @@ class MainFragment : CustomFragment() {
     private fun initRunSwitch(view: View) {
         fab.run {
             setOnClickListener {
-                //TODO: add lock to editing other fields, when run-switch is on
+                //TODO: detect if user kills app and alarm state wasn't updated (maybe use startActivityForResult)
 
                 if (alarmOn) {
                     Alarm.cancelPendingAlarm(activity!!.applicationContext)
@@ -289,6 +275,7 @@ class MainFragment : CustomFragment() {
     //region timeRange Card
 
     private fun initTimeRange() {
+        //TODO: add minimum available timerange and timeout (eg. 10 sec)
         minTime = getRingtoneMinTime(sharedPref)
         maxTime = getRingtoneMaxTime(sharedPref)
 
@@ -375,7 +362,7 @@ class MainFragment : CustomFragment() {
 
     //region alarm sound Card
 
-    //TODO: AFTER RELEASE: add vibration on/off option
+    //TODO AFTER RELEASE: add vibration on/off option
 
     private fun initAlarmSoundCard() {
         chooseToneButton.setOnClickListener { openSystemRingtonePicker() }
@@ -410,8 +397,6 @@ class MainFragment : CustomFragment() {
                 }
             })
         }
-
-        changeSeekBarColor(getString(R.string.seek_bar_color))
         currentAlarmName.text = (activity as MainActivity).getRingtoneName()
     }
 
@@ -424,12 +409,16 @@ class MainFragment : CustomFragment() {
         intentUpload.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false)
         intentUpload.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, defaultRingtoneUri)
         intentUpload.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALL)
-        startActivityForResult(intentUpload, SYSTEM_RINGTONE_PICKER_REQUEST_CODE)
-    }
-
-    private fun changeSeekBarColor(hexColor: String) {
-        alarmVolumeSeekBar.progressDrawable.setColorFilter(Color.parseColor(hexColor), PorterDuff.Mode.SRC_IN)
-        alarmVolumeSeekBar.thumb.setColorFilter(Color.parseColor(hexColor), PorterDuff.Mode.SRC_IN)
+        try {
+            startActivityForResult(intentUpload, SYSTEM_RINGTONE_PICKER_REQUEST_CODE)
+        } catch (e: ActivityNotFoundException) {
+            //TODO: investigate why Q doesn't have system ringtone picker and if there's another API that doesn't have it
+            Snackbar.make(
+                view!!.findViewById(R.id.coordinatorMainFragment),
+                getString(R.string.no_ringtone_picker),
+                Snackbar.LENGTH_SHORT
+            ).show()
+        }
     }
 
     private fun getCurrentAlarmVolume() : Int {
@@ -502,7 +491,7 @@ class MainFragment : CustomFragment() {
                     // Permission denied.®
                     Log.d("TAG", "No permission :(")
                     Toast.makeText(
-                        context, "No permission",
+                        context, getString(R.string.no_permission),
                         Toast.LENGTH_LONG
                     ).show()
                     // Disable emergency contact.
@@ -515,10 +504,28 @@ class MainFragment : CustomFragment() {
 
     //region utils
 
+    private fun listenForAlarmStatusChanges() {
+        PreferenceManager.getDefaultSharedPreferences(context)
+            .registerOnSharedPreferenceChangeListener { pref, key ->
+                if (key == ALARM_STATUS_KEY) {
+                    if (pref.getBoolean(ALARM_STATUS_KEY, false)) {
+                        Log.i(TAG, ":true key ")
+                        //TODO: update alarm FAB etc -> ON, or if it's currently on, do nothing
+                        //TODO: LOCK settings changing
+                    } else {
+                        Log.i(TAG, "false key: ")
+                        //TODO: update alarm FAB etc -> OFF, or if it's currently off, do nothing
+                        //TODO: UNLOCK settings changing
+
+                    }
+                }
+            }
+    }
+
     private fun updateUI() {
         sharedPref?.run {
             if (getString(TIME_TO_NEXT_ALARM_KEY, EMPTY) != EMPTY) {
-                val timeToNextAlarm = getString(TIME_TO_NEXT_ALARM_KEY, EMPTY).toInt()
+                val timeToNextAlarm = getString(TIME_TO_NEXT_ALARM_KEY, EMPTY)!!.toInt()
                 Snackbar.make(
                     view!!.findViewById(R.id.coordinatorMainFragment),
                     snackBarMessage(timeToNextAlarm),
@@ -528,7 +535,7 @@ class MainFragment : CustomFragment() {
                     putString(TIME_TO_NEXT_ALARM_KEY, EMPTY)
                 }
             } else {
-                notification?.cancelNotifications()
+                notification.cancelNotifications()
             }
         }
         fab.text = if (alarmOn) getString(R.string.turn_off) else getString(R.string.run_switch)
@@ -536,6 +543,7 @@ class MainFragment : CustomFragment() {
         setEmergencySmsSummary()
         defaultRingtoneUri = (activity as MainActivity).getRingtoneUri()
         setToolbarBasedOnTheme()
+        changeAlphaOfEditEmergencySMSButton()
     }
 
     private fun snackBarMessage(timeToNextAlarm: Int) = "New alarm in ${timeToNextAlarm / 1000} seconds"
@@ -574,7 +582,6 @@ class MainFragment : CustomFragment() {
         fab?.text = if (alarmOn) "ON" else "OFF"
         Log.i("tag", "fab updated")
     }
-
 
     //endregion
 }

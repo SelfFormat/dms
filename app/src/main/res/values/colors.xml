@@ -1,22 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#303f9f</color>
-    <color name="colorPrimaryDark">#1a237e</color>
-    <color name="colorAccent">#555</color>
+    <color name="colorPrimary">@color/lightBlue</color>
+    <color name="colorPrimaryDark">@color/midnightBlue</color>
+    <color name="colorAccent">@color/lightBlue</color>
+    <color name="blueButton">@color/lightBlue</color>
+
     <color name="black">#000</color>
+    <color name="almostBlack">#0a0a0a</color>
     <color name="darkGray">#222</color>
     <color name="cardDarkBackground">#333</color>
     <color name="grayButton">#555</color>
     <color name="lightGray">#DDD</color>
-    <color name="blueButton">#303f9f</color>
     <color name="white">#FFF</color>
+    <color name="lightBlue">#303f9f</color>
     <color name="midnightBlue">#1a237e</color>
-    <color name="colorControlNormal">#1a237e</color>
-    <color name="colorControlActivated">#1a237e</color>
-    <color name="colorControlHighlight">#1a237e</color>
-    <color name="colorPrimaryVariant">#1a237e</color>
-    <color name="colorOnPrimary">#1a237e</color>
-    <color name="colorSecondary">#1a237e</color>
-    <color name="colorSecondaryVariant">#1a237e</color>
-    <color name="colorOnSecondary">#1a237e</color>
 </resources>

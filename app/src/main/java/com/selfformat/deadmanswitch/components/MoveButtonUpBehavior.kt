@@ -6,6 +6,7 @@ import android.view.View
 import androidx.annotation.Keep
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.google.android.material.snackbar.Snackbar
+import kotlin.math.min
 
 @Keep
 class MoveButtonUpBehavior(context: Context, attrs: AttributeSet) : CoordinatorLayout.Behavior<View>(context, attrs) {
@@ -15,7 +16,7 @@ class MoveButtonUpBehavior(context: Context, attrs: AttributeSet) : CoordinatorL
     }
 
     override fun onDependentViewChanged(parent: CoordinatorLayout, child: View, dependency: View): Boolean {
-        val translationY = Math.min(0f, dependency.translationY - dependency.height)
+        val translationY = min(0f, dependency.translationY - dependency.height)
         child.animate().cancel()
         child.translationY = translationY
         return true

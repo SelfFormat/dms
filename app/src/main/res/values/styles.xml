@@ -3,10 +3,12 @@
     <!-- Base application theme. -->
     <style name="AppThemeLight" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
     </style>
 
     <style name="AppThemeDark" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
     </style>
 
     <style name="WindowAnimationTransition">
@@ -35,6 +37,8 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textColor">@color/midnightBlue</item>
+        <item name="iconTint">@color/colorAccent</item>
+        <item name="rippleColor">@color/colorAccent</item>
     </style>
 
     <style name="outlineButtonDarkMode" parent="Widget.MaterialComponents.Button.OutlinedButton">
@@ -42,6 +46,8 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textColor">@color/lightGray</item>
+        <item name="iconTint">@color/lightGray</item>
+        <item name="rippleColor">@color/lightGray</item>
     </style>
 
     <style name="widgetTitleLightMode" parent="TextAppearance.AppCompat.Medium">
@@ -71,11 +77,10 @@
     </style>
 
     <style name="Widget.MaterialComponents.CardView.Dark" parent="Widget.MaterialComponents.CardView">
-        <item name="cardBackgroundColor">@color/darkGray</item>
+        <item name="cardBackgroundColor">@color/almostBlack</item>
     </style>
 
     <style name="SwitchTheme">
         <item name="colorControlActivated">@color/blueButton</item>
-        <!--<item name="android:thumbTint">@color/midnightBlue</item>-->
     </style>
 </resources>

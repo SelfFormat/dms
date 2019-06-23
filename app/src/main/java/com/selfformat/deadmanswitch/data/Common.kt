@@ -26,7 +26,7 @@ const val IS_WIDGET_CARD_VISIBLE_KEY = "is_widget_card_visible"
 
 const val CHANNEL_ID = "com.selfformat.deadmanswitch"
 const val MAIN_FRAGMENT = "MAIN_FRAGMENT"
-const val EMPTY = "empty"
+const val EMPTY = "0"
 
 const val MIN_DEFAULT_TIME = 5
 const val MAX_DEFAULT_TIME = 10
