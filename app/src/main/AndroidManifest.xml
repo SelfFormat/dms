@@ -69,10 +69,14 @@
             android:resource="@array/preloaded_fonts" />
 
         <receiver android:name="com.selfformat.deadmanswitch.components.AlarmReceiver" />
-        <receiver android:name=".components.EmergencySmsReceiver" />
+        <receiver android:name=".components.AlarmReceiver" />
 
-        <service android:name="com.selfformat.deadmanswitch.components.SmsService" />
-        <service android:name=".components.CancelAlarmService" />
+        <service
+            android:name="com.selfformat.deadmanswitch.components.SmsService"
+            android:exported="false"/>
+        <service
+            android:name=".components.CancelAlarmService"
+            android:exported="false"/>
     </application>
 
 </manifest>
