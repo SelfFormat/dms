@@ -21,7 +21,7 @@ class BuyPremiumFragment : Fragment() {
             R.layout.fragment_buy_premium, container,
             false)
 
-        //TODO AFTER RELEASE: when accesed from night-mode click, then show get premium in dark layout
+        //TODO AFTER RELEASE: when accessed from night-mode click, then show get premium in dark layout
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

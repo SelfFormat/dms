@@ -12,6 +12,7 @@ import org.jetbrains.anko.defaultSharedPreferences
 internal class Alarm {
 
     companion object {
+        private const val TAG = "Alarm"
         fun prepareForAlarm(context: Context, time: Long?) {
             saveAlarmState(true, context)
             broadcast(context, time, AlarmState.ON, AlarmReceiver::class.java)
@@ -41,6 +42,7 @@ internal class Alarm {
             val sharedPref = context.defaultSharedPreferences
             sharedPref.edit(true) {
                 putBoolean(ALARM_STATUS_KEY, alarmIsRunning)
+                Log.i(TAG, ": state saved")
             }
         }
     }

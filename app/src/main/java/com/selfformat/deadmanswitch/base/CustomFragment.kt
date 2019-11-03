@@ -6,6 +6,7 @@ import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import com.selfformat.deadmanswitch.data.ALARM_STATUS_KEY
 import com.selfformat.deadmanswitch.data.LIGHT_THEME_KEY
+import com.selfformat.deadmanswitch.data.PREMIUM_FEATURES_KEY
 import org.jetbrains.anko.defaultSharedPreferences
 import kotlin.properties.Delegates
 

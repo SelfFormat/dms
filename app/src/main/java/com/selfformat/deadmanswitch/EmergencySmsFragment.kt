@@ -63,7 +63,7 @@ class EmergencySmsFragment : CustomFragment() {
                     }
                 }
             })
-            setOnFocusChangeListener { _, hasFocus ->
+            onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) {
                     if (timeoutInput.text.isNullOrBlank() || !timeoutInput.text.toString().isDigitsOnly()) timeoutInput.setText("30", TextView.BufferType.EDITABLE)
                     else timeoutInput.error = null
@@ -82,7 +82,7 @@ class EmergencySmsFragment : CustomFragment() {
                     if (contactNameInput.text.isNullOrBlank()) contactNameInput.error = "Contact name cannot be empty"
                 }
             })
-            setOnFocusChangeListener { _, hasFocus ->
+            onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) {
                     if (contactNameInput.text.isNullOrBlank()) contactNameInput.setText("default name", TextView.BufferType.EDITABLE)
                     else contactNameInput.error = null
@@ -104,7 +104,7 @@ class EmergencySmsFragment : CustomFragment() {
                     }
                 }
             })
-            setOnFocusChangeListener { _, hasFocus ->
+            onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) {
                     when {
                         contactNumberInput.text.isNullOrBlank() -> contactNumberInput.setText("default number", TextView.BufferType.EDITABLE)
@@ -126,7 +126,7 @@ class EmergencySmsFragment : CustomFragment() {
                     if (emergencyMessageInput.text.isNullOrBlank()) emergencyMessageInput.error = "Message cannot be empty"
                 }
             })
-            setOnFocusChangeListener { _, hasFocus ->
+            onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) {
                     if (emergencyMessageInput.text.isNullOrBlank()) emergencyMessageInput.setText("default message", TextView.BufferType.EDITABLE)
                     else emergencyMessageInput.error = null

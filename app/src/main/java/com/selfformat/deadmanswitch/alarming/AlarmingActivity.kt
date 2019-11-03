@@ -54,10 +54,10 @@ class AlarmingActivity : CustomActivity(), SensorEventListener {
 
     override fun onDestroy() {
         mediaPlayer.release()
-        super.onDestroy()
         if (::thread.isInitialized) {
             thread.interrupt()
         }
+        super.onDestroy()
     }
 
     override fun onResume() {
@@ -80,6 +80,8 @@ class AlarmingActivity : CustomActivity(), SensorEventListener {
 
     private fun initMediaPlayer() {
         uri = getRingtoneUri()
+
+        getRingtoneUri()
         mediaPlayer = MediaPlayer()
         mediaPlayer.run {
             isLooping = true

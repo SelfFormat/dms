@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.media.AudioManager
@@ -26,7 +27,6 @@ import androidx.core.content.edit
 import androidx.core.text.isDigitsOnly
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.transaction
-import androidx.preference.PreferenceManager
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.snackbar.Snackbar
@@ -78,19 +78,42 @@ class MainFragment : CustomFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        listenForAlarmStatusChanges()
+//        val listener: SharedPreferences.OnSharedPreferenceChangeListener =
+            SharedPreferences.OnSharedPreferenceChangeListener { prefs, key ->
+                Log.i(TAG, "IN: ")
+                if (key == ALARM_STATUS_KEY) {
+                    Log.i(TAG, "ININ: ")
+                    if (prefs.getBoolean(ALARM_STATUS_KEY, false)) {
+                        Log.i(TAG, ":true key ")
+                        fab?.text = "ON"
+                    } else {
+                        Log.i(TAG, "false key: ")
+                        fab?.text = "OFF"
+                    }
+                }
+            }
+//        prefs = PreferenceManager.getDefaultSharedPreferences(context)
+//        sharedPref!!.registerOnSharedPreferenceChangeListener(listener)
         notification = NotificationCancelAlarm(context!!)
-        initVisibilityModeSwitch()
+        initVisibilityModeSwitchCard()
         initEmergencySmsCard()
-        initTimeRange()
+        initTimeRangeCard()
         initAlarmSoundCard()
-        initRunSwitch(view)
+        initRunSwitchFAB(view)
         initWidgetCard()
         initBuyPremiumBar()
-        initAd()
+        initAdCard()
+        if (!isSmsPermissionGranted(context)) { askForSmsPermissions() }
     }
 
-    private fun initAd() {
+    private fun askForSmsPermissions() {
+        requestPermissions(
+            arrayOf(Manifest.permission.SEND_SMS),
+            PERMISSIONS_REQUEST_SEND_SMS
+        )
+    }
+
+    private fun initAdCard() {
         MobileAds.initialize(context, BuildConfig.APP_KEY)
         adView.loadAd(AdRequest.Builder().build())
     }
@@ -107,7 +130,7 @@ class MainFragment : CustomFragment() {
 
     //region darkMode Card
 
-    private fun initVisibilityModeSwitch() {
+    private fun initVisibilityModeSwitchCard() {
         visibilityModeSwitch.isChecked = !lightTheme
         visibilityModeSwitch.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
@@ -122,11 +145,10 @@ class MainFragment : CustomFragment() {
 
     //region RunSwitch FAB
 
-    private fun initRunSwitch(view: View) {
+    private fun initRunSwitchFAB(view: View) {
         fab.run {
             setOnClickListener {
                 //TODO: detect if user kills app and alarm state wasn't updated (maybe use startActivityForResult)
-
                 if (alarmOn) {
                     Alarm.cancelPendingAlarm(activity!!.applicationContext)
                     saveAlarmState(false)
@@ -166,7 +188,7 @@ class MainFragment : CustomFragment() {
     private fun initBuyPremiumBar() {
         if (premium) premiumBarMain?.visibility = View.GONE
         else {
-            premiumBarMain.setOnClickListener { activity?.startActivity<BuyPremiumActivity>() }
+            premiumBarMain?.setOnClickListener { activity?.startActivity<BuyPremiumActivity>() }
         }
     }
 
@@ -215,10 +237,10 @@ class MainFragment : CustomFragment() {
             if (isSmsPermissionGranted(context)) {
                 replaceFragmentWithTransition(EmergencySmsFragment.newInstance())
             } else {
-                requestPermissions(
-                    arrayOf(Manifest.permission.SEND_SMS),
-                    PERMISSIONS_REQUEST_SEND_SMS
-                )
+                Toast.makeText(
+                    context, getString(R.string.no_permission),
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }
@@ -274,8 +296,7 @@ class MainFragment : CustomFragment() {
 
     //region timeRange Card
 
-    private fun initTimeRange() {
-        //TODO: add minimum available timerange and timeout (eg. 10 sec)
+    private fun initTimeRangeCard() {
         minTime = getRingtoneMinTime(sharedPref)
         maxTime = getRingtoneMaxTime(sharedPref)
 
@@ -298,7 +319,7 @@ class MainFragment : CustomFragment() {
                     }
                 }
             })
-            setOnFocusChangeListener { _, hasFocus ->
+            onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) {
                     if (minTimeText.text.isNullOrBlank()) {
                         minTimeText.text = maxTimeText.text
@@ -336,7 +357,7 @@ class MainFragment : CustomFragment() {
                     }
                 }
             })
-            setOnFocusChangeListener { _, hasFocus ->
+            onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) {
                     if (maxTimeText.text.isNullOrBlank()) {
                         maxTimeText.text = minTimeText.text
@@ -354,8 +375,6 @@ class MainFragment : CustomFragment() {
                 }
             }
         }
-
-        //TODO: Add better description to what is time range (and what is timeout)
     }
 
     //endregion
@@ -400,8 +419,6 @@ class MainFragment : CustomFragment() {
         currentAlarmName.text = (activity as MainActivity).getRingtoneName()
     }
 
-    //TODO: ADD BUTTON that appears when scrolled down. It should appear on the right side of FAB. (i) -> info, privacy policy etc. -> copy activity from bekind
-
     private fun openSystemRingtonePicker() {
         val intentUpload = Intent(RingtoneManager.ACTION_RINGTONE_PICKER)
         intentUpload.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "SYSTEM SOUNDS LIST")
@@ -412,7 +429,6 @@ class MainFragment : CustomFragment() {
         try {
             startActivityForResult(intentUpload, SYSTEM_RINGTONE_PICKER_REQUEST_CODE)
         } catch (e: ActivityNotFoundException) {
-            //TODO: investigate why Q doesn't have system ringtone picker and if there's another API that doesn't have it
             Snackbar.make(
                 view!!.findViewById(R.id.coordinatorMainFragment),
                 getString(R.string.no_ringtone_picker),
@@ -483,10 +499,9 @@ class MainFragment : CustomFragment() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             PERMISSIONS_REQUEST_SEND_SMS -> {
-                if (permissions[0] == Manifest.permission.SEND_SMS && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.isNotEmpty() && permissions[0] == Manifest.permission.SEND_SMS && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // Permission was granted. Enable emergency contact.
                     Log.d("TAG", "Permission granted :)")
-                    replaceFragmentWithTransition(EmergencySmsFragment.newInstance())
                 } else {
                     // Permission denied.®
                     Log.d("TAG", "No permission :(")
@@ -504,23 +519,12 @@ class MainFragment : CustomFragment() {
 
     //region utils
 
-    private fun listenForAlarmStatusChanges() {
-        PreferenceManager.getDefaultSharedPreferences(context)
-            .registerOnSharedPreferenceChangeListener { pref, key ->
-                if (key == ALARM_STATUS_KEY) {
-                    if (pref.getBoolean(ALARM_STATUS_KEY, false)) {
-                        Log.i(TAG, ":true key ")
-                        //TODO: update alarm FAB etc -> ON, or if it's currently on, do nothing
-                        //TODO: LOCK settings changing
-                    } else {
-                        Log.i(TAG, "false key: ")
-                        //TODO: update alarm FAB etc -> OFF, or if it's currently off, do nothing
-                        //TODO: UNLOCK settings changing
-
-                    }
-                }
-            }
-    }
+//    private fun listenForAlarmStatusChanges() {
+//        PreferenceManager.getDefaultSharedPreferences(context)
+//            .registerOnSharedPreferenceChangeListener { pref, key ->
+//
+//            }
+//    }
 
     private fun updateUI() {
         sharedPref?.run {
@@ -538,6 +542,7 @@ class MainFragment : CustomFragment() {
                 notification.cancelNotifications()
             }
         }
+        Log.i(TAG, "FAB text changed ")
         fab.text = if (alarmOn) getString(R.string.turn_off) else getString(R.string.run_switch)
         alarmVolumeSeekBar.progress = getCurrentAlarmVolume()
         setEmergencySmsSummary()
@@ -579,8 +584,12 @@ class MainFragment : CustomFragment() {
     }
 
     override fun updateFAB() {
-        fab?.text = if (alarmOn) "ON" else "OFF"
-        Log.i("tag", "fab updated")
+        Log.i(TAG, "updating FAB ")
+        fab?.setBackgroundColor(Color.GREEN)
+        if (fab != null ) {
+            fab.text = "SNHKFASNf"
+        }
+        fab?.text = if (alarmOn) "ON__" else "OFF__"
     }
 
     //endregion

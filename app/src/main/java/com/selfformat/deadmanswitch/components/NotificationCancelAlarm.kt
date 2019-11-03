@@ -13,10 +13,9 @@ import com.selfformat.deadmanswitch.data.CHANNEL_ID
 
 class NotificationCancelAlarm(val context: Context) {
 
-    private lateinit var notificationManager: NotificationManager
+    private var notificationManager: NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
     fun setUpNotification(title: String) {
-        init()
         val resultPendingIntent = PendingIntent.getService(
             context,
             0,
@@ -36,17 +35,11 @@ class NotificationCancelAlarm(val context: Context) {
             .setContentTitle(title)
             .setAutoCancel(true)
             .setContentIntent(resultPendingIntent)
-            .setDeleteIntent(resultPendingIntent)
             .setSmallIcon(R.drawable.ic_moon)
         notificationManager.notify(mNotificationId, mBuilder.build())
     }
 
-    private fun init() {
-        notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-    }
-
     fun cancelNotifications() {
-        init()
         notificationManager.cancelAll()
     }
 

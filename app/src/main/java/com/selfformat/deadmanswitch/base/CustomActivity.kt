@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
@@ -24,6 +25,20 @@ open class CustomActivity : AppCompatActivity() {
         super.onResume()
         updateImportantBooleansFromPrefs()
         setUpStatusBarAppearance()
+        sharedPref.registerOnSharedPreferenceChangeListener { sharedPreferencess, key ->
+            if (key == ALARM_STATUS_KEY) {
+                Log.i("PL", "ININ: ")
+                if (sharedPreferencess.getBoolean(ALARM_STATUS_KEY, false)) {
+                    Log.i("PL", ":true key ")
+                } else {
+                    Log.i("PL", "false key: ")
+                }
+            }
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +50,8 @@ open class CustomActivity : AppCompatActivity() {
     private fun updateImportantBooleansFromPrefs() {
         lightTheme = sharedPref.getBoolean(LIGHT_THEME_KEY, true)
         alarmOn = sharedPref.getBoolean(ALARM_STATUS_KEY, false)
-        premium = sharedPref.getBoolean(PREMIUM_FEATURES_KEY, false)
+        premium = true // PREMIUM FOR TESTING ONLY
+        emergencyEnabled = sharedPref.getBoolean(EMERGENCY_ENABLED_KEY, false)
     }
 
     fun saveAlarmState(alarmIsRunning: Boolean) {

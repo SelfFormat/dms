@@ -132,7 +132,7 @@
             app:layout_constraintBottom_toTopOf="@+id/premiumBarMain"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_behavior="com.selfformat.deadmanswitch.components.MoveButtonUpBehavior"/>
+            app:layout_behavior="com.selfformat.deadmanswitch.components.MoveFABUpBehavior"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

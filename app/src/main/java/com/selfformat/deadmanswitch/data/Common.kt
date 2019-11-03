@@ -33,7 +33,7 @@ const val MAX_DEFAULT_TIME = 10
 const val CUSTOM_RINGTONE_PICKER_REQUEST_CODE = 2
 const val SYSTEM_RINGTONE_PICKER_REQUEST_CODE = 5
 const val PERMISSIONS_REQUEST_SEND_SMS = 1
-const val DEFAULT_EMERGENCY_TIME = 8
+const val DEFAULT_EMERGENCY_TIME = 1
 
 fun goToMainScreen(context: Context) {
     val intent = Intent(context, MainActivity::class.java)

@@ -9,7 +9,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlin.math.min
 
 @Keep
-class MoveButtonUpBehavior(context: Context, attrs: AttributeSet) : CoordinatorLayout.Behavior<View>(context, attrs) {
+class MoveFABUpBehavior(context: Context, attrs: AttributeSet) : CoordinatorLayout.Behavior<View>(context, attrs) {
 
     override fun layoutDependsOn(parent: CoordinatorLayout, child: View, dependency: View): Boolean {
         return dependency is Snackbar.SnackbarLayout
