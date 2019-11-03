@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.selfformat.deadmanswitch">
 
-    <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
@@ -71,10 +70,6 @@
 
         <receiver android:name="com.selfformat.deadmanswitch.components.AlarmReceiver" />
         <receiver android:name=".components.AlarmReceiver" />
-
-        <service
-            android:name="com.selfformat.deadmanswitch.components.SmsService"
-            android:exported="false"/>
         <service
             android:name=".components.CancelAlarmService"
             android:exported="false"/>

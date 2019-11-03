@@ -2,7 +2,6 @@
 package com.selfformat.deadmanswitch.alarming
 
 import android.content.Context
-import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -15,7 +14,6 @@ import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.WindowManager
 import android.view.animation.AnimationUtils
@@ -23,10 +21,8 @@ import androidx.core.content.edit
 import com.selfformat.deadmanswitch.R
 import com.selfformat.deadmanswitch.base.CustomActivity
 import com.selfformat.deadmanswitch.components.Alarm
-import com.selfformat.deadmanswitch.components.SmsService
 import com.selfformat.deadmanswitch.data.*
 import kotlinx.android.synthetic.main.activity_alarming.*
-import kotlin.concurrent.thread
 
 class AlarmingActivity : CustomActivity(), SensorEventListener {
 
@@ -42,7 +38,6 @@ class AlarmingActivity : CustomActivity(), SensorEventListener {
         initActivityLayoutAndSettings()
         initManagers()
         initMediaPlayer()
-        runSendEmergencyMessageThread()
         turnAlarmOffButton.setOnClickListener {
             textOff.text = getString(R.string.closing)
             turnOffAlarm()
@@ -131,30 +126,6 @@ class AlarmingActivity : CustomActivity(), SensorEventListener {
         saveAlarmState(false)
     }
 
-    private fun runSendEmergencyMessageThread() {
-        if (premium && emergencyEnabled && isSmsPermissionGranted(this)) {
-            thread = thread(start = true) {
-                val timeToSms = getTimeUntilEmergencySms()
-                if (timeToSms != null) {
-                    try {
-                        Thread.sleep(timeToSms)
-                        startService(Intent(this, SmsService::class.java))
-                        turnOffAlarm()
-                        runOnUiThread {
-                            textOff.text = getString(R.string.closing)
-                            onBackPressed()
-                        }
-                    } catch (e: InterruptedException) {
-                        Log.i("tag", "InterruptedException")
-                    }
-                } else {
-                    Log.w("tag", "timeToSms was null -> probably not specified")
-                }
-                //If user stop alarm or re-schedule alarm, or kills activity thread will also die, so it won't send emergency sms
-            }
-        }
-    }
-
     private fun scheduleNextAlarm() {
         saveAlarmState(true)
         val timeToNextAlarm = randomTime(getRingtoneMinTime(sharedPref), getRingtoneMaxTime(sharedPref))
@@ -180,14 +151,6 @@ class AlarmingActivity : CustomActivity(), SensorEventListener {
     private fun getRingtoneUri() : Uri {
         val uri = sharedPref.getString(RINGTONE_KEY, null) ?: return RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_RINGTONE)
         return Uri.parse(uri)
-    }
-
-    private fun getTimeUntilEmergencySms(): Long? {
-        val time = sharedPref.getString(
-            TIMEOUT_UNTIL_EMERGENCY_MESSAGE_KEY, null)?.toLong()
-        return if (time != null) {
-            time * 1000
-        } else time
     }
 
     //endregion

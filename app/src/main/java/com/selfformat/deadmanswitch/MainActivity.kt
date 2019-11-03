@@ -56,13 +56,5 @@ class MainActivity : CustomActivity() {
         return Uri.parse(uri)
     }
 
-    fun getEmergencyContact(): EmergencyContact {
-        return EmergencyContact(
-            sharedPref.getString(CONTACT_NUMBER_KEY, getString(R.string.example_phone_number)),
-            sharedPref.getString(EMERGENCY_MESSAGE_KEY, getString(R.string.default_emergency_message)),
-            sharedPref.getString(CONTACT_NAME_KEY, getString(R.string.sample_contact_name))
-        )
-    }
-
     //endregion
 }

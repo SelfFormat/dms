@@ -1,23 +1,16 @@
 package com.selfformat.deadmanswitch.data
 
-import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.pm.PackageManager
 import android.util.Log
-import androidx.core.content.PermissionChecker
 import com.selfformat.deadmanswitch.MainActivity
 import java.util.*
 
 const val PREFERENCES_KEY = "prefs_key"
 const val LIGHT_THEME_KEY = "light_theme"
-const val CONTACT_NUMBER_KEY = "contact_number"
-const val EMERGENCY_MESSAGE_KEY = "emergency_message"
-const val CONTACT_NAME_KEY = "contact_name"
 const val RINGTONE_KEY = "ringtone"
 const val RINGTONE_NAME_KEY = "ringtone_name"
-const val TIMEOUT_UNTIL_EMERGENCY_MESSAGE_KEY = "timeout"
 const val ALARM_STATUS_KEY = "alarm_status_key"
 const val PREMIUM_FEATURES_KEY = "premium_features"
 const val EMERGENCY_ENABLED_KEY = "emergency_enabled"
@@ -33,7 +26,6 @@ const val MAX_DEFAULT_TIME = 10
 const val CUSTOM_RINGTONE_PICKER_REQUEST_CODE = 2
 const val SYSTEM_RINGTONE_PICKER_REQUEST_CODE = 5
 const val PERMISSIONS_REQUEST_SEND_SMS = 1
-const val DEFAULT_EMERGENCY_TIME = 1
 
 fun goToMainScreen(context: Context) {
     val intent = Intent(context, MainActivity::class.java)
@@ -54,20 +46,4 @@ fun randomTime(minTime: Int, maxTime: Int): Int {
     val generated = Random().nextInt(maxTime + 1 - minTime) * 1000
     Log.i("init: $initialTime", ", gen: $generated")
     return generated + initialTime
-}
-
-fun isSmsPermissionGranted(context: Context?): Boolean {
-    return if (context?.let {
-            PermissionChecker.checkSelfPermission(
-                it,
-                Manifest.permission.SEND_SMS
-            )
-        } == PackageManager.PERMISSION_GRANTED
-    ) {
-        Log.d("TAG", "Permission granted")
-        true
-    } else {
-        Log.d("TAG", "Permission not granted")
-        false
-    }
 }

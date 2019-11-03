@@ -30,7 +30,6 @@ class BuyPremiumFragment : Fragment() {
         val arrayOfFeatures = ArrayList<SingleFeature>()
         arrayOfFeatures.add(SingleFeature(getString(R.string.feature_no_ads)))
         arrayOfFeatures.add(SingleFeature(getString(R.string.feature_custom_alarms)))
-        arrayOfFeatures.add(SingleFeature(getString(R.string.feature_emergency_sms)))
         arrayOfFeatures.add(SingleFeature(getString(R.string.feature_dark_mode)))
         arrayOfFeatures.add(SingleFeature(getString(R.string.feature_widget)))
         val listView = view.findViewById<ListView>(R.id.listOfFeatures)

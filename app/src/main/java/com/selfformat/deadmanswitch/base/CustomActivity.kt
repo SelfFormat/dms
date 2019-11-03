@@ -25,20 +25,16 @@ open class CustomActivity : AppCompatActivity() {
         super.onResume()
         updateImportantBooleansFromPrefs()
         setUpStatusBarAppearance()
-        sharedPref.registerOnSharedPreferenceChangeListener { sharedPreferencess, key ->
+        sharedPref.registerOnSharedPreferenceChangeListener { sharedPreferences, key ->
             if (key == ALARM_STATUS_KEY) {
                 Log.i("PL", "ININ: ")
-                if (sharedPreferencess.getBoolean(ALARM_STATUS_KEY, false)) {
+                if (sharedPreferences.getBoolean(ALARM_STATUS_KEY, false)) {
                     Log.i("PL", ":true key ")
                 } else {
                     Log.i("PL", "false key: ")
                 }
             }
         }
-    }
-
-    override fun onPause() {
-        super.onPause()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

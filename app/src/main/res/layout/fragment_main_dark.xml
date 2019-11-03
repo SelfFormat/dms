@@ -80,19 +80,6 @@
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardEmergency"
-                    style="@style/Widget.MaterialComponents.CardView.Dark"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="16dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="3dp">
-                    <include layout="@layout/card_emergency_dark" />
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardWidget"
                     style="@style/Widget.MaterialComponents.CardView.Dark"
                     android:layout_width="match_parent"

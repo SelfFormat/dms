@@ -37,12 +37,6 @@ import com.selfformat.deadmanswitch.data.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.ad_card.*
 import kotlinx.android.synthetic.main.card_addwidget.*
-import kotlinx.android.synthetic.main.card_emergency.contactNumber
-import kotlinx.android.synthetic.main.card_emergency.editEmergency
-import kotlinx.android.synthetic.main.card_emergency.messageSummary
-import kotlinx.android.synthetic.main.card_emergency_dark.contactName
-import kotlinx.android.synthetic.main.card_emergency_dark.emergencySmsSwitch
-import kotlinx.android.synthetic.main.card_emergency_dark.timeout
 import kotlinx.android.synthetic.main.card_time_picker.*
 import kotlinx.android.synthetic.main.card_tone_picker.*
 import kotlinx.android.synthetic.main.card_turn_on_light_mode.*
@@ -56,7 +50,6 @@ class MainFragment : CustomFragment() {
     private lateinit var audioManager: AudioManager
     private var defaultRingtoneUri: Uri? = null
     private var widgetCardVisibility = View.VISIBLE
-    private var emergencySmsFeature = false
     private lateinit var notification: NotificationCancelAlarm
 
     companion object {
@@ -96,21 +89,12 @@ class MainFragment : CustomFragment() {
 //        sharedPref!!.registerOnSharedPreferenceChangeListener(listener)
         notification = NotificationCancelAlarm(context!!)
         initVisibilityModeSwitchCard()
-        initEmergencySmsCard()
         initTimeRangeCard()
         initAlarmSoundCard()
         initRunSwitchFAB(view)
         initWidgetCard()
         initBuyPremiumBar()
         initAdCard()
-        if (!isSmsPermissionGranted(context)) { askForSmsPermissions() }
-    }
-
-    private fun askForSmsPermissions() {
-        requestPermissions(
-            arrayOf(Manifest.permission.SEND_SMS),
-            PERMISSIONS_REQUEST_SEND_SMS
-        )
     }
 
     private fun initAdCard() {
@@ -165,7 +149,7 @@ class MainFragment : CustomFragment() {
                         showMutedAlarmSnackBarWarningSnackBar()
                     } else {
                         saveAlarmState(true)
-                        notification.setUpNotification(getString(R.string.cancle_alarm_notification_title))
+                        notification.setUpNotification(getString(R.string.cancel_alarm_notification_title))
                         val random = randomTime(minTime, maxTime)
                         val time = System.currentTimeMillis() + random
                         Snackbar.make(
@@ -189,67 +173,6 @@ class MainFragment : CustomFragment() {
         if (premium) premiumBarMain?.visibility = View.GONE
         else {
             premiumBarMain?.setOnClickListener { activity?.startActivity<BuyPremiumActivity>() }
-        }
-    }
-
-    //endregion
-
-    //region emergencySMS Card
-
-    private fun setEmergencySmsSummary() {
-        val emergencyContact = (activity as MainActivity).getEmergencyContact()
-        val timeoutTime =
-            "${sharedPref?.getString(TIMEOUT_UNTIL_EMERGENCY_MESSAGE_KEY, DEFAULT_EMERGENCY_TIME.toString())} seconds"
-        contactNumber.text = emergencyContact.number
-        contactName.text = emergencyContact.name
-        timeout.text = timeoutTime
-        messageSummary.text = emergencyContact.message
-    }
-
-    private fun initEmergencySmsCard() {
-        emergencySmsFeature = sharedPref?.getBoolean(EMERGENCY_ENABLED_KEY, false) ?: false
-
-        emergencySmsSwitch.isEnabled = premium
-        emergencySmsSwitch.setOnClickListener { if (!premium) activity?.startActivity<BuyPremiumActivity>() }
-        emergencySmsSwitch.isChecked = emergencySmsFeature
-        emergencySmsSwitch.setOnCheckedChangeListener { _, isChecked ->
-            sharedPref?.edit(true) {
-                putBoolean(EMERGENCY_ENABLED_KEY, isChecked)
-            }
-            val emergencyNumber = sharedPref?.getString(CONTACT_NUMBER_KEY, null)
-            if (emergencyNumber != null && emergencyNumber != getString(R.string.example_phone_number)) {
-                emergencySmsFeature = isChecked
-                changeAlphaOfEditEmergencySMSButton()
-            } else {
-                Snackbar.make(
-                    view!!.findViewById(R.id.coordinatorMainFragment),
-                    "Cannot turn feature on because no number is provided",
-                    Snackbar.LENGTH_SHORT
-                ).show()
-                emergencySmsSwitch.isChecked = false
-            }
-        }
-
-        changeAlphaOfEditEmergencySMSButton()
-
-        editEmergency.isEnabled = premium
-        editEmergency.setOnClickListener {
-            if (isSmsPermissionGranted(context)) {
-                replaceFragmentWithTransition(EmergencySmsFragment.newInstance())
-            } else {
-                Toast.makeText(
-                    context, getString(R.string.no_permission),
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
-    }
-
-    private fun changeAlphaOfEditEmergencySMSButton() {
-        if (editEmergency.isEnabled) {
-            editEmergency.alpha = 1f
-        } else {
-            editEmergency.alpha = 0.1f
         }
     }
 
@@ -545,10 +468,8 @@ class MainFragment : CustomFragment() {
         Log.i(TAG, "FAB text changed ")
         fab.text = if (alarmOn) getString(R.string.turn_off) else getString(R.string.run_switch)
         alarmVolumeSeekBar.progress = getCurrentAlarmVolume()
-        setEmergencySmsSummary()
         defaultRingtoneUri = (activity as MainActivity).getRingtoneUri()
         setToolbarBasedOnTheme()
-        changeAlphaOfEditEmergencySMSButton()
     }
 
     private fun snackBarMessage(timeToNextAlarm: Int) = "New alarm in ${timeToNextAlarm / 1000} seconds"

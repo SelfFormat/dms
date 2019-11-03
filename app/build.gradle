@@ -9,9 +9,9 @@ android {
     defaultConfig {
         applicationId "com.selfformat.deadmanswitch"
         minSdkVersion 21
-        targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        targetSdkVersion 29
+        versionCode 10
+        versionName "0.17"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary true
         //provide your unique APP_KEY and AD_UNIT_ID in gradle.properties file
