@@ -1,12 +1,10 @@
 package com.selfformat.deadmanswitch
 
-import android.Manifest
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.media.AudioManager
 import android.media.RingtoneManager
@@ -412,30 +410,6 @@ class MainFragment : CustomFragment() {
             }
         }
         Toast.makeText(context, "$uri ${(activity as MainActivity).getRingtoneName()}", Toast.LENGTH_SHORT).show()
-    }
-
-    //endregion
-
-    //region sms permissions
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            PERMISSIONS_REQUEST_SEND_SMS -> {
-                if (grantResults.isNotEmpty() && permissions[0] == Manifest.permission.SEND_SMS && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Permission was granted. Enable emergency contact.
-                    Log.d("TAG", "Permission granted :)")
-                } else {
-                    // Permission denied.®
-                    Log.d("TAG", "No permission :(")
-                    Toast.makeText(
-                        context, getString(R.string.no_permission),
-                        Toast.LENGTH_LONG
-                    ).show()
-                    // Disable emergency contact.
-                }
-            }
-        }
     }
 
     //endregion
